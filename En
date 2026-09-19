@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manda Capital | Mergers &amp; Acquisitions, CFO as a Service and Financial Strategy</title>
+<meta name="description" content="Independent M&amp;A (mergers and acquisitions), Corporate Finance and CFO as a Service boutique in Florianópolis, Brazil. Strategic advisory on sell-side and buy-side mandates, capital raising and outsourced financial leadership for Brazilian middle-market companies.">
+<meta name="keywords" content="mergers and acquisitions, M&A, M&A mandate, M&A advisory, CFO as a Service, outsourced financial leadership, financial strategy, corporate finance, M&A boutique, business sale, middle market, Florianópolis, Brazil">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Manda Capital">
+<link rel="canonical" href="https://mandacapital.com.br/en.html">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Manda Capital">
+<meta property="og:title" content="Manda Capital | Mergers &amp; Acquisitions, CFO as a Service and Financial Strategy">
+<meta property="og:description" content="Independent M&amp;A, Corporate Finance and CFO as a Service boutique in Florianópolis, Brazil. Alongside partners, business owners and investors in the decisions that change the direction of the business.">
+<meta property="og:url" content="https://mandacapital.com.br/en.html">
+<meta property="og:image" content="https://mandacapital.com.br/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Manda Capital | Mergers &amp; Acquisitions, CFO as a Service">
+<meta name="twitter:description" content="Independent M&amp;A, Corporate Finance and CFO as a Service boutique in Florianópolis, Brazil.">
+<meta name="twitter:image" content="https://mandacapital.com.br/og-image.png">
+
+<!-- Favicons -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#10283A">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Dados estruturados (schema.org) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Manda Capital",
+  "alternateName": "M/A Manda Capital",
+  "description": "Independent mergers and acquisitions (M&amp;A), Corporate Finance and CFO as a Service boutique, working alongside partners and business owners of the Brazilian middle market.",
+  "url": "https://mandacapital.com.br/en.html",
+  "email": "contato@mandacapital.com.br",
+  "areaServed": "BR",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Florianópolis",
+    "addressRegion": "SC",
+    "addressCountry": "BR"
+  },
+  "serviceType": ["Mergers & Acquisitions", "M&A Advisory", "CFO as a Service", "Corporate Finance", "Outsourced Financial Leadership"]
+}
+</script>
+<style>
+
+:root{
+  --navy:#10283A;
+  --navy-deep:#0A1C2A;
+  --cream:#F3EBD9;
+  --gold:#F3BC49;
+  --orange:#E56E2F;
+  --ocean:#245872;
+  --forest:#1D4A3B;
+  --sky:#A9C9D3;
+
+  --sans-ui:'Montserrat', Arial, sans-serif;
+  --sans-tag:'DM Sans', Arial, sans-serif;
+  --mono:'DM Mono', monospace;
+
+  --line-on-navy:rgba(243,235,217,.08);
+  --line-on-cream:rgba(16,40,58,.10);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--cream);color:var(--navy);font-family:var(--sans-ui);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+a{color:inherit;}
+.wrap{width:min(1040px, calc(100% - 48px));margin:auto;}
+[hidden]{display:none !important;}
+
+.label{font-family:var(--mono);font-weight:400;font-size:14px;letter-spacing:.16em;text-transform:uppercase;display:flex;align-items:center;gap:9px;}
+.grid-navy{
+  background-image:linear-gradient(var(--line-on-navy) 1px, transparent 1px), linear-gradient(90deg, var(--line-on-navy) 1px, transparent 1px);
+  background-size:44px 44px;
+}
+.grid-cream{
+  background-image:linear-gradient(var(--line-on-cream) 1px, transparent 1px), linear-gradient(90deg, var(--line-on-cream) 1px, transparent 1px);
+  background-size:44px 44px;
+}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.plus{opacity:.55;}
+
+/* ===== LOGO ===== */
+.logo-icon{display:block;fill:none;stroke:currentColor;stroke-linejoin:round;stroke-linecap:round;}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--cream);}
+.brand-word{
+  display:inline-flex;align-items:baseline;gap:.6em;flex-wrap:nowrap;white-space:nowrap;
+  font-family:var(--sans-ui);font-weight:600;font-size:12px;
+  line-height:1.4;color:inherit;
+}
+.brand-word .ma{letter-spacing:normal;}
+.brand-word .ma .slash{color:var(--gold);margin:0 .18em;}
+.brand-word .full{letter-spacing:.22em;}
+
+/* ===== HEADER ===== */
+header{background:var(--navy);position:relative;z-index:5;}
+header .wrap{display:flex;align-items:center;justify-content:space-between;padding:22px 0;}
+header .logo-icon{width:26px;height:20px;stroke-width:20;}
+.private-btn{
+  display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;
+  font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(243,235,217,.6);
+  transition:color 220ms ease;
+}
+.private-btn:hover{color:var(--gold);}
+.header-right{display:flex;align-items:center;gap:18px;}
+.lang-switch{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.08em;text-transform:uppercase;}
+.lang-switch a{color:rgba(243,235,217,.45);text-decoration:none;transition:color 220ms ease;}
+.lang-switch a:hover{color:var(--gold);}
+.lang-switch a.active{color:var(--cream);}
+.lang-switch .sep{color:rgba(243,235,217,.25);}
+.arrow-icon{width:11px;height:11px;flex-shrink:0;}
+
+/* ===== HERO ===== */
+.hero{background:var(--navy);color:var(--cream);position:relative;overflow:hidden;}
+.hero-inner{padding:64px 0 0;}
+.hero .eyebrow{color:var(--sky);margin-bottom:26px;}
+.hero .eyebrow .dot{background:var(--orange);}
+.hero h1{
+  font-family:var(--sans-ui);font-weight:600;
+  font-size:clamp(42px,8.4vw,74px);line-height:1.04;letter-spacing:-0.02em;
+  margin:0 0 40px;
+}
+.hero h1 .accent{color:var(--gold);display:block;}
+.hero-row{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:30px;
+  padding-bottom:52px;border-bottom:1px solid var(--line-on-navy);flex-wrap:wrap;
+}
+.hero-row p{
+  max-width:38ch;color:rgba(243,235,217,.85);margin:0;
+  padding-left:22px;border-left:1px solid var(--line-on-navy);
+}
+.begin-link{
+  display:flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;
+  font-family:var(--mono);font-weight:400;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cream);white-space:nowrap;transition:color 220ms ease;
+}
+.begin-link:hover{color:var(--gold);}
+.begin-link .circ{
+  width:26px;height:26px;border:1px solid var(--line-on-navy);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+}
+.hero-bar{
+  padding:18px 0;
+  font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(243,235,217,.4);
+}
+
+/* ===== STATEMENT ===== */
+.statement{background:var(--cream);padding:80px 0;}
+.statement-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:40px;}
+.statement .label{color:var(--orange);}
+.statement h2{color:var(--navy);margin:0;}
+@media (max-width:680px){.statement-grid{grid-template-columns:1fr;}}
+
+/* ===== DIAGONAL ===== */
+.diagonal{
+  position:relative;min-height:320px;
+  background:linear-gradient(101deg, var(--sky) 0%, var(--sky) 58%, var(--gold) 58%, var(--gold) 100%);
+  display:flex;align-items:center;
+}
+.diagonal .wrap{padding:60px 0;}
+.diagonal .label{color:var(--navy);opacity:.55;margin-bottom:22px;}
+.diagonal h2{color:var(--navy);margin:0;max-width:32ch;}
+
+/* ===== TEXTO EM DUAS CAMADAS (frase forte + frase leve) ===== */
+.split-strong{
+  display:block;font-family:var(--sans-ui);font-weight:600;
+  font-size:clamp(16px,5vw,32px);line-height:1.28;white-space:nowrap;
+}
+.split-light{
+  display:block;font-family:var(--sans-ui);font-weight:400;
+  font-size:clamp(12px,1.8vw,18px);line-height:1.5;margin-top:10px;
+}
+.diagonal p{font-family:var(--sans-tag);font-weight:400;color:#33403C;font-size:15px;max-width:36ch;margin:0;line-height:1.65;}
+
+/* ===== FOOTER ===== */
+footer{background:var(--navy-deep);color:rgba(243,235,217,.6);padding:34px 0;}
+footer .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;}
+footer .logo-icon{width:20px;height:15px;stroke-width:21;}
+footer .brand-word{font-size:10.5px;}
+footer .contact{font-family:var(--sans-ui);font-weight:400;font-size:12px;letter-spacing:.05em;text-decoration:none;color:rgba(243,235,217,.6);transition:color 220ms ease;}
+footer .contact:hover{color:var(--gold);}
+footer .meta{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.06em;color:rgba(243,235,217,.35);}
+
+/* ===== GATE + PRIVATE OVERLAYS ===== */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);}}
+.animate{animation:fadeUp 500ms cubic-bezier(.2,.75,.25,1) both;}
+@media (prefers-reduced-motion:reduce){.animate{animation:none;}}
+
+.stage{
+  position:fixed;inset:0;z-index:100;background:var(--navy);
+  display:flex;align-items:center;justify-content:center;padding:1.5rem;
+}
+.stage.private{align-items:flex-start;}
+#gate{flex-direction:column;align-items:stretch;justify-content:flex-start;padding:0;}
+.gate-body{flex:1;width:100%;display:flex;align-items:center;justify-content:center;padding:1.5rem;}
+.close-btn{
+  position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;cursor:pointer;
+  font-family:var(--mono);font-weight:400;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(243,235,217,.55);transition:color 220ms ease, transform 220ms ease;
+}
+.close-btn:hover{color:var(--gold);transform:translateY(-1px);}
+
+.gate-inner{width:100%;max-width:560px;text-align:center;display:flex;flex-direction:column;align-items:center;}
+.gate-brand{flex-direction:column;gap:18px;margin-bottom:2.8rem;}
+.gate-brand .logo-icon{width:104px;height:80px;stroke-width:15;color:var(--cream);flex-shrink:0;}
+.gate-word{font-size:clamp(14px,3.6vw,32px);white-space:nowrap;}
+.field-group{width:100%;max-width:240px;margin:0 auto;text-align:left;}
+.field-label{
+  display:block;font-family:var(--mono);font-weight:400;font-size:14px;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(243,235,217,.5);margin-bottom:.9rem;
+}
+#code{
+  width:100%;background:transparent;border:none;border-bottom:1px solid rgba(243,235,217,.35);
+  padding:0 0 1rem;font-family:var(--sans-ui);font-weight:400;font-size:1.2rem;letter-spacing:.12em;color:var(--cream);
+  text-align:center;transition:border-color 220ms ease;
+}
+#code::placeholder{color:rgba(243,235,217,.35);font-size:12px;letter-spacing:0.02em;}
+#code:focus{border-bottom-color:var(--gold);outline:none;}
+#code.error{border-bottom-color:var(--orange);}
+.submit-link{
+  margin-top:2.2rem;background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:.5rem;
+  font-family:var(--mono);font-weight:400;font-size:14px;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(243,235,217,.55);transition:color 220ms ease;padding:0;
+}
+.submit-link:hover{color:var(--gold);}
+.submit-link .arrow-icon{width:14px;height:14px;}
+
+.gate-footer{
+  width:100%;background:var(--cream);color:var(--navy);
+  padding:26px 1.5rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;
+}
+.gate-footer .brand-word{color:var(--navy);}
+.gate-footer .logo-icon{width:20px;height:15px;stroke-width:21;color:var(--navy);}
+.gate-footer .contact{
+  font-family:var(--sans-ui);font-weight:400;font-size:12px;letter-spacing:.05em;
+  text-decoration:none;color:var(--navy);transition:color 220ms ease;
+}
+.gate-footer .contact:hover{color:var(--orange);}
+
+@media (max-width:480px){
+  .gate-brand{gap:12px;}
+  .gate-brand .logo-icon{width:56px;height:44px;}
+  .gate-word{font-size:14px;}
+}
+
+
+.private-inner{margin:auto;width:100%;max-width:420px;text-align:center;padding:1.5rem;}
+.private-inner .brand{flex-direction:column;justify-content:center;gap:14px;margin-bottom:3rem;}
+.private-inner .logo-icon{width:52px;height:40px;stroke-width:17;}
+.private-inner .brand-word{font-size:13px;}
+.granted{
+  font-family:var(--mono);font-weight:400;font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(243,235,217,.6);margin:0 0 1.1rem;
+}
+.private-inner h1{
+  font-family:var(--sans-tag);font-weight:600;font-size:clamp(1.7rem,3.8vw,2.3rem);color:var(--gold);margin:0 0 1.3rem;
+}
+.private-inner p{
+  font-family:var(--sans-tag);font-weight:400;font-size:15px;line-height:1.7;color:rgba(243,235,217,.6);
+  max-width:34ch;margin:0 auto 2.6rem;
+}
+.exit-link{
+  background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:.5rem;
+  font-family:var(--mono);font-weight:400;font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(243,235,217,.55);transition:color 220ms ease, transform 220ms ease;padding:0;
+}
+.exit-link:hover{color:var(--gold);transform:translateY(-1px);}
+
+@media (max-width:640px){
+  .hero-row{flex-direction:column;align-items:flex-start;}
+  .hero-row p{border-left:none;padding-left:0;border-top:1px solid var(--line-on-navy);padding-top:18px;}
+  header .wrap{gap:10px;}
+  header .brand{gap:8px;}
+  header .logo-icon{width:19px;height:15px;}
+  header .brand-word{font-size:9px;}
+  header .brand-word .full{letter-spacing:.1em;}
+  .private-btn{font-size:9.5px;gap:5px;}
+  .header-right{gap:10px;}
+  .lang-switch{font-size:9.5px;}
+}
+@media (max-width:420px){
+  .split-strong{font-size:16px;}
+  .split-light{font-size:12px;}
+}
+</style>
+</head>
+<body>
+
+<div id="site">
+  <header class="grid-navy">
+    <div class="wrap">
+      <a class="brand" href="#top">
+        <svg class="logo-icon" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <path d="M10,180 L95,20 L180,180"/>
+        <path d="M165,20 L250,180 L80,180 Z"/>
+      </svg>
+        <span class="brand-word"><span class="ma">M<span class="slash">/</span>A</span><span class="full">MANDA CAPITAL</span></span>
+      </a>
+      <div class="header-right">
+        <div class="lang-switch">
+          <a href="index.html">PT</a><span class="sep">/</span><a href="en.html" class="active">EN</a><span class="sep">/</span><a href="es.html">ES</a>
+        </div>
+        <button class="private-btn" id="openGateHeader" type="button">
+          Private Access
+          <svg class="arrow-icon" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <path d="M2 6H10M6 2L10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <section id="top" class="hero grid-navy">
+    <div class="wrap hero-inner">
+      <h1>Find your<span class="accent">horizon</span></h1>
+      <p class="label eyebrow"><span class="dot"></span>M&amp;A <span class="plus">+</span> STRATEGIC FINANCE</p>
+      <div class="hero-row">
+        <p><span class="split-strong">You built your business.</span><span class="split-light">We help you maximize its value.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="statement grid-cream">
+    <div class="wrap">
+      <div class="statement-grid">
+        <p class="label"><span class="dot"></span>PREPARATION <span class="plus">+</span> EXECUTION</p>
+        <h2><span class="split-strong">Plan before you act.</span><span class="split-light">For every decision, a strategy.</span></h2>
+      </div>
+    </div>
+  </section>
+
+  <section class="diagonal">
+    <div class="wrap">
+      <p class="label"><span class="dot"></span>HARD <span class="plus">+</span> SOFT SKILLS</p>
+      <h2><span class="split-strong">Technical and Human Knowledge.</span><span class="split-light">Negotiations are about numbers and people.</span></h2>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <a class="brand" href="#top">
+        <svg class="logo-icon" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <path d="M10,180 L95,20 L180,180"/>
+        <path d="M165,20 L250,180 L80,180 Z"/>
+      </svg>
+        <span class="brand-word"><span class="ma">M<span class="slash">/</span>A</span><span class="full">MANDA CAPITAL</span></span>
+      </a>
+      <a class="contact" href="mailto:contato@mandacapital.com.br">contato@mandacapital.com.br</a>
+    </div>
+  </footer>
+</div>
+
+<div class="stage" id="gate" hidden>
+  <button class="close-btn" id="closeGate" type="button">Back</button>
+  <div class="gate-body">
+    <div class="gate-inner animate">
+      <div class="brand gate-brand">
+        <svg class="logo-icon" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+          <path d="M10,180 L95,20 L180,180"/>
+          <path d="M165,20 L250,180 L80,180 Z"/>
+        </svg>
+        <span class="brand-word gate-word"><span class="ma">M<span class="slash">/</span>A</span><span class="full">MANDA CAPITAL</span></span>
+      </div>
+      <div class="field-group">
+        <input type="password" id="code" placeholder="Type your access code" autocomplete="off" inputmode="text">
+      </div>
+      <button class="submit-link" id="submitCode" type="button">
+        Access
+        <svg class="arrow-icon" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+          <path d="M2 6H10M6 2L10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <footer class="gate-footer">
+    <div class="brand">
+      <svg class="logo-icon" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <path d="M10,180 L95,20 L180,180"/>
+        <path d="M165,20 L250,180 L80,180 Z"/>
+      </svg>
+      <span class="brand-word"><span class="ma">M<span class="slash">/</span>A</span><span class="full">MANDA CAPITAL</span></span>
+    </div>
+    <a class="contact" href="mailto:contato@mandacapital.com.br">contato@mandacapital.com.br</a>
+  </footer>
+</div>
+
+<div class="stage private" id="private" hidden>
+  <button class="close-btn" id="closePrivate" type="button">Back</button>
+  <div class="private-inner animate">
+    <a class="brand" href="#top" style="pointer-events:none;">
+      <svg class="logo-icon" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <path d="M10,180 L95,20 L180,180"/>
+        <path d="M165,20 L250,180 L80,180 Z"/>
+      </svg>
+      <span class="brand-word"><span class="ma">M<span class="slash">/</span>A</span><span class="full">MANDA CAPITAL</span></span>
+    </a>
+    <p class="granted">Access granted</p>
+    <h1>Private room.</h1>
+    <p>A space reserved for selected opportunities from Manda Capital, shared only with those already part of this conversation.</p>
+    <button class="exit-link" id="exitPrivate" type="button">
+      Sair
+      <svg class="arrow-icon" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <path d="M2 6H10M6 2L10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  const gate = document.getElementById('gate');
+  const privateArea = document.getElementById('private');
+  const codeInput = document.getElementById('code');
+
+  function openGate(){ gate.hidden = false; codeInput.focus(); }
+  function closeGate(){ gate.hidden = true; codeInput.value = ''; }
+  function closePrivate(){ privateArea.hidden = true; }
+
+  document.getElementById('openGateHeader').addEventListener('click', openGate);
+  document.getElementById('closeGate').addEventListener('click', closeGate);
+  document.getElementById('closePrivate').addEventListener('click', closePrivate);
+  document.getElementById('exitPrivate').addEventListener('click', closePrivate);
+
+  function attemptAccess(){
+    const value = codeInput.value.trim().toUpperCase();
+    if(value === 'MANDA'){
+      gate.hidden = true;
+      privateArea.hidden = false;
+      codeInput.value = '';
+    } else {
+      codeInput.classList.add('error');
+      setTimeout(() => codeInput.classList.remove('error'), 900);
+    }
+  }
+  document.getElementById('submitCode').addEventListener('click', attemptAccess);
+  codeInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') attemptAccess(); });
+</script>
+
+</body>
+</html>
