@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#10283A">
+<title>Manda Capital</title>
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="shortcut icon" href="/favicon.ico">
+
+<!-- ▼▼ Endereço do painel, cifrado com a senha. Para trocar a senha ou o
+        endereço, abra mandacap.com.br/dashboard/?gerar ▼▼ -->
+<script>var COFRE = "JTU6NDJ3bmE3Ij8oPjBvKi4hIy0oby0rLGIgYSkgLjMhN24gICAgIC4gPmoiIixgJjNiMmEFCis4LSY4ICwvHnUgIBkBJS8eOXM0HTgUaRgPKBgoMSsWeDUNKSV5Pnh6LSItBTwRBTwKLAgbIjgJFgMhMgkYPSIkOik6DTJiJDYhIg==";</script>
+<!-- ▲▲ ---------------------------------------------------------------- ▲▲ -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html,body{height:100%;margin:0}
+  body{
+    background:#10283A;color:#F3EBD9;
+    font-family:"Montserrat",system-ui,sans-serif;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:24px;
+  }
+  .logo-icon{width:46px;height:36px;stroke:#F3BC49;stroke-width:17;fill:none;
+             stroke-linecap:round;stroke-linejoin:round;margin-bottom:16px}
+  .marca{font-weight:700;letter-spacing:.2em;font-size:13px;margin-bottom:30px;opacity:.75}
+  form{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  input{
+    background:rgba(243,235,217,.08);border:1px solid rgba(243,235,217,.3);
+    color:#F3EBD9;font-family:inherit;font-size:16px;padding:12px 16px;
+    border-radius:2px;width:210px;text-align:center;letter-spacing:.16em;
+  }
+  input::placeholder{letter-spacing:.04em;color:rgba(243,235,217,.35)}
+  input:focus{outline:none;border-color:#F3BC49}
+  button{
+    background:#F3BC49;color:#10283A;border:0;font-family:inherit;font-weight:600;
+    font-size:14px;padding:12px 26px;border-radius:2px;cursor:pointer;
+  }
+  .recado{font-size:13px;margin-top:18px;min-height:20px;color:rgba(243,235,217,.6)}
+  .recado.erro{color:#F3BC49}
+  .nota{margin-top:32px;font-size:12px;color:rgba(243,235,217,.4);max-width:340px;line-height:1.6}
+  .nota a{color:rgba(243,235,217,.6)}
+  textarea{
+    width:min(520px,90vw);height:92px;margin-top:14px;background:rgba(0,0,0,.25);
+    color:#F3BC49;border:1px solid rgba(243,235,217,.25);font-family:ui-monospace,monospace;
+    font-size:11px;padding:10px;border-radius:2px;word-break:break-all;
+  }
+</style>
+</head>
+<body>
+  <svg class="logo-icon" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M10,180 L95,20 L180,180"/><path d="M165,20 L250,180 L80,180 Z"/>
+  </svg>
+  <div class="marca">PAINEL DE CONTROLE</div>
+
+  <form id="porta" onsubmit="entrar(event)">
+    <input id="senha" type="password" placeholder="código" autocomplete="current-password"
+           autocapitalize="characters" spellcheck="false">
+    <button type="submit">Entrar</button>
+  </form>
+
+  <div class="recado" id="recado"></div>
+  <div class="nota" id="nota">
+    Depois do código, o Google ainda pede a conta da Manda. É esse login que
+    protege os dados — o código aqui só mantém a página fora de vista.
+  </div>
+
+<script>
+function decifrar(cofre, senha){
+  try{
+    var b = atob(cofre), s = senha.toUpperCase(), r = '';
+    for (var i = 0; i < b.length; i++){
+      r += String.fromCharCode(b.charCodeAt(i) ^ s.charCodeAt(i % s.length));
+    }
+    return r;
+  } catch(e){ return ''; }
+}
+function cifrar(texto, senha){
+  var s = senha.toUpperCase(), r = '';
+  for (var i = 0; i < texto.length; i++){
+    r += String.fromCharCode(texto.charCodeAt(i) ^ s.charCodeAt(i % s.length));
+  }
+  return btoa(r);
+}
+function valida(url){ return url.indexOf('https://script.google.com/') === 0; }
+
+function ir(url){
+  document.getElementById('recado').textContent = 'Abrindo o painel…';
+  window.location.replace(url);
+}
+
+function entrar(e){
+  e.preventDefault();
+  var campo = document.getElementById('senha');
+  var senha = campo.value.trim();
+  if (!senha) return;
+  var url = decifrar(COFRE, senha);
+  if (!valida(url)){
+    var r = document.getElementById('recado');
+    r.textContent = 'Código incorreto.';
+    r.className = 'recado erro';
+    campo.value = ''; campo.focus();
+    return;
+  }
+  try{
+    localStorage.setItem('manda_painel', JSON.stringify({
+      s: senha, ate: Date.now() + 30 * 24 * 3600 * 1000
+    }));
+  } catch(err){ /* janela anônima: só não lembra */ }
+  ir(url);
+}
+
+(function(){
+  if (location.search.indexOf('gerar') !== -1) return modoGerador();
+  if (location.search.indexOf('sair') !== -1){
+    try{ localStorage.removeItem('manda_painel'); } catch(err){}
+    document.getElementById('recado').textContent = 'Saiu deste navegador.';
+    return;
+  }
+  try{
+    var g = JSON.parse(localStorage.getItem('manda_painel') || 'null');
+    if (g && g.ate > Date.now()){
+      var url = decifrar(COFRE, g.s);
+      if (valida(url)) return ir(url);
+    }
+  } catch(err){}
+  document.getElementById('senha').focus();
+})();
+
+/** /dashboard/?gerar — troca o código ou o endereço do painel. */
+function modoGerador(){
+  document.getElementById('porta').innerHTML =
+    '<input id="gUrl" type="text" placeholder="endereço /exec do painel" style="width:min(520px,90vw);letter-spacing:0">' +
+    '<input id="gSenha" type="text" placeholder="novo código" style="letter-spacing:0">' +
+    '<button type="submit">Gerar</button>';
+  document.getElementById('nota').innerHTML =
+    'Cole a linha gerada no lugar da linha <b>var COFRE</b> do arquivo ' +
+    '<b>dashboard/index.html</b> e faça o commit. Nada aqui sai do seu navegador.';
+  document.getElementById('porta').onsubmit = function(e){
+    e.preventDefault();
+    var u = document.getElementById('gUrl').value.trim();
+    var p = document.getElementById('gSenha').value.trim();
+    var r = document.getElementById('recado');
+    if (!valida(u)) { r.textContent = 'O endereço precisa começar com https://script.google.com/'; return; }
+    if (!p) { r.textContent = 'Escreva o código.'; return; }
+    r.innerHTML = '<textarea readonly onclick="this.select()">var COFRE = "' + cifrar(u, p) + '";</textarea>';
+  };
+}
+</script>
+</body>
+</html>

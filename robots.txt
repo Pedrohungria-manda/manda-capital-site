@@ -1,0 +1,51 @@
+# Manda Capital — mandacap.com.br
+
+# Buscadores tradicionais
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Rastreadores de IA — liberados propositalmente.
+# São eles que alimentam respostas do ChatGPT, Claude, Perplexity e Gemini.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+# Regra geral
+User-agent: *
+Allow: /
+Disallow: /dashboard/
+Disallow: /cadastro/
+
+Sitemap: https://mandacap.com.br/sitemap.xml
