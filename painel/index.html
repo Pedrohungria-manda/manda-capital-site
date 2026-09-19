@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Manda Capital · Painel</title>
+
+<!-- ▼▼ TROQUE APENAS ESTA LINHA se o link do app da Web mudar ▼▼ -->
+<script>var PAINEL = "https://script.google.com/a/macros/mandacap.com.br/s/AKfycbymmaZ4maWEdb_w7uPyZ-YBiVlpfW6qLdd7z97lliDqPKxKaIUfyDWMesDYsfewhtIs/exec";</script>
+<!-- ▲▲ ------------------------------------------------------ ▲▲ -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  html,body{height:100%;margin:0}
+  body{
+    background:#10283A;color:#F3EBD9;
+    font-family:"Montserrat",system-ui,sans-serif;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:24px;
+  }
+  .marca{font-weight:700;letter-spacing:.16em;font-size:16px}
+  .marca span{opacity:.55;font-weight:400;letter-spacing:.06em;margin-left:9px}
+  p{color:rgba(243,235,217,.7);font-size:14px;margin:18px 0 26px}
+  a.botao{
+    background:#F3BC49;color:#10283A;text-decoration:none;font-weight:600;
+    padding:12px 26px;border-radius:2px;font-size:14px;display:inline-block;
+  }
+  .nota{margin-top:26px;font-size:12px;color:rgba(243,235,217,.45);max-width:340px;line-height:1.55}
+</style>
+</head>
+<body>
+  <div class="marca">MANDA<span>Painel</span></div>
+  <p id="estado">Abrindo o painel…</p>
+  <a class="botao" id="link" href="#">Abrir agora</a>
+  <div class="nota">Acesso restrito à conta da Manda Capital. Se pedir login, entre com pedro@mandacap.com.br.</div>
+
+<script>
+  var link = document.getElementById('link');
+  if (PAINEL.indexOf('script.google.com') === -1) {
+    document.getElementById('estado').textContent =
+      'Falta colar o endereço do painel neste arquivo.';
+    link.style.display = 'none';
+  } else {
+    link.href = PAINEL;
+    setTimeout(function(){ window.location.replace(PAINEL); }, 400);
+  }
+</script>
+</body>
+</html>
