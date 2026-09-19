@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cadastro de clientes · Manda Capital</title>
+<meta name="description" content="Cadastro de empresas e sócios para elaboração do contrato de assessoria da Manda Capital.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#10283A">
+<link rel="icon" href="/favicon.ico">
+<style>
+  html,body{margin:0;height:100%;background:#F6F4EF;font-family:Montserrat,system-ui,sans-serif}
+  iframe{position:fixed;inset:0;width:100%;height:100%;border:0;display:block}
+  .loading{position:fixed;inset:0;display:grid;place-items:center;color:#5F7482;font-size:14px;background:#F6F4EF;transition:opacity .3s}
+  .loading span::before{content:"";display:inline-block;width:14px;height:14px;border:2px solid #CFD6DB;border-top-color:#10283A;border-radius:50%;margin-right:10px;vertical-align:-2px;animation:sp .7s linear infinite}
+  .loading.hide{opacity:0;pointer-events:none}
+  .fallback{position:fixed;bottom:12px;left:0;right:0;text-align:center;font-size:12px;color:#5F7482}
+  .fallback a{color:#10283A}
+  @keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<!-- COLE AQUI a "URL do app da Web" do Apps Script (termina em /exec) -->
+<iframe id="form" title="Cadastro de clientes Manda Capital"
+  src="https://script.google.com/macros/s/AKfycbylrlRT44ldzBaDSrisW9f09MBdABfOvmk3EX4O54hvaNg3eDTujvFW-R4imZnVra9y2Q/exec"
+  allow="clipboard-write"></iframe>
+<div class="loading" id="loading"><span>Carregando formulário…</span></div>
+<script>
+  var f = document.getElementById('form'), l = document.getElementById('loading');
+  f.addEventListener('load', function(){ l.classList.add('hide'); });
+  setTimeout(function(){ // se em 12 s não carregar, oferece abrir direto
+    if (!l.classList.contains('hide')) l.innerHTML = '<p style="text-align:center">O formulário está demorando para carregar.<br><a href="' + f.src + '" style="color:#10283A">Clique aqui para abrir em uma nova aba</a>.</p>';
+  }, 12000);
+</script>
+</body>
+</html>
