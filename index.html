@@ -120,6 +120,12 @@ header .logo-icon{width:26px;height:20px;stroke-width:20;}
   transition:color 220ms ease;
 }
 .private-btn:hover{color:var(--gold);}
+.header-right{display:flex;align-items:center;gap:18px;}
+.lang-switch{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.08em;text-transform:uppercase;}
+.lang-switch a{color:rgba(243,235,217,.45);text-decoration:none;transition:color 220ms ease;}
+.lang-switch a:hover{color:var(--gold);}
+.lang-switch a.active{color:var(--cream);}
+.lang-switch .sep{color:rgba(243,235,217,.25);}
 .arrow-icon{width:11px;height:11px;flex-shrink:0;}
 
 /* ===== HERO ===== */
@@ -287,6 +293,8 @@ footer .meta{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spa
   header .brand-word{font-size:9px;}
   header .brand-word .full{letter-spacing:.1em;}
   .private-btn{font-size:9.5px;gap:5px;}
+  .header-right{gap:10px;}
+  .lang-switch{font-size:9.5px;}
 }
 @media (max-width:420px){
   .split-strong{font-size:16px;}
@@ -306,12 +314,17 @@ footer .meta{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spa
       </svg>
         <span class="brand-word"><span class="ma">M<span class="slash">/</span>A</span><span class="full">MANDA CAPITAL</span></span>
       </a>
-      <button class="private-btn" id="openGateHeader" type="button">
-        Private Access
-        <svg class="arrow-icon" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-          <path d="M2 6H10M6 2L10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
+      <div class="header-right">
+        <div class="lang-switch">
+          <a href="index.html" class="active">PT</a><span class="sep">/</span><a href="en.html">EN</a><span class="sep">/</span><a href="es.html">ES</a>
+        </div>
+        <button class="private-btn" id="openGateHeader" type="button">
+          Private Access
+          <svg class="arrow-icon" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <path d="M2 6H10M6 2L10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </header>
 
