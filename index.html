@@ -338,6 +338,46 @@ footer .meta{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spa
   .split-strong{font-size:16px;}
   .split-light{font-size:12px;}
 }
+
+  /* ── Bloco de leituras ─────────────────────────────────────── */
+  .leituras{background:#F3EBD9;color:#10283A;padding:clamp(72px,10vw,128px) 0}
+  .leituras .label{color:#5F7482}
+  .leituras-h{font-family:"DM Sans",sans-serif;font-weight:500;letter-spacing:-.02em;
+    font-size:clamp(28px,4.2vw,46px);line-height:1.12;margin:0 0 clamp(36px,5vw,56px);max-width:16ch}
+  .leituras-trilho{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 32px)/3);
+    gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+    padding-bottom:14px;scrollbar-width:thin;scrollbar-color:rgba(16,40,58,.3) transparent}
+  .leituras-trilho::-webkit-scrollbar{height:6px}
+  .leituras-trilho::-webkit-scrollbar-track{background:rgba(16,40,58,.08);border-radius:99px}
+  .leituras-trilho::-webkit-scrollbar-thumb{background:rgba(16,40,58,.3);border-radius:99px}
+  .leituras-trilho::-webkit-scrollbar-thumb:hover{background:rgba(16,40,58,.5)}
+  .leituras-trilho .leitura{scroll-snap-align:start}
+  .leituras-rodape{display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    margin-top:clamp(20px,3vw,30px)}
+  .leituras-setas{display:flex;gap:8px;margin-left:auto}
+  .leituras-setas button{width:42px;height:42px;border-radius:50%;border:1px solid rgba(16,40,58,.22);
+    background:#FFFDF8;color:#10283A;font-size:20px;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+  .leituras-setas button:hover{background:#10283A;color:#F3EBD9;border-color:#10283A}
+  @media (max-width:900px){ .leituras-trilho{grid-auto-columns:calc((100% - 16px)/2)} }
+  @media (max-width:640px){ .leituras-trilho{grid-auto-columns:82%} .leituras-setas{display:none} }
+  .leitura{display:flex;flex-direction:column;gap:10px;background:#FFFDF8;border-radius:16px;
+    padding:26px 24px 22px;text-decoration:none;color:inherit;
+    box-shadow:0 1px 2px rgba(16,40,58,.05),0 10px 30px rgba(16,40,58,.06);
+    transition:transform .18s ease, box-shadow .18s ease}
+  .leitura:hover{transform:translateY(-3px);box-shadow:0 2px 4px rgba(16,40,58,.07),0 18px 44px rgba(16,40,58,.11)}
+  .leitura-kicker{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#E56E2F;font-weight:700}
+  .leitura-titulo{font-family:"DM Sans",sans-serif;font-size:19px;line-height:1.28;font-weight:500;letter-spacing:-.01em}
+  .leitura-resumo{font-size:13.5px;line-height:1.6;color:#5F7482;flex:1}
+  .leitura-ir{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;
+    letter-spacing:.06em;color:#10283A;margin-top:4px}
+  .leitura-ir svg{width:11px;height:11px;transition:transform .18s ease}
+  .leitura:hover .leitura-ir svg{transform:translateX(3px)}
+  .leituras-todos{display:inline-block;font-size:13px;font-weight:600;
+    letter-spacing:.08em;text-transform:uppercase;color:#10283A;text-decoration:none;
+    border-bottom:1px solid rgba(16,40,58,.3);padding-bottom:4px}
+  .leituras-todos:hover{border-bottom-color:#E56E2F;color:#E56E2F}
+  @media (max-width:640px){ .leitura{padding:22px 20px 18px} }
 </style>
 </head>
 <body>
@@ -392,6 +432,58 @@ footer .meta{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spa
     </div>
   </section>
 
+  <section class="leituras" id="leituras">
+    <div class="wrap">
+      <p class="label"><span class="dot"></span>LEITURA <span class="plus">+</span> CONTEXTO</p>
+      <h2 class="leituras-h">Antes da decisão, o entendimento.</h2>
+      <div class="leituras-trilho" id="trilho">
+        <a class="leitura" href="/conteudo/processo-de-venda-de-empresa/">
+          <span class="leitura-kicker">Processo</span>
+          <span class="leitura-titulo">Quanto tempo leva para vender uma empresa no Brasil</span>
+          <span class="leitura-resumo">As sete etapas de um sell-side no middle market, com os prazos reais de cada uma.</span>
+          <span class="leitura-ir">Ler<svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6H10M6 2L10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a class="leitura" href="/conteudo/negociacao-tecnica-e-humana/">
+          <span class="leitura-kicker">Negociação</span>
+          <span class="leitura-titulo">Negociação é técnica. E é gente.</span>
+          <span class="leitura-resumo">Por que uma boa negociação exige conhecimento financeiro e leitura humana ao mesmo tempo.</span>
+          <span class="leitura-ir">Ler<svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6H10M6 2L10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a class="leitura" href="/conteudo/processo-e-diligencia/">
+          <span class="leitura-kicker">Valor</span>
+          <span class="leitura-titulo">O processo também é ativo</span>
+          <span class="leitura-resumo">Empresa organizada vale mais: a diligência reduz a dúvida, e é a dúvida que o comprador desconta.</span>
+          <span class="leitura-ir">Ler<svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6H10M6 2L10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a class="leitura" href="/conteudo/ambiente-competitivo/">
+          <span class="leitura-kicker">Concorrência</span>
+          <span class="leitura-titulo">Por que vender para um único comprador custa caro</span>
+          <span class="leitura-resumo">O que muda no preço e nas condições quando existe concorrência real entre compradores.</span>
+          <span class="leitura-ir">Ler<svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6H10M6 2L10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a class="leitura" href="/conteudo/clareza-financeira/">
+          <span class="leitura-kicker">Gestão</span>
+          <span class="leitura-titulo">Decidir com dado ou decidir no feeling</span>
+          <span class="leitura-resumo">Por que empresas que faturam bem seguem sem saber onde ganham e onde perdem dinheiro.</span>
+          <span class="leitura-ir">Ler<svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6H10M6 2L10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a class="leitura" href="/conteudo/crescimento-e-estrutura/">
+          <span class="leitura-kicker">Crescimento</span>
+          <span class="leitura-titulo">Quando a empresa cresce mais rápido que a estrutura</span>
+          <span class="leitura-resumo">A transição de pequena empresa para companhia estruturada é o ponto mais crítico da trajetória.</span>
+          <span class="leitura-ir">Ler<svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6H10M6 2L10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+      </div>
+      <div class="leituras-rodape">
+        <a class="leituras-todos" href="/conteudo/">Todos os conteúdos</a>
+        <div class="leituras-setas">
+          <button type="button" aria-label="Anterior" onclick="rolarLeituras(-1)">&lsaquo;</button>
+          <button type="button" aria-label="Próximo" onclick="rolarLeituras(1)">&rsaquo;</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <div class="wrap">
       <a class="brand" href="#top">
@@ -401,7 +493,6 @@ footer .meta{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spa
       </svg>
         <span class="brand-word"><span class="ma">M<span class="slash">/</span>A</span><span class="full">MANDA CAPITAL</span></span>
       </a>
-      <a class="contact" href="/conteudo/">Conteúdo</a>
       <a class="contact" href="mailto:contato@mandacapital.com.br">contato@mandacapital.com.br</a>
     </div>
   </footer>
@@ -508,5 +599,14 @@ footer .meta{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spa
   codeInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') attemptAccess(); });
 </script>
 
+<script>
+  function rolarLeituras(dir){
+    var t = document.getElementById('trilho');
+    if (!t) return;
+    var card = t.querySelector('.leitura');
+    var passo = card ? card.getBoundingClientRect().width + 16 : t.clientWidth / 3;
+    t.scrollBy({ left: dir * passo, behavior: 'smooth' });
+  }
+</script>
 </body>
 </html>
