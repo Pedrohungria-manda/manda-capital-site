@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Manda Capital · Solicitação de Informações</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#10283A; --ink:#10283A; --muted:#5F7482; --soft:#3C4A54;
+    --orange:#E56E2F; --gold:#E8A72B; --sand:#F3EBD9; --line:#E3E6E8; --bg:#F6F4EF; --card:#FFFFFF; --err:#C0392B; --ok:#2E7D57;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none !important}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Montserrat,system-ui,sans-serif;font-size:15px;line-height:1.55}
+  .hero{background:var(--navy);color:#fff;padding:40px 16px 88px;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-120px;top:-120px;width:360px;height:360px;border:1px solid rgba(232,167,43,.35);border-radius:50%}
+  .wrap{max-width:880px;margin:0 auto;position:relative;z-index:1}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.32em;font-size:12px;text-transform:uppercase}
+  .brand .mark{width:14px;height:14px;border-left:3px solid #fff;border-top:3px solid #fff}
+  .brand small{font-weight:600;letter-spacing:.3em;color:var(--gold);margin-left:14px;font-size:10px}
+  .empresa{margin:30px 0 0;color:var(--gold);font-weight:600;font-size:13px;letter-spacing:.04em}
+  h1{font-family:"DM Sans",sans-serif;font-size:34px;line-height:1.15;margin:6px 0 10px;font-weight:700}
+  .hero p.intro{margin:0;max-width:600px;color:#C9D3DA}
+  .progresso{display:flex;align-items:center;gap:14px;margin-top:22px;max-width:600px}
+  .trilho{flex:1;height:6px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}
+  .trilho i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s}
+  .progresso span{font-size:12.5px;color:#C9D3DA;white-space:nowrap}
+  .progresso b{color:#fff}
+  main{margin-top:-56px;padding:0 16px 64px}
+  .card{background:var(--card);border-radius:14px;box-shadow:0 1px 2px rgba(16,40,58,.06),0 8px 28px rgba(16,40,58,.07);padding:28px;margin-bottom:20px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px;flex-wrap:wrap}
+  .num{font-family:"DM Sans",sans-serif;color:var(--orange);font-weight:700;font-size:13px;letter-spacing:.15em}
+  h2{font-family:"DM Sans",sans-serif;font-size:21px;margin:0;font-weight:700}
+  .placar{margin-left:auto;font-size:12.5px;color:var(--muted);font-weight:600}
+  .placar.pronto{color:var(--ok)}
+  .hint{color:var(--muted);font-size:13px;margin:0 0 18px}
+  .demo{display:none;background:#FBEDEA;color:var(--err);border-radius:10px;padding:12px 14px;font-size:13px;margin-bottom:16px}
+  .demo.on{display:block}
+  .sub{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--orange);margin:18px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .sub span{color:var(--muted);margin-right:8px}
+
+  .item{border-top:1px solid var(--line);padding:12px 0}
+  .sub + .item{border-top:none}
+  .linha{display:grid;grid-template-columns:64px minmax(0,1fr) 180px auto auto;gap:10px;align-items:center}
+  .cod{font-family:"DM Sans",sans-serif;font-weight:700;font-size:13px;color:var(--muted);letter-spacing:.04em}
+  .nome{font-size:14.5px;font-weight:500}
+  select,textarea{font:inherit;color:var(--ink);background:#fff;border:1px solid #CFD6DB;border-radius:9px;padding:8px 10px;width:100%;transition:border-color .15s, box-shadow .15s}
+  select{font-size:13.5px;font-weight:500}
+  textarea{min-height:80px;resize:vertical;padding:11px 12px}
+  select:focus,textarea:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(16,40,58,.12)}
+  select[data-v="Enviado"]{border-color:var(--ok);color:var(--ok);background:#EEF6F1}
+  select[data-v="Parcialmente enviado"]{border-color:var(--gold);color:#8A5E0F;background:#FDF5E4}
+
+  .btn{font:inherit;font-weight:600;border-radius:10px;padding:9px 16px;border:1px solid transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;font-size:13px;transition:transform .05s, background .15s}
+  .btn:active{transform:translateY(1px)}
+  .btn:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+  .btn-navy{background:var(--navy);color:#fff}
+  .btn-navy:hover{background:#1B3A52}
+  .btn-ghost{background:transparent;color:var(--muted);border-color:var(--line)}
+  .btn-ghost:hover{color:var(--navy);border-color:var(--navy)}
+  .btn-primary{background:var(--orange);color:#fff;padding:14px 24px;font-size:15px}
+  .btn-primary:hover{background:#cf5f24}
+  .btn[disabled]{opacity:.55;cursor:default}
+  input[type=file]{display:none}
+
+  .baixo{margin:8px 0 0 74px}
+  .info{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+  .info:empty{display:none}
+  .info.erro{color:var(--err)}
+  .info.ok{color:var(--ok);font-weight:600}
+  .barra-up{height:4px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:8px;display:none}
+  .barra-up.on{display:block}
+  .barra-up i{display:block;height:100%;width:0;background:var(--orange);transition:width .2s}
+
+  .cmts{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+  .cmt{background:var(--sand);border-radius:9px;padding:9px 12px}
+  .cmt p{margin:0;font-size:13.5px;color:var(--ink);white-space:pre-wrap}
+  .cmt .rodape-cmt{display:flex;align-items:center;gap:6px;margin-top:4px}
+  .cmt .meta{font-size:11.5px;color:var(--muted);margin-right:auto}
+  .btn-mini{font:inherit;font-size:12px;font-weight:600;background:none;border:none;color:var(--muted);cursor:pointer;padding:2px 6px;border-radius:6px}
+  .btn-mini:hover{color:var(--navy);background:rgba(16,40,58,.06)}
+  .btn-mini.del:hover{color:var(--err);background:#FBEDEA}
+  .editor{margin-top:6px}
+  .editor .fila{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+  .btn-mic{background:#fff;color:var(--navy);border-color:#CFD6DB}
+  .btn-mic:hover{border-color:var(--navy)}
+  .btn-mic.gravando{background:var(--err);border-color:var(--err);color:#fff;animation:pulso 1.2s ease-in-out infinite}
+  @keyframes pulso{50%{opacity:.75}}
+  .dica{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+  .dica:empty{display:none}
+  .sobre .fila{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+  .pacote .fila{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .pacote .info{margin-top:10px}
+
+  .fila-envio{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:30;background:var(--navy);color:#fff;border-radius:12px;padding:12px 18px;font-size:13px;box-shadow:0 8px 28px rgba(16,40,58,.25);display:flex;gap:10px;align-items:center;max-width:calc(100% - 32px)}
+  .fila-envio .spin{width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;flex:none}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .legal{font-size:11.5px;color:var(--muted);text-align:center;margin-top:18px}
+
+  @media (max-width:680px){
+    h1{font-size:27px} .card{padding:20px} .brand small{display:none}
+    .linha{grid-template-columns:1fr 1fr;grid-template-areas:"cod cod" "nome nome" "st st" "cm env"}
+    .linha .cod{grid-area:cod} .linha .nome{grid-area:nome} .linha select{grid-area:st}
+    .linha .bt-c{grid-area:cm} .linha .bt-e{grid-area:env}
+    .baixo{margin-left:0}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="brand"><span class="mark"></span>Manda Capital<small>Clareza para decidir</small></div>
+    <p class="empresa" id="empresa"></p>
+    <h1>Solicitação preliminar de informações</h1>
+    <p class="intro">As informações solicitadas têm caráter estritamente confidencial e serão utilizadas exclusivamente na avaliação estratégica e na condução do processo de M&amp;A, com acesso restrito às partes diretamente envolvidas.</p>
+    <div class="progresso"><div class="trilho"><i id="trilho"></i></div><span><b id="feitos">0</b> de <b id="total">0</b> itens enviados</span></div>
+  </div>
+</header>
+
+<main id="principal" style="visibility:hidden">
+<div class="wrap">
+  <section class="card pacote">
+    <p class="demo" id="demo">Pré-visualização. Status e comentários funcionam só nesta tela e não são gravados; o envio de arquivos funciona no endereço oficial.</p>
+    <div class="sec-head"><span class="num">ATALHO</span><h2>Enviar tudo de uma vez</h2></div>
+    <p class="hint">Se preferir, mande um zip com tudo, ou selecione vários arquivos juntos. Nós organizamos por item depois. Você pode continuar usando a página enquanto os arquivos sobem.</p>
+    <div class="fila">
+      <button type="button" class="btn btn-primary" id="btPacote">Enviar pacote</button>
+      <input type="file" id="arqPacote" multiple>
+    </div>
+    <div class="barra-up" id="barraPacote"><i></i></div>
+    <p class="info" id="infoPacote"></p>
+  </section>
+
+  <section class="card sobre">
+    <div class="sec-head"><span class="num">OPCIONAL</span><h2>Conte sobre a empresa</h2></div>
+    <p class="hint">História, clientes, diferenciais, o que você quiser que a gente saiba. Pode escrever, falar para o texto aparecer sozinho, ou mandar um áudio gravado no celular.</p>
+    <div id="sobreCmts"></div>
+    <div class="fila">
+      <button type="button" class="btn btn-navy" id="btSobre">Escrever ou falar</button>
+      <button type="button" class="btn btn-ghost" id="btAudio">Enviar um áudio</button>
+      <input type="file" id="arqAudio" accept="audio/*" multiple>
+    </div>
+    <div class="barra-up" id="barraAudio"><i></i></div>
+    <p class="info" id="infoAudio"></p>
+  </section>
+
+  <div id="lista"></div>
+  <p class="legal">Manda Capital · Florianópolis/SC · mandacap.com.br · Dados tratados com confidencialidade.</p>
+</div>
+</main>
+
+<div class="fila-envio" id="filaEnvio" hidden><span class="spin"></span><span id="filaTxt"></span></div>
+
+<script>
+(function(){
+  'use strict';
+  /* Endereço do Apps Script (Implantar > Gerenciar implantações > URL do app da Web) */
+  var API = 'https://script.google.com/macros/s/AKfycbxjVJqFlD81vXBUByedg_16V_LZ-voJb8tXXl05Zq1v2FhkoRcaS31QV4_p__Blhb1j/exec';
+  var DEMO = null;
+  var CHAVE = new URLSearchParams(location.search).get('k') || '';
+
+  function falha(titulo) {
+    document.getElementById('empresa').textContent = '';
+    var w = document.querySelector('#principal .wrap');
+    w.innerHTML = '<section class="card"><h2></h2><p class="hint" style="margin:8px 0 0">Use o link enviado pela Manda Capital. Se o problema continuar, fale com a gente.</p></section>';
+    w.querySelector('h2').textContent = titulo;
+    document.getElementById('principal').style.visibility = 'visible';
+  }
+
+  if (DEMO) { iniciar(DEMO, false); return; }
+  if (!CHAVE) { falha('Link incompleto.'); return; }
+  document.getElementById('empresa').textContent = 'Carregando…';
+  fetch(API + '?acao=dados&k=' + encodeURIComponent(CHAVE))
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      if (!j.ok) return falha(j.erro || 'Link inválido.');
+      j.r.chave = CHAVE;
+      iniciar(j.r, true);
+    })
+    .catch(function () { falha('Não foi possível carregar agora. Tente de novo em instantes.'); });
+
+  function iniciar(D, AO_VIVO) {
+  document.getElementById('principal').style.visibility = 'visible';
+  if (!AO_VIVO) document.getElementById('demo').classList.add('on');
+
+  var estado = D.estado || {};
+  var PEDACO = D.pedaco || 20 * 1024 * 1024;
+  var PARALELO = 4;
+  document.getElementById('empresa').textContent = D.empresa || '';
+
+  var MAPA = {
+    solic_salvarStatus:      ['status',            ['k', 'cod', 'status']],
+    solic_addComentario:     ['addComentario',     ['k', 'cod', 'texto']],
+    solic_editarComentario:  ['editarComentario',  ['k', 'id', 'texto']],
+    solic_excluirComentario: ['excluirComentario', ['k', 'id']],
+    solic_iniciarUpload:     ['iniciarUpload',     ['k', 'cod', 'nome', 'mime', 'tamanho', 'origem']],
+    solic_concluirDireto:    ['concluirDireto',    ['token', 'arquivoId']],
+    solic_enviarPedaco:      ['enviarPedaco',      ['token', 'b64', 'inicio']]
+  };
+  function chamar(fn) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    if (!AO_VIVO) return Promise.reject(new Error('demo'));
+    var m = MAPA[fn], corpo = { acao: m[0] };
+    m[1].forEach(function (n, i) { corpo[n] = args[i]; });
+    return fetch(API, { method: 'POST', body: JSON.stringify(corpo) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { if (!j.ok) throw new Error(j.erro || 'Falha.'); return j.r; });
+  }
+  function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+  function aviso(p, msg, erro, ok) { p.textContent = msg; p.classList.toggle('erro', !!erro); p.classList.toggle('ok', !!ok); }
+  function rotuloArquivos(n) { return n === 1 ? '1 arquivo recebido' : n + ' arquivos recebidos'; }
+  function guardar(cod, m) { estado[cod] = Object.assign({ status: 'Pendente', arquivos: 0, comentarios: [] }, estado[cod] || {}, m); }
+
+  /* ---------- lista ---------- */
+  var lista = document.getElementById('lista');
+  var todos = [];
+  D.lista.forEach(function (s) {
+    var card = el('section', 'card');
+    var head = el('div', 'sec-head');
+    head.appendChild(el('span', 'num', s.cod));
+    head.appendChild(el('h2', '', s.nome));
+    var pl = el('span', 'placar'); pl.setAttribute('data-placar', s.cod); head.appendChild(pl);
+    card.appendChild(head);
+    s.grupos.forEach(function (g) {
+      if (g.cod) { var sub = el('p', 'sub'); sub.appendChild(el('span', '', g.cod)); sub.appendChild(document.createTextNode(g.nome)); card.appendChild(sub); }
+      g.itens.forEach(function (it) { todos.push({ cod: it[0], secao: s.cod }); card.appendChild(montarItem(it[0], it[1])); });
+    });
+    lista.appendChild(card);
+  });
+  document.getElementById('total').textContent = todos.length;
+
+  /* ---------- ditado por voz ---------- */
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  var ouvindo = null;
+  function dicaSistema() {
+    var ua = navigator.userAgent;
+    if (/Android|iPhone|iPad|iPod/i.test(ua)) return 'Toque no microfone do teclado do celular e fale. O texto aparece aqui.';
+    if (/Mac/i.test(ua)) return 'Aperte duas vezes a tecla Fn (ou 🌐) e fale. O texto aparece aqui.';
+    if (/Win/i.test(ua)) return 'Aperte as teclas Windows + H e fale. O texto aparece aqui.';
+    return 'Use o ditado do seu teclado para falar. O texto aparece aqui.';
+  }
+  function ditar(ta, btn, dica) {
+    ta.focus();
+    if (ouvindo) { ouvindo.stop(); return; }
+    if (!SR) { dica.textContent = dicaSistema(); return; }
+    var r = new SR();
+    r.lang = 'pt-BR'; r.continuous = true; r.interimResults = false;
+    r.onresult = function (e) {
+      for (var i = e.resultIndex; i < e.results.length; i++) {
+        if (!e.results[i].isFinal) continue;
+        var t = e.results[i][0].transcript.trim();
+        ta.value = ta.value && !/\s$/.test(ta.value) ? ta.value + ' ' + t : ta.value + t;
+      }
+    };
+    r.onerror = function (e) {
+      if (/not-allowed|service-not-allowed|audio-capture/.test(e.error)) { SR = null; dica.textContent = dicaSistema(); }
+      else if (e.error !== 'aborted') dica.textContent = 'Não consegui ouvir. Tente de novo.';
+    };
+    r.onend = function () { ouvindo = null; btn.classList.remove('gravando'); btn.textContent = '🎤 Falar'; };
+    try {
+      r.start(); ouvindo = r;
+      btn.classList.add('gravando'); btn.textContent = '■ Parar'; dica.textContent = 'Ouvindo… fale normalmente.';
+    } catch (err) { SR = null; dica.textContent = dicaSistema(); }
+  }
+
+  /* ---------- editor de texto (novo ou edição) ---------- */
+  function editor(inicial, rotulo, aoSalvar, aoCancelar) {
+    var box = el('div', 'editor');
+    var ta = el('textarea'); ta.placeholder = 'Escreva ou fale aqui…'; ta.value = inicial || '';
+    var fila = el('div', 'fila');
+    var btM = el('button', 'btn btn-mic', '🎤 Falar'); btM.type = 'button';
+    var btS = el('button', 'btn btn-navy', rotulo); btS.type = 'button';
+    var btX = el('button', 'btn btn-ghost', 'Cancelar'); btX.type = 'button';
+    var dica = el('p', 'dica');
+    fila.appendChild(btM); fila.appendChild(btS); fila.appendChild(btX);
+    box.appendChild(ta); box.appendChild(fila); box.appendChild(dica);
+    btM.addEventListener('click', function () { ditar(ta, btM, dica); });
+    btX.addEventListener('click', function () { if (ouvindo) ouvindo.stop(); aoCancelar(); });
+    btS.addEventListener('click', function () {
+      if (ouvindo) ouvindo.stop();
+      var t = ta.value.trim();
+      if (!t) { dica.textContent = 'Escreva ou fale algo antes de salvar.'; return; }
+      btS.disabled = true;
+      aoSalvar(t).catch(function (e) { btS.disabled = false; dica.textContent = 'Não salvou: ' + (e && e.message ? e.message : e); });
+    });
+    setTimeout(function () { ta.focus(); }, 0);
+    return box;
+  }
+
+  /* ---------- lista de comentários de um item ---------- */
+  function simular(cod, acao, a, b) { /* pré-visualização: só na tela */
+    var l = ((estado[cod] || {}).comentarios || []).slice();
+    var agora = new Date(), q = ('0' + agora.getDate()).slice(-2) + '/' + ('0' + (agora.getMonth() + 1)).slice(-2) + ' ' + ('0' + agora.getHours()).slice(-2) + ':' + ('0' + agora.getMinutes()).slice(-2);
+    if (acao === 'add') l.push({ id: String(Math.random()).slice(2, 10), texto: a, quando: q, editado: false });
+    if (acao === 'edit') l.forEach(function (c) { if (c.id === a) { c.texto = b; c.quando = q; c.editado = true; } });
+    if (acao === 'del') l = l.filter(function (c) { return c.id !== a; });
+    return Promise.resolve({ cod: cod, comentarios: l });
+  }
+  function api(cod, acao, a, b) {
+    if (!AO_VIVO) return simular(cod, acao, a, b);
+    if (acao === 'add') return chamar('solic_addComentario', D.chave, cod, a);
+    if (acao === 'edit') return chamar('solic_editarComentario', D.chave, a, b);
+    return chamar('solic_excluirComentario', D.chave, a);
+  }
+  function blocoComentarios(cod) {
+    var raiz = el('div'), ul = el('ul', 'cmts'), novo = el('div');
+    raiz.appendChild(ul); raiz.appendChild(novo);
+    function aplicar(r) { guardar(cod, { comentarios: r.comentarios }); desenhar(); }
+    function desenhar() {
+      ul.innerHTML = '';
+      ((estado[cod] || {}).comentarios || []).forEach(function (c) {
+        var li = el('li', 'cmt');
+        li.appendChild(el('p', '', c.texto));
+        var rp = el('div', 'rodape-cmt');
+        rp.appendChild(el('span', 'meta', (c.quando || '') + (c.editado ? ' · editado' : '')));
+        var bE = el('button', 'btn-mini', 'Editar'); bE.type = 'button';
+        var bX = el('button', 'btn-mini del', 'Excluir'); bX.type = 'button';
+        rp.appendChild(bE); rp.appendChild(bX); li.appendChild(rp);
+        bE.addEventListener('click', function () {
+          li.innerHTML = '';
+          li.appendChild(editor(c.texto, 'Salvar', function (t) { return api(cod, 'edit', c.id, t).then(aplicar); }, desenhar));
+        });
+        bX.addEventListener('click', function () {
+          if (!confirm('Excluir este comentário?')) return;
+          bX.disabled = true;
+          api(cod, 'del', c.id).then(aplicar).catch(function (e) { bX.disabled = false; alert('Não excluiu: ' + e.message); });
+        });
+        ul.appendChild(li);
+      });
+    }
+    function abrirNovo() {
+      if (novo.firstChild) { novo.querySelector('textarea').focus(); return; }
+      novo.appendChild(editor('', 'Salvar comentário',
+        function (t) { return api(cod, 'add', t).then(function (r) { novo.innerHTML = ''; aplicar(r); }); },
+        function () { novo.innerHTML = ''; }));
+    }
+    desenhar();
+    return { el: raiz, abrirNovo: abrirNovo };
+  }
+
+  function montarItem(cod, nome) {
+    var st = estado[cod] || { status: 'Pendente', arquivos: 0 };
+    var box = el('div', 'item');
+    var ln = el('div', 'linha');
+    ln.appendChild(el('span', 'cod', cod));
+    ln.appendChild(el('span', 'nome', nome));
+    var sel = el('select'); sel.setAttribute('aria-label', 'Status de ' + nome);
+    (D.status || ['Pendente', 'Parcialmente enviado', 'Enviado']).forEach(function (o) { var op = el('option', '', o); op.value = o; sel.appendChild(op); });
+    sel.value = st.status || 'Pendente'; sel.dataset.v = sel.value;
+    ln.appendChild(sel);
+    var btC = el('button', 'btn btn-ghost bt-c', 'Comentar'); btC.type = 'button';
+    var btE = el('button', 'btn btn-navy bt-e', 'Enviar'); btE.type = 'button';
+    var arq = el('input'); arq.type = 'file'; arq.multiple = true;
+    ln.appendChild(btC); ln.appendChild(btE); ln.appendChild(arq);
+    box.appendChild(ln);
+
+    var baixo = el('div', 'baixo');
+    var cmts = blocoComentarios(cod);
+    var barra = el('div', 'barra-up'); barra.appendChild(el('i'));
+    var info = el('p', 'info', st.arquivos ? rotuloArquivos(st.arquivos) : '');
+    baixo.appendChild(cmts.el); baixo.appendChild(barra); baixo.appendChild(info);
+    box.appendChild(baixo);
+
+    sel.addEventListener('change', function () {
+      sel.dataset.v = sel.value; guardar(cod, { status: sel.value }); contar();
+      chamar('solic_salvarStatus', D.chave, cod, sel.value).catch(function (e) { if (e.message !== 'demo') aviso(info, e.message, true); });
+    });
+    btC.addEventListener('click', cmts.abrirNovo);
+    btE.addEventListener('click', function () {
+      if (!AO_VIVO) return aviso(info, 'Na pré-visualização o envio fica desligado.', true);
+      arq.click();
+    });
+    arq.addEventListener('change', function () {
+      var files = Array.prototype.slice.call(arq.files); arq.value = '';
+      if (!files.length) return;
+      enviarLote(cod, files, barra, info, function (est) {
+        guardar(cod, est); sel.value = est.status; sel.dataset.v = sel.value; contar();
+        aviso(info, rotuloArquivos(est.arquivos), false, true);
+      });
+    });
+    return box;
+  }
+
+  function contar() {
+    var feitos = 0;
+    D.lista.forEach(function (s) {
+      var dela = todos.filter(function (t) { return t.secao === s.cod; });
+      var ok = dela.filter(function (t) { return (estado[t.cod] || {}).status === 'Enviado'; }).length;
+      feitos += ok;
+      var p = document.querySelector('[data-placar="' + s.cod + '"]');
+      p.textContent = ok + ' de ' + dela.length; p.classList.toggle('pronto', ok === dela.length);
+    });
+    document.getElementById('feitos').textContent = feitos;
+    document.getElementById('trilho').style.width = (feitos / todos.length * 100) + '%';
+  }
+
+  /* ---------- fila de envio: até 3 arquivos ao mesmo tempo ---------- */
+  var ativos = 0, espera = [], pendentes = 0;
+  function naFila(fn) {
+    pendentes++; mostrarFila();
+    return new Promise(function (ok, erro) { espera.push({ fn: fn, ok: ok, erro: erro }); puxar(); })
+      .finally(function () { pendentes--; mostrarFila(); });
+  }
+  function puxar() {
+    while (ativos < PARALELO && espera.length) {
+      var t = espera.shift(); ativos++;
+      t.fn().then(t.ok, t.erro).finally(function () { ativos--; puxar(); });
+    }
+  }
+  function mostrarFila() {
+    var box = document.getElementById('filaEnvio');
+    box.hidden = pendentes === 0;
+    document.getElementById('filaTxt').textContent = pendentes === 1
+      ? 'Enviando 1 arquivo. Não feche esta página até terminar.'
+      : 'Enviando ' + pendentes + ' arquivos. Não feche esta página até terminar.';
+  }
+  window.addEventListener('beforeunload', function (e) { if (pendentes > 0) { e.preventDefault(); e.returnValue = ''; } });
+
+  function lerB64(blob) {
+    return new Promise(function (ok, erro) {
+      var r = new FileReader();
+      r.onload = function () { ok(String(r.result).split(',')[1] || ''); };
+      r.onerror = function () { erro(r.error); };
+      r.readAsDataURL(blob);
+    });
+  }
+
+  /* um arquivo: vai direto do navegador para o Drive.
+     Se o navegador não conseguir (bloqueio de rede, por exemplo), cai no
+     caminho antigo, pelo Apps Script, sem o cliente perceber. */
+  var DIRETO = true;
+  function putDireto(url, f, mime, avancou) {
+    return new Promise(function (ok, erro) {
+      var xhr = new XMLHttpRequest(), ultimo = 0;
+      xhr.open('PUT', url);
+      xhr.setRequestHeader('Content-Type', mime);
+      xhr.upload.onprogress = function (e) { if (e.lengthComputable) { avancou(e.loaded - ultimo); ultimo = e.loaded; } };
+      xhr.onload = function () {
+        if (xhr.status === 200 || xhr.status === 201) {
+          try { return ok(JSON.parse(xhr.responseText).id); } catch (e) { return erro({ bloqueado: true, enviado: ultimo }); }
+        }
+        erro(new Error('Drive respondeu ' + xhr.status));
+      };
+      xhr.onerror = function () { erro({ bloqueado: true, enviado: ultimo }); };
+      xhr.send(f);
+    });
+  }
+  function pelaPonte(token, f, avancou) {
+    var ini = 0;
+    function proximo() {
+      var pedaco = f.slice(ini, Math.min(ini + PEDACO, f.size));
+      return lerB64(pedaco).then(function (b64) {
+        return chamar('solic_enviarPedaco', token, b64, ini);
+      }).then(function (r) {
+        ini += pedaco.size; avancou(pedaco.size);
+        return (r && r.pronto) ? r : proximo();
+      });
+    }
+    return proximo();
+  }
+  function subir(cod, f, avancou) {
+    var mime = f.type || 'application/octet-stream';
+    return chamar('solic_iniciarUpload', D.chave, cod, f.name, mime, f.size, location.origin).then(function (s) {
+      if (!DIRETO || !s.direto) return pelaPonte(s.token, f, avancou);
+      return putDireto(s.url, f, mime, avancou).then(function (id) {
+        return chamar('solic_concluirDireto', s.token, id);
+      }, function (e) {
+        if (!e || !e.bloqueado) throw e;
+        DIRETO = false;
+        avancou(-(e.enviado || 0));
+        if (e.enviado) return subir(cod, f, avancou); /* caiu no meio: recomeça numa sessão nova */
+        return pelaPonte(s.token, f, avancou);
+      });
+    });
+  }
+
+  function enviarLote(cod, files, barra, info, aoTerminar) {
+    files = files.filter(function (f) { return f.size > 0; });
+    if (!files.length) return aviso(info, 'Arquivo vazio.', true);
+    var total = files.reduce(function (a, f) { return a + f.size; }, 0), feito = 0, falhas = [], ultimo = null;
+    barra.classList.add('on'); barra.firstChild.style.width = '4%';
+    aviso(info, files.length === 1 ? 'Enviando ' + files[0].name + '…' : 'Enviando ' + files.length + ' arquivos…');
+    return Promise.all(files.map(function (f) {
+      return naFila(function () {
+        return subir(cod, f, function (n) { feito += n; barra.firstChild.style.width = Math.max(4, feito / total * 100) + '%'; });
+      }).then(function (r) { if (r && r.estado) ultimo = r.estado; }, function (e) { falhas.push(f.name + ' (' + (e && e.message ? e.message : e) + ')'); });
+    })).then(function () {
+      barra.classList.remove('on');
+      if (falhas.length) return aviso(info, 'Não subiu: ' + falhas.join('; ') + '. Tente de novo.', true);
+      if (cod === 'PACOTE' || cod === 'GERAL') return aviso(info, (files.length === 1 ? 'Recebido.' : files.length + ' arquivos recebidos.') + ' Obrigado.', false, true);
+      if (ultimo && aoTerminar) aoTerminar(ultimo);
+    });
+  }
+
+  /* ---------- pacote ---------- */
+  var arqP = document.getElementById('arqPacote'), infoP = document.getElementById('infoPacote');
+  document.getElementById('btPacote').addEventListener('click', function () {
+    if (!AO_VIVO) return aviso(infoP, 'Na pré-visualização o envio fica desligado.', true);
+    arqP.click();
+  });
+  arqP.addEventListener('change', function () {
+    var files = Array.prototype.slice.call(arqP.files); arqP.value = '';
+    if (files.length) enviarLote('PACOTE', files, document.getElementById('barraPacote'), infoP);
+  });
+
+  /* ---------- sobre a empresa ---------- */
+  var sobre = blocoComentarios('GERAL');
+  document.getElementById('sobreCmts').appendChild(sobre.el);
+  document.getElementById('btSobre').addEventListener('click', sobre.abrirNovo);
+  var arqA = document.getElementById('arqAudio'), infoA = document.getElementById('infoAudio');
+  document.getElementById('btAudio').addEventListener('click', function () {
+    if (!AO_VIVO) return aviso(infoA, 'Na pré-visualização o envio fica desligado.', true);
+    arqA.click();
+  });
+  arqA.addEventListener('change', function () {
+    var files = Array.prototype.slice.call(arqA.files); arqA.value = '';
+    if (files.length) enviarLote('GERAL', files, document.getElementById('barraAudio'), infoA);
+  });
+
+  contar();
+  }
+})();
+</script>
+</body>
+</html>
