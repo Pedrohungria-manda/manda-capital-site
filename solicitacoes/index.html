@@ -177,14 +177,26 @@
   if (DEMO) { iniciar(DEMO, false); return; }
   if (!CHAVE) { falha('Link incompleto.'); return; }
   document.getElementById('empresa').textContent = 'Carregando…';
-  fetch(API + '?acao=dados&k=' + encodeURIComponent(CHAVE))
-    .then(function (r) { return r.json(); })
-    .then(function (j) {
-      if (!j.ok) return falha(j.erro || 'Link inválido.');
-      j.r.chave = CHAVE;
-      iniciar(j.r, true);
-    })
-    .catch(function () { falha('Não foi possível carregar agora. Tente de novo em instantes.'); });
+  /* Se o Google demorar ou a resposta se perder, tenta de novo antes de mostrar erro. */
+  var carregado = false;
+  (function carregar(tentativa) {
+    fetch(API + '?acao=dados&k=' + encodeURIComponent(CHAVE))
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (!j.ok) return falha(j.erro || 'Link inválido.');
+        j.r.chave = CHAVE;
+        carregado = true;
+        iniciar(j.r, true);
+      })
+      .catch(function (e) {
+        if (carregado) throw e;
+        if (tentativa < 4) {
+          document.getElementById('empresa').textContent = 'Carregando… (conexão lenta, tentando de novo)';
+          return setTimeout(function () { carregar(tentativa + 1); }, 1500 * (tentativa + 1));
+        }
+        falha('Não foi possível carregar agora. Tente de novo em instantes.');
+      });
+  })(0);
 
   function iniciar(D, AO_VIVO) {
   document.getElementById('principal').style.visibility = 'visible';
