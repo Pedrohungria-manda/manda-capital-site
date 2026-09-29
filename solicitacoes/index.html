@@ -110,6 +110,12 @@
     .baixo{margin-left:0}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  /* enquanto o andamento carrega: a lista aparece na hora, os botões esperam */
+  body.sincronizando main .item select, body.sincronizando main .btn, body.sincronizando main .btn-mini{pointer-events:none;opacity:.5}
+  .sinc{display:none;align-items:center;gap:8px;font-size:12.5px;color:#C9D3DA;margin-top:10px}
+  body.sincronizando .sinc{display:flex}
+  .sinc i{width:10px;height:10px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#E8A72B;animation:gira .8s linear infinite}
+  @keyframes gira{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -120,6 +126,7 @@
     <p class="empresa" id="empresa"></p>
     <h1>Solicitação preliminar de informações</h1>
     <p class="intro">As informações solicitadas têm caráter estritamente confidencial e serão utilizadas exclusivamente na avaliação estratégica e na condução do processo de M&amp;A, com acesso restrito às partes diretamente envolvidas.</p>
+    <div class="sinc"><i></i><span>Carregando o andamento…</span></div>
     <div class="progresso"><div class="trilho"><i id="trilho"></i></div><span><b id="feitos">0</b> de <b id="total">0</b> itens enviados</span></div>
   </div>
 </header>
@@ -167,6 +174,7 @@
   var CHAVE = new URLSearchParams(location.search).get('k') || '';
 
   function falha(titulo) {
+    document.body.classList.remove('sincronizando');
     document.getElementById('empresa').textContent = '';
     var w = document.querySelector('#principal .wrap');
     w.innerHTML = '<section class="card"><h2></h2><p class="hint" style="margin:8px 0 0">Use o link enviado pela Manda Capital. Se o problema continuar, fale com a gente.</p></section>';
@@ -174,19 +182,78 @@
     document.getElementById('principal').style.visibility = 'visible';
   }
 
+  /* O Google às vezes segura uma resposta por 10 a 40 s, mesmo com o servidor pronto
+     em menos de 1 s. Se a resposta não chega em 2,5 s, o mesmo pedido sai de novo
+     (até 3 ao mesmo tempo) e vale o primeiro que voltar com sucesso. Só é usado em
+     pedidos que o servidor aceita repetidos sem duplicar nada. */
+  function rapido(fazer) {
+    return new Promise(function (ok, erro) {
+      var fim = false, vivos = 0, n = 0, reserva = null, falhou = null, timer;
+      function terminar(f) { fim = true; clearInterval(timer); f(); }
+      function talvez() {
+        if (fim || vivos) return;
+        if (reserva) return terminar(function () { ok(reserva); });
+        if (n < 3) return lancar();
+        terminar(function () { erro(falhou); });
+      }
+      function lancar() {
+        n++; vivos++;
+        fazer().then(function (v) {
+          vivos--; if (fim) return;
+          if (v && v.ok) return terminar(function () { ok(v); });
+          reserva = v; talvez();
+        }, function (e) { vivos--; if (fim) return; falhou = e; talvez(); });
+      }
+      lancar();
+      timer = setInterval(function () { if (fim || n >= 3) return clearInterval(timer); lancar(); }, 2500);
+    });
+  }
+
   if (DEMO) { iniciar(DEMO, false); return; }
   if (!CHAVE) { falha('Link incompleto.'); return; }
-  document.getElementById('empresa').textContent = 'Carregando…';
+  /* A lista de itens é a mesma para todos os clientes: a página mostra tudo na hora
+     e só o andamento (status, comentários, arquivos) vem do Google, em segundo plano.
+     Se a lista mudar no Apps Script (SOLIC_LISTA), a página percebe e se recarrega. */
+  var LISTA_PADRAO = [{"cod":"A","nome":"Dados Iniciais e Gerais da Empresa","grupos":[{"cod":"","nome":"","itens":[["A.01","Estrutura Societária e Contrato Social"],["A.02","Apresentações Institucionais e/ou Catálogo de Produtos"],["A.03","Catálogo de Produtos"],["A.04","Certificações Relevantes"],["A.05","Histórico & Key Milestones"],["A.06","Manual da Marca (Logo, Fontes, Paleta de Cores)"],["A.07","Lista de Ativos Imobilizados/Físicos em nome da Sociedade"]]}]},{"cod":"B","nome":"Informações Contábeis","grupos":[{"cod":"B.1","nome":"Demonstrativos Financeiros Anuais Assinados pelo Contador","itens":[["B.1.01","DRE 2021"],["B.1.02","DRE 2022"],["B.1.03","DRE 2023"],["B.1.04","DRE 2024"],["B.1.05","DRE 2025"],["B.1.06","Balanço Patrimonial 2021"],["B.1.07","Balanço Patrimonial 2022"],["B.1.08","Balanço Patrimonial 2023"],["B.1.09","Balanço Patrimonial 2024"],["B.1.10","Balanço Patrimonial 2025"]]},{"cod":"B.2","nome":"Balancetes Mensais (Formato Excel)","itens":[["B.2.01","Balancetes Mensais 2023"],["B.2.02","Balancetes Mensais 2024"],["B.2.03","Balancetes Mensais 2025"],["B.2.04","Balancetes Mensais 2026 (Até o mês mais recente disponível)"]]},{"cod":"B.3","nome":"Colaboradores & Organograma","itens":[["B.3.01","Folha de Pagamentos/Relação de Colaboradores"],["B.3.02","Organograma Funcional e Equipe Chave (Principais Lideranças)"]]},{"cod":"B.4","nome":"Impostos e Regime Tributário","itens":[["B.4.01","Regime Tributário e Alíquotas Tributárias"]]},{"cod":"B.5","nome":"Passivos/Dívidas Financeiros e Fiscais","itens":[["B.5.01","Lista dos Passivos/Dívidas Financeiras e/ou Bancárias"],["B.5.02","Lista de Relações de Processos Trabalhistas em aberto"],["B.5.03","Lista de Passivos Fiscais e Tributários"]]}]},{"cod":"C","nome":"Informações Operacionais/Comerciais","grupos":[{"cod":"","nome":"","itens":[["C.01","Relatório de Notas Fiscais de 2023"],["C.02","Relatório de Notas Fiscais de 2024"],["C.03","Relatório de Notas Fiscais de 2025"],["C.04","Relatório de Notas Fiscais de 2026 (Até o mês mais recente disponível)"],["C.05","Dados Cadastrais dos Clientes (Local, Setor, Outras Informações)"]]}]}];
+  var STATUS_PADRAO = ["Pendente","Parcialmente enviado","Enviado"];
+  var CACHE = 'solic_' + CHAVE, guardado = null;
+  try { guardado = JSON.parse(localStorage.getItem(CACHE) || 'null'); } catch (e) { guardado = null; }
+  var base = {
+    chave: CHAVE,
+    empresa: (guardado && guardado.empresa) || '',
+    lista: (guardado && guardado.lista) || LISTA_PADRAO,
+    status: (guardado && guardado.status) || STATUS_PADRAO,
+    pedaco: (guardado && guardado.pedaco) || 20 * 1024 * 1024,
+    estado: {}
+  };
+  document.body.classList.add('sincronizando');
+  var ui = iniciar(base, true);
+  if (!base.empresa) document.getElementById('empresa').textContent = 'Carregando…';
   /* Se o Google demorar ou a resposta se perder, tenta de novo antes de mostrar erro. */
   var carregado = false;
   (function carregar(tentativa) {
-    fetch(API + '?acao=dados&k=' + encodeURIComponent(CHAVE))
-      .then(function (r) { return r.json(); })
+    rapido(function () {
+      return fetch(API + '?acao=dados&k=' + encodeURIComponent(CHAVE)).then(function (r) { return r.json(); });
+    })
       .then(function (j) {
-        if (!j.ok) return falha(j.erro || 'Link inválido.');
-        j.r.chave = CHAVE;
+        if (!j.ok) {
+          try { localStorage.removeItem(CACHE); } catch (e) {}
+          document.body.classList.remove('sincronizando');
+          return falha(j.erro || 'Link inválido.');
+        }
+        var gravou = false;
+        try {
+          localStorage.setItem(CACHE, JSON.stringify({ empresa: j.r.empresa, lista: j.r.lista, status: j.r.status, pedaco: j.r.pedaco }));
+          gravou = true;
+        } catch (e) {}
+        var mudou = JSON.stringify(j.r.lista) !== JSON.stringify(base.lista) || JSON.stringify(j.r.status) !== JSON.stringify(base.status);
+        if (mudou) {
+          var flag = 'recarregou_' + CHAVE, ja = false;
+          try { ja = sessionStorage.getItem(flag) === '1'; sessionStorage.setItem(flag, '1'); } catch (e) { ja = true; }
+          if (gravou && !ja) { location.reload(); return; }
+        }
         carregado = true;
-        iniciar(j.r, true);
+        ui.aplicar(j.r);
       })
       .catch(function (e) {
         if (carregado) throw e;
@@ -200,6 +267,7 @@
 
   function iniciar(D, AO_VIVO) {
   document.getElementById('principal').style.visibility = 'visible';
+  var REG = {};
   if (!AO_VIVO) document.getElementById('demo').classList.add('on');
 
   var estado = D.estado || {};
@@ -226,8 +294,10 @@
        então aqui tentamos de novo, em silêncio, antes de mostrar erro. */
     var tentativa = 0, corpoTxt = JSON.stringify(corpo);
     function vai() {
-      return fetch(API, { method: 'POST', body: corpoTxt })
-        .then(function (r) { return r.json(); })
+      var tentar = function () {
+        return fetch(API, { method: 'POST', body: corpoTxt }).then(function (r) { return r.json(); });
+      };
+      return (corpo.acao === 'enviarPedaco' ? tentar() : rapido(tentar))
         .then(function (j) {
           if (!j.ok) { var e = new Error(j.erro || 'Falha.'); e.doServidor = true; throw e; }
           return j.r;
@@ -370,7 +440,7 @@
         function () { novo.innerHTML = ''; }));
     }
     desenhar();
-    return { el: raiz, abrirNovo: abrirNovo };
+    return { el: raiz, abrirNovo: abrirNovo, desenhar: desenhar };
   }
 
   function montarItem(cod, nome) {
@@ -395,6 +465,7 @@
     var info = el('p', 'info', st.arquivos ? rotuloArquivos(st.arquivos) : '');
     baixo.appendChild(cmts.el); baixo.appendChild(barra); baixo.appendChild(info);
     box.appendChild(baixo);
+    REG[cod] = { sel: sel, info: info, cmts: cmts };
 
     sel.addEventListener('change', function () {
       sel.dataset.v = sel.value; guardar(cod, { status: sel.value }); contar();
@@ -553,6 +624,23 @@
   });
 
   contar();
+
+  /* chega o andamento do Google: atualiza a tela sem refazer nada */
+  function aplicar(D2) {
+    document.getElementById('empresa').textContent = D2.empresa || '';
+    Object.keys(estado).forEach(function (k) { delete estado[k]; });
+    Object.keys(D2.estado || {}).forEach(function (k) { estado[k] = D2.estado[k]; });
+    Object.keys(REG).forEach(function (cod) {
+      var st = estado[cod] || { status: 'Pendente', arquivos: 0 }, r = REG[cod];
+      r.sel.value = st.status || 'Pendente'; r.sel.dataset.v = r.sel.value;
+      aviso(r.info, st.arquivos ? rotuloArquivos(st.arquivos) : '', false, false);
+      r.cmts.desenhar();
+    });
+    sobre.desenhar();
+    contar();
+    document.body.classList.remove('sincronizando');
+  }
+  return { aplicar: aplicar };
   }
 })();
 </script>
