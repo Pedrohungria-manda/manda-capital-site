@@ -322,6 +322,38 @@ footer .meta{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spa
 }
 .exit-link:hover{color:var(--gold);transform:translateY(-1px);}
 
+/* ===== SALA: apresentação reservada, aberta pelo Private Access ===== */
+.submit-link:disabled{opacity:.45;cursor:default;}
+.stage.sala{flex-direction:column;align-items:stretch;justify-content:flex-start;padding:0;z-index:120;}
+.sala-bar{
+  flex:none;height:40px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:var(--navy-deep);border-bottom:1px solid var(--line-on-navy);
+}
+.sala-bar .brand{gap:8px;}
+.sala-bar .logo-icon{width:17px;height:13px;stroke-width:21;}
+.sala-bar .brand-word{font-size:9.5px;}
+.sala-tag,.sala-sair{
+  font-family:var(--mono);font-weight:400;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(243,235,217,.5);
+}
+.sala-sair{background:none;border:none;cursor:pointer;padding:8px 0;transition:color 220ms ease;}
+.sala-sair:hover{color:var(--gold);}
+.sala-corpo{position:relative;flex:1;min-height:0;}
+.sala-corpo iframe{
+  position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--navy);
+  opacity:0;transition:opacity 600ms ease;
+}
+.sala.aberta .sala-corpo iframe{opacity:1;}
+.sala-espera{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;text-align:center;padding:1.5rem;transition:opacity 400ms ease;
+}
+.sala.aberta .sala-espera{opacity:0;pointer-events:none;}
+.sala-espera .logo-icon{width:64px;height:49px;stroke-width:15;color:var(--cream);margin-bottom:10px;}
+.sala-espera .granted{margin:0;}
+.sala-espera .abrindo{font-family:var(--sans-tag);font-weight:400;font-size:15px;color:rgba(243,235,217,.6);margin:0;}
+@media (max-width:480px){ .sala-tag{display:none;} }
+
 @media (max-width:640px){
   .hero-row{flex-direction:column;align-items:flex-start;}
   .hero-row p{border-left:none;padding-left:0;border-top:1px solid var(--line-on-navy);padding-top:18px;}
@@ -560,6 +592,31 @@ footer .meta{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spa
   </div>
 </div>
 
+<div class="stage sala" id="sala" hidden>
+  <div class="sala-bar">
+    <div class="brand">
+      <svg class="logo-icon" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <path d="M10,180 L95,20 L180,180"/>
+        <path d="M165,20 L250,180 L80,180 Z"/>
+      </svg>
+      <span class="brand-word"><span class="ma">M<span class="slash">/</span>A</span><span class="full">MANDA CAPITAL</span></span>
+    </div>
+    <span class="sala-tag">Private Access</span>
+    <button class="sala-sair" id="sairSala" type="button">Sair</button>
+  </div>
+  <div class="sala-corpo">
+    <div class="sala-espera">
+      <svg class="logo-icon" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <path d="M10,180 L95,20 L180,180"/>
+        <path d="M165,20 L250,180 L80,180 Z"/>
+      </svg>
+      <p class="granted">Access granted</p>
+      <p class="abrindo" id="salaRecado">Abrindo a sala…</p>
+    </div>
+    <iframe id="salaFrame" title="Sala reservada" allow="autoplay; fullscreen" referrerpolicy="no-referrer"></iframe>
+  </div>
+</div>
+
 <script>
   const gate = document.getElementById('gate');
   const privateArea = document.getElementById('private');
@@ -574,18 +631,92 @@ footer .meta{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spa
   document.getElementById('closePrivate').addEventListener('click', closePrivate);
   document.getElementById('exitPrivate').addEventListener('click', closePrivate);
 
-  function attemptAccess(){
-    const value = codeInput.value.trim().toUpperCase();
-    if(value === 'MANDA'){
+  function codigoErrado(){
+    codeInput.classList.add('error');
+    setTimeout(() => codeInput.classList.remove('error'), 900);
+  }
+  const submitCode = document.getElementById('submitCode');
+  let tentando = false;
+  async function attemptAccess(){
+    if(tentando) return;
+    const digitado = codeInput.value.trim();
+    if(!digitado) return;
+    if(digitado.toUpperCase() === 'MANDA'){
       gate.hidden = true;
       privateArea.hidden = false;
       codeInput.value = '';
       mostrarPainelSeForDono();
-    } else {
-      codeInput.classList.add('error');
-      setTimeout(() => codeInput.classList.remove('error'), 900);
+      return;
     }
+    tentando = true; submitCode.disabled = true;
+    let s = null;
+    try{ s = await procurarSala(digitado); }catch(e){}
+    tentando = false; submitCode.disabled = false;
+    if(s) abrirSala(s, digitado); else codigoErrado();
   }
+
+  /* ===== Salas reservadas =====
+     Este arquivo é público, então aqui não há código de acesso nem endereço de sala. O código digitado vai para o
+     porteiro (Apps Script da Manda), que confere no servidor e só então devolve o endereço. A sala abre aqui dentro,
+     num quadro, e confere o código de novo no servidor dela. */
+  const PORTEIRO = 'https://script.google.com/macros/s/AKfycbxeWSLs2tWS6EaW5hSxil9_W3ULzLGh3OEsMALiQyhfssa0V3lmj3m3XYpDH1BiuAzcrA/exec';
+  const sala = document.getElementById('sala');
+  const salaFrame = document.getElementById('salaFrame');
+  const salaRecado = document.getElementById('salaRecado');
+  let salaSenha = null, salaTimer = null;
+
+  async function procurarSala(digitado){
+    const r = await fetch(PORTEIRO, { method:'POST', body:digitado.slice(0, 200) });   // texto puro: sem pré-consulta
+    const d = await r.json();
+    return (d && d.ok && typeof d.u === 'string' && d.u.indexOf('https://script.google.com/macros/s/') === 0) ? d : null;
+  }
+  function abrirSala(s, digitado){
+    salaSenha = digitado;
+    gate.hidden = true; codeInput.value = '';
+    sala.classList.remove('aberta');
+    salaRecado.textContent = 'Abrindo a sala…';
+    sala.hidden = false;
+    document.documentElement.style.overflow = 'hidden';
+    salaFrame.src = s.u;
+    clearTimeout(salaTimer);
+    // Se a sala não avisar que abriu, mostra assim mesmo: ela tem a própria tela de senha.
+    salaTimer = setTimeout(() => sala.classList.add('aberta'), 25000);
+  }
+  function fecharSala(){
+    clearTimeout(salaTimer);
+    salaSenha = null;
+    sala.hidden = true;
+    sala.classList.remove('aberta');
+    salaFrame.src = 'about:blank';
+    document.documentElement.style.overflow = '';
+  }
+  // A mensagem só vale se vier de dentro do quadro da sala (o Apps Script põe a página alguns quadros abaixo).
+  function vemDaSala(w){
+    try{
+      for(let i = 0; i < 6 && w; i++){
+        if(w === salaFrame.contentWindow) return true;
+        if(w === w.parent) return false;
+        w = w.parent;
+      }
+    }catch(e){}
+    return false;
+  }
+  window.addEventListener('message', (e) => {
+    const d = e.data;
+    if(sala.hidden || !d || d.tipo !== 'manda-sala') return;
+    if(!/^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/.test(e.origin) || !vemDaSala(e.source)) return;
+    if(d.estado === 'pronta'){
+      if(salaSenha) e.source.postMessage({ tipo:'manda-acesso', senha:salaSenha }, e.origin);
+    } else if(d.estado === 'aberta'){
+      clearTimeout(salaTimer);
+      sala.classList.add('aberta');
+    } else if(d.estado === 'recusada'){
+      fecharSala(); openGate(); codigoErrado();
+    } else if(d.estado === 'falha'){
+      salaRecado.textContent = 'Sem conexão com a sala. Tente de novo em instantes.';
+    }
+  });
+  document.getElementById('sairSala').addEventListener('click', fecharSala);
   // O atalho para o painel só aparece no navegador que já entrou nele alguma vez.
   // É conveniência, não controle de acesso: o painel tem senha e login do Google.
   function mostrarPainelSeForDono(){
@@ -595,7 +726,7 @@ footer .meta{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spa
     }catch(e){}
   }
 
-  document.getElementById('submitCode').addEventListener('click', attemptAccess);
+  submitCode.addEventListener('click', attemptAccess);
   codeInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') attemptAccess(); });
 </script>
 
