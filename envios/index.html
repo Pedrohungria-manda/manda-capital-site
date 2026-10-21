@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Manda Capital · Envio de Documentos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#10283A; --ink:#10283A; --muted:#5F7482; --orange:#E56E2F; --gold:#E8A72B;
+    --sand:#F3EBD9; --line:#E3E6E8; --bg:#F6F4EF; --card:#FFFFFF; --err:#C0392B; --ok:#2E7D57;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none !important}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Montserrat,system-ui,sans-serif;font-size:15px;line-height:1.55}
+  .hero{background:var(--navy);color:#fff;padding:40px 16px 88px;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-120px;top:-120px;width:360px;height:360px;border:1px solid rgba(232,167,43,.35);border-radius:50%}
+  .wrap{max-width:880px;margin:0 auto;position:relative;z-index:1}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.32em;font-size:12px;text-transform:uppercase}
+  .brand .mark{width:14px;height:14px;border-left:3px solid #fff;border-top:3px solid #fff}
+  .brand small{font-weight:600;letter-spacing:.3em;color:var(--gold);margin-left:14px;font-size:10px}
+  .empresa{margin:30px 0 0;color:var(--gold);font-weight:600;font-size:13px;letter-spacing:.04em;min-height:1.5em}
+  h1{font-family:"DM Sans",sans-serif;font-size:34px;line-height:1.15;margin:6px 0 10px;font-weight:700}
+  .hero p.intro{margin:0;max-width:600px;color:#C9D3DA}
+  main{margin-top:-56px;padding:0 16px 64px}
+  .card{background:var(--card);border-radius:14px;box-shadow:0 1px 2px rgba(16,40,58,.06),0 8px 28px rgba(16,40,58,.07);padding:28px;margin-bottom:20px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px;flex-wrap:wrap}
+  .num{font-family:"DM Sans",sans-serif;color:var(--orange);font-weight:700;font-size:13px;letter-spacing:.15em}
+  h2{font-family:"DM Sans",sans-serif;font-size:21px;margin:0;font-weight:700}
+  .placar{margin-left:auto;font-size:12.5px;color:var(--muted);font-weight:600}
+  .hint{color:var(--muted);font-size:13px;margin:0 0 18px}
+  textarea{font:inherit;color:var(--ink);background:#fff;border:1px solid #CFD6DB;border-radius:9px;width:100%;min-height:90px;resize:vertical;padding:11px 12px}
+  textarea:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(16,40,58,.12)}
+  .btn{font:inherit;font-weight:600;border-radius:10px;padding:9px 16px;border:1px solid transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;font-size:13px}
+  .btn:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+  .btn-navy{background:var(--navy);color:#fff} .btn-navy:hover{background:#1B3A52}
+  .btn-ghost{background:transparent;color:var(--muted);border-color:var(--line)} .btn-ghost:hover{color:var(--navy);border-color:var(--navy)}
+  .btn-primary{background:var(--orange);color:#fff;padding:14px 24px;font-size:15px} .btn-primary:hover{background:#cf5f24}
+  .btn[disabled]{opacity:.55;cursor:default}
+  input[type=file]{display:none}
+  .fila{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .drop{border:1.5px dashed #CFD6DB;border-radius:12px;padding:22px 16px;text-align:center;background:#FBFAF7}
+  .drop.over{border-color:var(--orange);background:#FDF3EC}
+  .drop p{margin:10px 0 0;font-size:13px;color:var(--muted)}
+  .info{font-size:12.5px;color:var(--muted);margin:10px 0 0}
+  .info:empty{display:none}
+  .info.erro{color:var(--err)} .info.ok{color:var(--ok);font-weight:600}
+  .barra-up{height:4px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:12px;display:none}
+  .barra-up.on{display:block}
+  .barra-up i{display:block;height:100%;width:0;background:var(--orange);transition:width .2s}
+  .cmts{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:6px}
+  .cmt{background:var(--sand);border-radius:9px;padding:9px 12px}
+  .cmt p{margin:0;font-size:13.5px;white-space:pre-wrap;overflow-wrap:anywhere}
+  .rodape-cmt{display:flex;align-items:center;gap:6px;margin-top:4px}
+  .meta{font-size:11.5px;color:var(--muted);margin-right:auto}
+  .btn-mini{font:inherit;font-size:12px;font-weight:600;background:none;border:none;color:var(--muted);cursor:pointer;padding:2px 6px;border-radius:6px}
+  .btn-mini:hover{color:var(--navy);background:rgba(16,40,58,.06)}
+  .btn-mini.del:hover{color:var(--err);background:#FBEDEA}
+  .editor{margin-bottom:10px} .editor .fila{margin-top:8px}
+  .btn-mic{background:#fff;color:var(--navy);border-color:#CFD6DB}
+  .btn-mic.gravando{background:var(--err);border-color:var(--err);color:#fff}
+  .dica{font-size:12.5px;color:var(--muted);margin:6px 0 0} .dica:empty{display:none}
+  .confirma{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--err)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  .tw{overflow-x:auto}
+  th{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:left;font-weight:700;padding:8px 10px;border-bottom:2px solid var(--line);white-space:nowrap}
+  td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+  td.q,td.t{white-space:nowrap;color:var(--muted);font-variant-numeric:tabular-nums}
+  td.t,th.t{text-align:right}
+  td.n{overflow-wrap:anywhere;font-weight:500}
+  tr:last-child td{border-bottom:0}
+  .vazio{color:var(--muted);font-size:13.5px;margin:0}
+  .fila-envio{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:30;background:var(--navy);color:#fff;border-radius:12px;padding:12px 18px;font-size:13px;box-shadow:0 8px 28px rgba(16,40,58,.25);display:flex;gap:10px;align-items:center;max-width:calc(100% - 32px)}
+  .spin{width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;flex:none}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .legal{font-size:11.5px;color:var(--muted);text-align:center;margin-top:18px}
+  @media (max-width:680px){ h1{font-size:27px} .card{padding:20px} .brand small{display:none} td.q{white-space:normal} }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  body.carregando main .btn{pointer-events:none;opacity:.5}
+</style>
+</head>
+<body class="carregando">
+
+<header class="hero">
+  <div class="wrap">
+    <div class="brand"><span class="mark"></span>Manda Capital<small>Clareza para decidir</small></div>
+    <p class="empresa" id="empresa">Carregando…</p>
+    <h1>Envio de documentos</h1>
+    <p class="intro">Envie os arquivos, comentários e áudios que quiser. Tudo chega direto à equipe da Manda Capital, tem caráter estritamente confidencial e é usado apenas na análise do trabalho em andamento.</p>
+  </div>
+</header>
+
+<main id="principal">
+<div class="wrap">
+  <section class="card">
+    <div class="sec-head"><span class="num">ARQUIVOS</span><h2>Enviar arquivos</h2></div>
+    <p class="hint">Qualquer tipo e tamanho: PDF, Excel, Word, zip, imagens. Pode selecionar vários de uma vez. Você pode continuar usando a página enquanto eles sobem.</p>
+    <div class="drop" id="drop">
+      <button type="button" class="btn btn-primary" id="btArq">Anexar arquivos</button>
+      <input type="file" id="arq" multiple>
+      <p>ou arraste os arquivos para cá</p>
+    </div>
+    <div class="barra-up" id="barraArq"><i></i></div>
+    <p class="info" id="infoArq"></p>
+  </section>
+
+  <section class="card">
+    <div class="sec-head"><span class="num">COMENTÁRIOS</span><h2>Escreva, fale ou mande um áudio</h2></div>
+    <p class="hint">Contexto sobre os arquivos, o que falta, o que for útil. Pode escrever, falar para o texto aparecer sozinho, ou mandar um áudio gravado no celular.</p>
+    <ul class="cmts" id="cmts"></ul>
+    <div id="novo"></div>
+    <div class="fila">
+      <button type="button" class="btn btn-navy" id="btCmt">Escrever ou falar</button>
+      <button type="button" class="btn btn-ghost" id="btAudio">Enviar um áudio</button>
+      <input type="file" id="arqAudio" accept="audio/*" multiple>
+    </div>
+    <div class="barra-up" id="barraAudio"><i></i></div>
+    <p class="info" id="infoAudio"></p>
+  </section>
+
+  <section class="card">
+    <div class="sec-head"><span class="num">RECEBIDO</span><h2>Arquivos já enviados</h2><span class="placar" id="placar"></span></div>
+    <div id="recebidos"><p class="vazio">Carregando…</p></div>
+  </section>
+
+  <p class="legal">Manda Capital · Florianópolis/SC · mandacap.com.br · Dados tratados com confidencialidade.</p>
+</div>
+</main>
+
+<div class="fila-envio" id="filaEnvio" hidden><span class="spin"></span><span id="filaTxt"></span></div>
+
+<script>
+(function(){
+  'use strict';
+  /* Mesmo Apps Script da página /solicitacoes (Implantar > Gerenciar implantações > URL do app da Web) */
+  var API = 'https://script.google.com/macros/s/AKfycbxjVJqFlD81vXBUByedg_16V_LZ-voJb8tXXl05Zq1v2FhkoRcaS31QV4_p__Blhb1j/exec';
+  var CHAVE = new URLSearchParams(location.search).get('k') || '';
+  var PEDACO = 20 * 1024 * 1024, PARALELO = 3, DIRETO = true;
+  var comentarios = [];
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+  function aviso(p, msg, erro, ok) { p.textContent = msg; p.classList.toggle('erro', !!erro); p.classList.toggle('ok', !!ok); }
+
+  function falha(titulo) {
+    document.body.classList.remove('carregando');
+    $('empresa').textContent = '';
+    var w = document.querySelector('#principal .wrap');
+    w.innerHTML = '<section class="card"><h2></h2><p class="hint" style="margin:8px 0 0">Use o link enviado pela Manda Capital. Se o problema continuar, fale com a gente.</p></section>';
+    w.querySelector('h2').textContent = titulo;
+  }
+
+  /* O Google às vezes segura uma resposta por muitos segundos: se não volta em 2,5 s,
+     o mesmo pedido sai de novo (até 3) e vale o primeiro que voltar com sucesso. */
+  function rapido(fazer) {
+    return new Promise(function (ok, erro) {
+      var fim = false, vivos = 0, n = 0, reserva = null, falhou = null, timer;
+      function terminar(f) { fim = true; clearInterval(timer); f(); }
+      function talvez() {
+        if (fim || vivos) return;
+        if (reserva) return terminar(function () { ok(reserva); });
+        if (n < 3) return lancar();
+        terminar(function () { erro(falhou); });
+      }
+      function lancar() {
+        n++; vivos++;
+        fazer().then(function (v) {
+          vivos--; if (fim) return;
+          if (v && v.ok) return terminar(function () { ok(v); });
+          reserva = v; talvez();
+        }, function (e) { vivos--; if (fim) return; falhou = e; talvez(); });
+      }
+      lancar();
+      timer = setInterval(function () { if (fim || n >= 3) return clearInterval(timer); lancar(); }, 2500);
+    });
+  }
+
+  function chamar(acao, corpo) {
+    corpo.acao = acao;
+    var txt = JSON.stringify(corpo), tentativa = 0;
+    function vai() {
+      var tentar = function () { return fetch(API, { method: 'POST', body: txt }).then(function (r) { return r.json(); }); };
+      return (acao === 'enviarPedaco' ? tentar() : rapido(tentar))
+        .then(function (j) { if (!j.ok) { var e = new Error(j.erro || 'Falha.'); e.doServidor = true; throw e; } return j.r; })
+        .catch(function (e) {
+          if (e && e.doServidor) throw e;
+          if (tentativa >= 4) throw new Error('Sem conexão com o servidor. Confira a internet e tente de novo.');
+          tentativa++;
+          return new Promise(function (ok) { setTimeout(ok, 1500 * tentativa); }).then(vai);
+        });
+    }
+    return vai();
+  }
+
+  /* ---------- carregar ---------- */
+  function carregar(tentativa) {
+    tentativa = tentativa || 0;
+    return rapido(function () {
+      return fetch(API + '?acao=dados&k=' + encodeURIComponent(CHAVE)).then(function (r) { return r.json(); });
+    }).then(function (j) {
+      if (!j.ok) return falha(j.erro || 'Link inválido.');
+      var r = j.r;
+      if (r.pedaco) PEDACO = r.pedaco;
+      $('empresa').textContent = r.empresa || '';
+      comentarios = ((r.estado || {}).GERAL || {}).comentarios || [];
+      desenharComentarios();
+      desenharRecebidos(r.envios || []);
+      document.body.classList.remove('carregando');
+    }).catch(function () {
+      if (tentativa < 4) {
+        $('empresa').textContent = 'Carregando… (conexão lenta, tentando de novo)';
+        return new Promise(function (ok) { setTimeout(ok, 1500 * (tentativa + 1)); }).then(function () { return carregar(tentativa + 1); });
+      }
+      falha('Não foi possível carregar agora. Tente de novo em instantes.');
+    });
+  }
+
+  /* ---------- recebidos ---------- */
+  function tam(mb) {
+    if (!mb) return '< 0,01 MB';
+    return mb >= 1 ? mb.toFixed(1).replace('.', ',') + ' MB' : Math.max(1, Math.round(mb * 1024)) + ' KB';
+  }
+  function desenharRecebidos(lista) {
+    var box = $('recebidos'); box.innerHTML = '';
+    $('placar').textContent = lista.length ? (lista.length === 1 ? '1 arquivo' : lista.length + ' arquivos') : '';
+    if (!lista.length) { box.appendChild(el('p', 'vazio', 'Nenhum arquivo enviado ainda. Os arquivos aparecem aqui, com data e hora, assim que terminam de subir.')); return; }
+    var tw = el('div', 'tw'), t = el('table'), th = el('thead'), tr = el('tr');
+    tr.appendChild(el('th', '', 'Data')); tr.appendChild(el('th', '', 'Arquivo')); tr.appendChild(el('th', 't', 'Tamanho'));
+    th.appendChild(tr); t.appendChild(th);
+    var tb = el('tbody');
+    lista.forEach(function (a) {
+      var r = el('tr');
+      r.appendChild(el('td', 'q', a.quando || ''));
+      r.appendChild(el('td', 'n', a.nome + (a.cod === 'GERAL' ? ' (áudio)' : '')));
+      r.appendChild(el('td', 't', tam(a.mb)));
+      tb.appendChild(r);
+    });
+    t.appendChild(tb); tw.appendChild(t); box.appendChild(tw);
+  }
+
+  /* ---------- ditado ---------- */
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition || null, ouvindo = null;
+  function dicaSistema() {
+    var ua = navigator.userAgent;
+    if (/Android|iPhone|iPad|iPod/i.test(ua)) return 'Toque no microfone do teclado do celular e fale. O texto aparece aqui.';
+    if (/Mac/i.test(ua)) return 'Aperte duas vezes a tecla Fn (ou 🌐) e fale. O texto aparece aqui.';
+    if (/Win/i.test(ua)) return 'Aperte as teclas Windows + H e fale. O texto aparece aqui.';
+    return 'Use o ditado do seu teclado para falar. O texto aparece aqui.';
+  }
+  function ditar(ta, btn, dica) {
+    ta.focus();
+    if (ouvindo) { ouvindo.stop(); return; }
+    if (!SR) { dica.textContent = dicaSistema(); return; }
+    var r = new SR(); r.lang = 'pt-BR'; r.continuous = true; r.interimResults = false;
+    r.onresult = function (e) {
+      for (var i = e.resultIndex; i < e.results.length; i++) {
+        if (!e.results[i].isFinal) continue;
+        var t = e.results[i][0].transcript.trim();
+        ta.value = ta.value && !/\s$/.test(ta.value) ? ta.value + ' ' + t : ta.value + t;
+      }
+    };
+    r.onerror = function (e) {
+      if (/not-allowed|service-not-allowed|audio-capture/.test(e.error)) { SR = null; dica.textContent = dicaSistema(); }
+      else if (e.error !== 'aborted') dica.textContent = 'Não consegui ouvir. Tente de novo.';
+    };
+    r.onend = function () { ouvindo = null; btn.classList.remove('gravando'); btn.textContent = '🎤 Falar'; };
+    try { r.start(); ouvindo = r; btn.classList.add('gravando'); btn.textContent = '■ Parar'; dica.textContent = 'Ouvindo… fale normalmente.'; }
+    catch (err) { SR = null; dica.textContent = dicaSistema(); }
+  }
+
+  /* ---------- comentários ---------- */
+  function editor(inicial, rotulo, aoSalvar, aoCancelar) {
+    var box = el('div', 'editor');
+    var ta = el('textarea'); ta.placeholder = 'Escreva ou fale aqui…'; ta.value = inicial || '';
+    var fila = el('div', 'fila');
+    var btM = el('button', 'btn btn-mic', '🎤 Falar'); btM.type = 'button';
+    var btS = el('button', 'btn btn-navy', rotulo); btS.type = 'button';
+    var btX = el('button', 'btn btn-ghost', 'Cancelar'); btX.type = 'button';
+    var dica = el('p', 'dica');
+    fila.appendChild(btM); fila.appendChild(btS); fila.appendChild(btX);
+    box.appendChild(ta); box.appendChild(fila); box.appendChild(dica);
+    btM.addEventListener('click', function () { ditar(ta, btM, dica); });
+    btX.addEventListener('click', function () { if (ouvindo) ouvindo.stop(); aoCancelar(); });
+    btS.addEventListener('click', function () {
+      if (ouvindo) ouvindo.stop();
+      var t = ta.value.trim();
+      if (!t) { dica.textContent = 'Escreva ou fale algo antes de salvar.'; return; }
+      btS.disabled = true;
+      aoSalvar(t).catch(function (e) { btS.disabled = false; dica.textContent = 'Não salvou: ' + (e && e.message ? e.message : e); });
+    });
+    setTimeout(function () { ta.focus(); }, 0);
+    return box;
+  }
+  function aplicarCmts(r) { comentarios = r.comentarios || []; desenharComentarios(); }
+  function desenharComentarios() {
+    var ul = $('cmts'); ul.innerHTML = '';
+    comentarios.forEach(function (c) {
+      var li = el('li', 'cmt');
+      li.appendChild(el('p', '', c.texto));
+      var rp = el('div', 'rodape-cmt');
+      rp.appendChild(el('span', 'meta', (c.quando || '') + (c.editado ? ' · editado' : '')));
+      var bE = el('button', 'btn-mini', 'Editar'); bE.type = 'button';
+      var bX = el('button', 'btn-mini del', 'Excluir'); bX.type = 'button';
+      rp.appendChild(bE); rp.appendChild(bX); li.appendChild(rp);
+      bE.addEventListener('click', function () {
+        li.innerHTML = '';
+        li.appendChild(editor(c.texto, 'Salvar', function (t) {
+          return chamar('editarComentario', { k: CHAVE, id: c.id, texto: t }).then(aplicarCmts);
+        }, desenharComentarios));
+      });
+      bX.addEventListener('click', function () {
+        rp.innerHTML = '';
+        var cf = el('span', 'confirma', 'Excluir este comentário?');
+        var sim = el('button', 'btn-mini del', 'Excluir'); sim.type = 'button';
+        var nao = el('button', 'btn-mini', 'Manter'); nao.type = 'button';
+        cf.appendChild(sim); cf.appendChild(nao); rp.appendChild(cf);
+        nao.addEventListener('click', desenharComentarios);
+        sim.addEventListener('click', function () {
+          sim.disabled = true;
+          chamar('excluirComentario', { k: CHAVE, id: c.id, cod: 'GERAL' }).then(aplicarCmts, function (e) { cf.textContent = 'Não excluiu: ' + e.message; });
+        });
+      });
+      ul.appendChild(li);
+    });
+  }
+  $('btCmt').addEventListener('click', function () {
+    var novo = $('novo');
+    if (novo.firstChild) { novo.querySelector('textarea').focus(); return; }
+    novo.appendChild(editor('', 'Salvar comentário', function (t) {
+      var id = 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      return chamar('addComentario', { k: CHAVE, cod: 'GERAL', texto: t, id: id }).then(function (r) { novo.innerHTML = ''; aplicarCmts(r); });
+    }, function () { novo.innerHTML = ''; }));
+  });
+
+  /* ---------- envio de arquivos ---------- */
+  var ativos = 0, espera = [], pendentes = 0;
+  function naFila(fn) {
+    pendentes++; mostrarFila();
+    return new Promise(function (ok, erro) { espera.push({ fn: fn, ok: ok, erro: erro }); puxar(); })
+      .finally(function () { pendentes--; mostrarFila(); });
+  }
+  function puxar() {
+    while (ativos < PARALELO && espera.length) {
+      var t = espera.shift(); ativos++;
+      t.fn().then(t.ok, t.erro).finally(function () { ativos--; puxar(); });
+    }
+  }
+  function mostrarFila() {
+    $('filaEnvio').hidden = pendentes === 0;
+    $('filaTxt').textContent = pendentes === 1 ? 'Enviando 1 arquivo. Não feche esta página até terminar.'
+      : 'Enviando ' + pendentes + ' arquivos. Não feche esta página até terminar.';
+  }
+  window.addEventListener('beforeunload', function (e) { if (pendentes > 0) { e.preventDefault(); e.returnValue = ''; } });
+
+  function lerB64(blob) {
+    return new Promise(function (ok, erro) {
+      var r = new FileReader();
+      r.onload = function () { ok(String(r.result).split(',')[1] || ''); };
+      r.onerror = function () { erro(r.error); };
+      r.readAsDataURL(blob);
+    });
+  }
+  function putDireto(url, f, mime, avancou) {
+    return new Promise(function (ok, erro) {
+      var xhr = new XMLHttpRequest(), ultimo = 0;
+      xhr.open('PUT', url);
+      xhr.setRequestHeader('Content-Type', mime);
+      xhr.upload.onprogress = function (e) { if (e.lengthComputable) { avancou(e.loaded - ultimo); ultimo = e.loaded; } };
+      xhr.onload = function () {
+        if (xhr.status === 200 || xhr.status === 201) {
+          try { return ok(JSON.parse(xhr.responseText).id); } catch (e) { return erro({ bloqueado: true, enviado: ultimo }); }
+        }
+        erro(new Error('Drive respondeu ' + xhr.status));
+      };
+      xhr.onerror = function () { erro({ bloqueado: true, enviado: ultimo }); };
+      xhr.send(f);
+    });
+  }
+  function pelaPonte(token, f, avancou) {
+    var ini = 0;
+    function proximo() {
+      var pedaco = f.slice(ini, Math.min(ini + PEDACO, f.size));
+      return lerB64(pedaco).then(function (b64) {
+        return chamar('enviarPedaco', { token: token, b64: b64, inicio: ini });
+      }).then(function (r) {
+        ini += pedaco.size; avancou(pedaco.size);
+        return (r && r.pronto) ? r : proximo();
+      });
+    }
+    return proximo();
+  }
+  function subir(cod, f, avancou) {
+    var mime = f.type || 'application/octet-stream';
+    return chamar('iniciarUpload', { k: CHAVE, cod: cod, nome: f.name, mime: mime, tamanho: f.size, origem: location.origin }).then(function (s) {
+      if (!DIRETO || !s.direto) return pelaPonte(s.token, f, avancou);
+      return putDireto(s.url, f, mime, avancou).then(function (id) {
+        return chamar('concluirDireto', { token: s.token, arquivoId: id });
+      }, function (e) {
+        if (!e || !e.bloqueado) throw e;
+        DIRETO = false;
+        avancou(-(e.enviado || 0));
+        if (e.enviado) return subir(cod, f, avancou);
+        return pelaPonte(s.token, f, avancou);
+      });
+    });
+  }
+  function enviarLote(cod, files, barra, info) {
+    files = files.filter(function (f) { return f.size > 0; });
+    if (!files.length) return aviso(info, 'Arquivo vazio.', true);
+    var total = files.reduce(function (a, f) { return a + f.size; }, 0), feito = 0, falhas = [], certos = 0;
+    barra.classList.add('on'); barra.firstChild.style.width = '4%';
+    aviso(info, files.length === 1 ? 'Enviando ' + files[0].name + '…' : 'Enviando ' + files.length + ' arquivos…');
+    return Promise.all(files.map(function (f) {
+      return naFila(function () {
+        return subir(cod, f, function (n) { feito += n; barra.firstChild.style.width = Math.max(4, feito / total * 100) + '%'; });
+      }).then(function () { certos++; }, function (e) { falhas.push(f.name + ' (' + (e && e.message ? e.message : e) + ')'); });
+    })).then(function () {
+      barra.classList.remove('on');
+      if (certos) carregar();
+      if (falhas.length) return aviso(info, 'Não subiu: ' + falhas.join('; ') + '. Tente de novo.', true);
+      aviso(info, (files.length === 1 ? 'Recebido.' : files.length + ' arquivos recebidos.') + ' Obrigado.', false, true);
+    });
+  }
+
+  $('btArq').addEventListener('click', function () { $('arq').click(); });
+  $('arq').addEventListener('change', function () {
+    var files = Array.prototype.slice.call($('arq').files); $('arq').value = '';
+    if (files.length) enviarLote('PACOTE', files, $('barraArq'), $('infoArq'));
+  });
+  var drop = $('drop');
+  ['dragenter', 'dragover'].forEach(function (t) { drop.addEventListener(t, function (e) { e.preventDefault(); drop.classList.add('over'); }); });
+  ['dragleave', 'drop'].forEach(function (t) { drop.addEventListener(t, function (e) { e.preventDefault(); drop.classList.remove('over'); }); });
+  drop.addEventListener('drop', function (e) {
+    if (document.body.classList.contains('carregando')) return;
+    var files = Array.prototype.slice.call((e.dataTransfer && e.dataTransfer.files) || []);
+    if (files.length) enviarLote('PACOTE', files, $('barraArq'), $('infoArq'));
+  });
+  $('btAudio').addEventListener('click', function () { $('arqAudio').click(); });
+  $('arqAudio').addEventListener('change', function () {
+    var files = Array.prototype.slice.call($('arqAudio').files); $('arqAudio').value = '';
+    if (files.length) enviarLote('GERAL', files, $('barraAudio'), $('infoAudio'));
+  });
+
+  if (!CHAVE) { falha('Link incompleto.'); return; }
+  carregar();
+})();
+</script>
+</body>
+</html>
