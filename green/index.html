@@ -14,22 +14,28 @@ input:focus{outline:none;border-color:#8CC63F}
 button{font:inherit;font-weight:700;font-size:16px;padding:14px;border:0;border-radius:12px;background:#8CC63F;color:#13200F;cursor:pointer}
 .err{color:#F2A8A0;font-size:14px;min-height:20px}
 small{color:#7F8F86;font-size:12px}
+#ld{position:fixed;inset:0;z-index:9;background:#0F1A12;display:none;place-items:center}
+#ld.on{display:grid}
+#ld div{display:grid;gap:16px;justify-items:center;font:500 12px ui-monospace,Menlo,monospace;letter-spacing:.14em;color:#8CC63F}
+#ld i{width:40px;height:40px;border-radius:50%;border:3px solid rgba(140,198,63,.25);border-top-color:#8CC63F;animation:gira .8s linear infinite}
+@keyframes gira{to{transform:rotate(360deg)}}
 </style></head><body>
 <form id="f" autocomplete="off">
 <span class="eb">Manda Capital · Proposta Green</span>
 <h1>Olá, Josiel.</h1>
 <p>Esta proposta foi preparada para a Green Plásticos da Amazônia. Digite a senha para abrir.</p>
-<input id="s" type="text" placeholder="Senha" aria-label="Senha" autocapitalize="off" autocorrect="off" spellcheck="false">
+<input id="s" type="text" placeholder="Senha" enterkeyhint="go" aria-label="Senha" autocapitalize="off" autocorrect="off" spellcheck="false">
 <button type="submit">Abrir proposta</button>
 <span class="err" id="e" role="alert"></span>
 <small>Pedro Hungria · Manda Capital</small>
 </form>
+<div id="ld" aria-live="polite"><div><i></i>ABRINDO A PROPOSTA…</div></div>
 <script>
 var K="w*a33>5bec?14770145543";
 function n(s){s=(s||'').toLowerCase();try{s=s.normalize('NFD').replace(/[\u0300-\u036f]/g,'')}catch(e){}return s.replace(/[^a-z]/g,'')}
 function lev(a,b){var m=a.length,k=b.length,d=[],i,j;for(i=0;i<=m;i++){d[i]=[i]}for(j=0;j<=k;j++){d[0][j]=j}for(i=1;i<=m;i++)for(j=1;j<=k;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][k]}
-function ok(x){if(!x)return false;if(lev(x,'daamazoniaparaobrasil')<=7||lev(x,'amazoniaparaobrasil')<=7||lev(x,'amazoniabrasil')<=4)return true;return /ama[sz]|amz/.test(x)&&/bra[sz]|brz/.test(x)}
+function ok(x){if(!x)return false;if(lev(x,'novagreen')<=3||(/gr[e]*n/.test(x)&&/nov|nob|now/.test(x)))return true;if(lev(x,'daamazoniaparaobrasil')<=7||lev(x,'amazoniaparaobrasil')<=7||lev(x,'amazoniabrasil')<=4)return true;return /ama[sz]|amz/.test(x)&&/bra[sz]|brz/.test(x)}
 function vai(){var p='';for(var i=0;i<K.length;i++)p+=String.fromCharCode(K.charCodeAt(i)^7);location.href='/green/'+p+'/'}
 document.getElementById('f').addEventListener('submit',function(ev){ev.preventDefault();var e=document.getElementById('e');
- if(ok(n(document.getElementById('s').value))){e.textContent='Abrindo…';vai()}else{e.textContent='Senha incorreta. Tente de novo.'}});
+ if(ok(n(document.getElementById('s').value))){e.textContent='';document.getElementById('ld').className='on';document.activeElement&&document.activeElement.blur();setTimeout(vai,30)}else{e.textContent='Senha incorreta. Tente de novo.'}});
 </script></body></html>
