@@ -29,7 +29,7 @@ var K="w*a33>5bec?14770145543";
 function n(s){s=(s||'').toLowerCase();try{s=s.normalize('NFD').replace(/[\u0300-\u036f]/g,'')}catch(e){}return s.replace(/[^a-z]/g,'')}
 function lev(a,b){var m=a.length,k=b.length,d=[],i,j;for(i=0;i<=m;i++){d[i]=[i]}for(j=0;j<=k;j++){d[0][j]=j}for(i=1;i<=m;i++)for(j=1;j<=k;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][k]}
 function ok(x){if(!x)return false;if(lev(x,'daamazoniaparaobrasil')<=7||lev(x,'amazoniaparaobrasil')<=7||lev(x,'amazoniabrasil')<=4)return true;return /ama[sz]|amz/.test(x)&&/bra[sz]|brz/.test(x)}
-function vai(){var p='';for(var i=0;i<K.length;i++)p+=String.fromCharCode(K.charCodeAt(i)^7);location.href='./'+p+'/'}
+function vai(){var p='';for(var i=0;i<K.length;i++)p+=String.fromCharCode(K.charCodeAt(i)^7);location.href='/green/'+p+'/'}
 document.getElementById('f').addEventListener('submit',function(ev){ev.preventDefault();var e=document.getElementById('e');
  if(ok(n(document.getElementById('s').value))){e.textContent='Abrindo…';vai()}else{e.textContent='Senha incorreta. Tente de novo.'}});
 </script></body></html>
