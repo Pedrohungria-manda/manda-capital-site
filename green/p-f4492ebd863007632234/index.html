@@ -165,6 +165,8 @@ p{margin:0}
 .linha{display:flex;justify-content:space-between;gap:12px;font-size:15px}
 .linha span{color:var(--tinta2)}
 .linha b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.parc{font-size:12.5px;color:var(--verde,#2F8F4E);text-align:right;margin-top:-4px;font-variant-numeric:tabular-nums}
+.resumo .parc{color:#C9EC8F}
 .var{background:var(--claro-bg);border-radius:10px;padding:10px 12px;font-size:14px;display:grid;gap:4px}
 .var b{font-family:var(--disp);font-size:20px;color:var(--verde)}
 .total{background:var(--grafite);color:#FFFFFF;border-radius:12px;padding:14px 16px;display:grid;gap:6px}
@@ -520,26 +522,26 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
     <span class="selo">Menor investimento inicial</span>
     <h3>Proposta A</h3><p class="sub">Entrada mais leve, com parte atrelada ao resultado.</p>
     <div class="base"><div class="t"><b>Painel de prospecção</b><span class="tag">Base</span></div>
-     <div class="linha"><span>Implantação</span><b>R$ 15.000</b></div><div class="linha"><span>Mensalidade</span><b>R$ 6.000</b></div><div class="linha"><span>Prazo mínimo</span><b>12 meses</b></div>
-     <div class="var"><span>Variável sobre clientes novos, à escolha da Green</span><b>3% no 1º ano ou 1% vitalício</b></div></div>
+     <div class="linha"><span>Implantação</span><b>R$ 15.000</b></div><div class="parc">ou em até 3x de R$ 5.000</div><div class="linha"><span>Mensalidade</span><b>R$ 6.000</b></div><div class="linha"><span>Prazo mínimo</span><b>12 meses</b></div>
+     <div class="var"><span>Variável sobre clientes novos, à escolha da Green</span><b>1% vitalício ou 3% no 1º ano</b></div></div>
     <div class="adic"><span class="eb">Adicionais opcionais</span>
      <div class="sub-cards">
-      <div class="sc"><b>Funil e vendas</b><div class="linha"><span>Implantação</span><b>R$ 5.000</b></div><div class="linha"><span>Mensalidade</span><b>R$ 1.500</b></div></div>
-      <div class="sc"><b>Identidade e site</b><div class="linha"><span>Pagamento único</span><b>R$ 7.500</b></div></div>
+      <div class="sc"><b>Funil e vendas</b><div class="linha"><span>Implantação</span><b>R$ 5.000</b></div><div class="parc">ou em até 3x de R$ 1.666,67</div><div class="linha"><span>Mensalidade</span><b>R$ 1.500</b></div></div>
+      <div class="sc"><b>Identidade e site</b><div class="linha"><span>Implantação única</span><b>R$ 7.500</b></div><div class="parc">ou em até 3x de R$ 2.500</div></div>
      </div></div>
    </article>
    <article class="plano">
     <h3>Proposta B</h3><p class="sub">Valor fechado, sem percentual sobre vendas.</p>
     <div class="base"><div class="t"><b>Painel de prospecção</b><span class="tag">Base</span></div>
-     <div class="linha"><span>Implantação</span><b>R$ 25.000</b></div><div class="linha"><span>Mensalidade</span><b>R$ 10.000</b></div><div class="linha"><span>Prazo mínimo</span><b>12 meses</b></div></div>
+     <div class="linha"><span>Implantação</span><b>R$ 25.000</b></div><div class="parc">ou em até 3x de R$ 8.333,33</div><div class="linha"><span>Mensalidade</span><b>R$ 10.000</b></div><div class="linha"><span>Prazo mínimo</span><b>12 meses</b></div></div>
     <div class="adic"><span class="eb">Adicionais opcionais</span>
      <div class="sub-cards">
-      <div class="sc"><b>Funil e vendas</b><div class="linha"><span>Implantação</span><b>R$ 7.500</b></div><div class="linha"><span>Mensalidade</span><b>R$ 2.500</b></div></div>
-      <div class="sc"><b>Identidade e site</b><div class="linha"><span>Pagamento único</span><b>R$ 10.000</b></div></div>
+      <div class="sc"><b>Funil e vendas</b><div class="linha"><span>Implantação</span><b>R$ 7.500</b></div><div class="parc">ou em até 3x de R$ 2.500</div><div class="linha"><span>Mensalidade</span><b>R$ 2.500</b></div></div>
+      <div class="sc"><b>Identidade e site</b><div class="linha"><span>Implantação única</span><b>R$ 10.000</b></div><div class="parc">ou em até 3x de R$ 3.333,33</div></div>
      </div></div>
    </article>
   </div>
-  <p class="nota">A variável da proposta A incide só sobre empresas originadas pelo painel; a carteira atual da Green nunca entra na conta. As mensalidades cobrem plataforma, IA, validação de e-mail, envio, suporte e ajustes. Prazo mínimo de 12 meses. Valores sem impostos retidos na fonte.</p>
+  <p class="nota">A variável da proposta A incide só sobre empresas originadas pelo painel; a carteira atual da Green nunca entra na conta. As mensalidades cobrem plataforma, IA, validação de e-mail, envio, suporte e ajustes. Prazo mínimo de 12 meses. Todas as implantações podem ser parceladas em até 3x. Valores sem impostos retidos na fonte.</p>
  </div>
 </section>
 
@@ -554,18 +556,18 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
      <label class="op"><input type="radio" name="pl" id="plB" value="B"><span><b>Proposta B</b><small>R$ 25.000 + R$ 10.000/mês, sem variável</small></span></label>
     </fieldset>
     <fieldset id="fsVar"><legend>Variável da proposta A</legend>
-     <label class="op"><input type="radio" name="vr" id="vr3" value="3% sobre clientes novos no 1º ano" checked><span><b>3% no primeiro ano</b><small>De cada cliente novo, depois zero</small></span></label>
-     <label class="op"><input type="radio" name="vr" id="vr1" value="1% vitalício sobre clientes novos"><span><b>1% vitalício</b><small>Enquanto o cliente novo comprar</small></span></label>
+     <label class="op"><input type="radio" name="vr" id="vr1" value="1% vitalício sobre clientes novos" checked><span><b>1% vitalício</b><small>Enquanto o cliente novo comprar</small></span></label>
+     <label class="op"><input type="radio" name="vr" id="vr3" value="3% sobre clientes novos no 1º ano"><span><b>3% no primeiro ano</b><small>De cada cliente novo, depois zero</small></span></label>
     </fieldset>
     <fieldset><legend>Adicionais</legend>
-     <label class="op"><input type="checkbox" id="adF"><span><b>Funil e vendas</b><small id="adFt">+ R$ 5.000 e + R$ 1.500/mês</small></span></label>
-     <label class="op"><input type="checkbox" id="adI"><span><b>Identidade e site</b><small id="adIt">+ R$ 7.500, pagamento único</small></span></label>
+     <label class="op"><input type="checkbox" id="adF" checked><span><b>Funil e vendas</b><small id="adFt">+ R$ 5.000 e + R$ 1.500/mês</small></span></label>
+     <label class="op"><input type="checkbox" id="adI" checked><span><b>Identidade e site</b><small id="adIt">+ R$ 7.500, implantação única</small></span></label>
     </fieldset>
    </div>
    <aside class="resumo" aria-live="polite">
     <span class="eb" style="color:#C9EC8F">Resumo</span>
     <b id="rsNome">Proposta A</b>
-    <div class="linha"><span>Implantação</span><b id="rsImp">R$ 15.000</b></div>
+    <div class="linha"><span>Implantação</span><b id="rsImp">R$ 15.000</b></div><div class="parc" id="rsParc">ou em até 3x de R$ 5.000</div>
     <div class="linha"><span>Mensalidade</span><b id="rsMen">R$ 6.000</b></div>
     <div class="linha"><span>Variável</span><b id="rsVar">3% no 1º ano</b></div>
     <div class="linha"><span>Prazo mínimo</span><b>12 meses</b></div>
@@ -687,16 +689,16 @@ function copa(id){
  function calc(){
   const pl=f.querySelector('input[name=pl]:checked').value,p=P[pl],fF=$('adF').checked,fI=$('adI').checked;
   $('fsVar').disabled=pl!=='A';
-  $('adFt').textContent='+ '+brl(p.f[0])+' e + '+brl(p.f[1])+'/mês';$('adIt').textContent='+ '+brl(p.i)+', pagamento único';
+  $('adFt').textContent='+ '+brl(p.f[0])+' e + '+brl(p.f[1])+'/mês';$('adIt').textContent='+ '+brl(p.i)+', implantação única';
   const imp=p.imp+(fF?p.f[0]:0)+(fI?p.i:0),men=p.men+(fF?p.f[1]:0);
   const vr=pl==='A'?f.querySelector('input[name=vr]:checked').value:'Sem variável';
-  $('rsNome').textContent='Proposta '+pl;$('rsImp').textContent=brl(imp);$('rsMen').textContent=brl(men);
+  $('rsNome').textContent='Proposta '+pl;$('rsImp').textContent=brl(imp);$('rsParc').textContent='ou em até 3x de '+brl(Math.round(imp/3*100)/100);$('rsMen').textContent=brl(men);
   $('rsVar').textContent=pl==='A'?(vr.startsWith('3')?'3% no 1º ano':'1% vitalício'):'Nenhuma';
   const ad=[fF&&'Funil e vendas',fI&&'Identidade e site'].filter(Boolean);
   $('rsAd').textContent=ad.length?'Com '+ad.join(' e '):'Sem adicionais';
   return `Green · escolha da proposta
 Proposta ${pl}
-Implantação: ${brl(imp)}
+Implantação: ${brl(imp)} (ou em até 3x de ${brl(Math.round(imp/3*100)/100)})
 Mensalidade: ${brl(men)}
 Variável: ${vr}
 Prazo mínimo: 12 meses
@@ -708,4 +710,31 @@ Adicionais: ${ad.length?ad.join(', '):'nenhum'}`;
   try{navigator.clipboard.writeText(t).then(()=>mostra('Copiado. Cole no e-mail ou no WhatsApp para confirmar.'),()=>{pre.textContent=t;pre.hidden=false;mostra('Selecione o texto abaixo e copie.')})}catch(e){pre.textContent=t;pre.hidden=false;mostra('Selecione o texto abaixo e copie.')}});
 })();
 </script>
-</body></html>
+<script>/* Registro de acessos à proposta (tempo, rolagem, seções). Envia para /api/rastro do próprio site. */
+(function(){
+ if(location.protocol==='file:'||location.hostname.indexOf('mandacap')<0)return;
+ var P='green',V,s=null;try{s=sessionStorage}catch(e){}
+ V=s&&s.getItem('rastro_v');if(!V){V=Date.now().toString(36)+Math.random().toString(36).slice(2,8);try{s.setItem('rastro_v',V)}catch(e){}}
+ var dono=false;try{dono=!!localStorage.getItem('manda_painel')}catch(e){}if(/[?&]teste/.test(location.search))dono=true;
+ var em=false;try{em=window.top!==window}catch(e){em=true}
+ var origem=(em?'Private Access':'Link direto')+(dono?' (Pedro)':'');
+ var seg=0,rol=0,sec='',vistas={};
+ setInterval(function(){if(document.visibilityState==='visible')seg++},1000);
+ function rolagem(){var d=document.documentElement,r=Math.round((d.scrollTop+innerHeight)/Math.max(1,d.scrollHeight)*100);if(r>rol)rol=Math.min(100,r)}
+ addEventListener('scroll',rolagem,{passive:true});
+ function env(ev,secao){try{var d=JSON.stringify({p:P,v:V,ev:ev,seg:seg,rol:rol,secao:secao||'',origem:origem,tela:screen.width+'x'+screen.height});
+  if(navigator.sendBeacon&&navigator.sendBeacon('/api/rastro',new Blob([d],{type:'text/plain'})))return;
+  fetch('/api/rastro',{method:'POST',body:d,keepalive:true}).catch(function(){})}catch(e){}}
+ function nome(el){var t=el.getAttribute('aria-label');if(!t){var h=el.querySelector('h1,h2');t=h?h.textContent:el.id}return (t||'').replace(/\s+/g,' ').trim().slice(0,70)}
+ document.addEventListener('DOMContentLoaded',function(){
+  rolagem();env('abriu');
+  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var n=nome(e.target);if(n&&!vistas[n]){vistas[n]=1;sec=n;env('viu',n)}}})},{rootMargin:'-45% 0px -45% 0px'});
+   document.querySelectorAll('section').forEach(function(x){io.observe(x)})}
+ });
+ setInterval(function(){if(document.visibilityState==='visible')env('ativo')},20000);
+ document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')env('saiu')});
+ addEventListener('pagehide',function(){env('saiu')});
+ /* cliques na escolha da proposta */
+ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btCopia');if(b)env('copiou escolha',(document.getElementById('rsNome')||{}).textContent+' · '+((document.getElementById('rsAd')||{}).textContent||''))});
+})();
+</script></body></html>
