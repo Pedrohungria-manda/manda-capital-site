@@ -648,6 +648,7 @@ footer .meta{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spa
       mostrarPainelSeForDono();
       return;
     }
+    if(await salaDireta(digitado)) return;
     tentando = true; submitCode.disabled = true;
     let s = null;
     try{ s = await procurarSala(digitado); }catch(e){}
@@ -716,6 +717,31 @@ footer .meta{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spa
       salaRecado.textContent = 'Sem conexão com a sala. Tente de novo em instantes.';
     }
   });
+  /* Propostas publicadas no próprio site (pasta do repositório). O código é conferido por impressão digital (SHA-256),
+     tolerante a maiúsculas, acentos e espaços. */
+  const DIRETAS = [{ u:'/green/p-f4492ebd863007632234/', h:["68c2b0b7b2c9a66c7a4044b1bc0035ebe0dd9124a9c6c24521d1bf66bdec74e0", "eb0400fa3918f9871bb1bcf49ec9198f84e6c4dfa32d6ac58cb5ae7e10953e2c", "4d1aafa9fa0e724524cef3d8b103bedf75384ace08323c273e5b16ca11b92768", "13dc81d978807aa8cd0272f26bc0eaff38b0d632cb7610842b02845bea164340", "52c51c6740172126918888e2d93357ceb17ce454e14f5001bafcdf58c4065c30", "2fde633a89099b02beb6ff2606bc515ed18b663002a206e3bc596ff95a00b148", "67c1f6c07a434e862dc38ecf2bd8d441d1356d29b4e84439b8e43734d18e8410", "9858e37de92d025482978762c29dbf29be309840a1d67aacc54ad5cbffcdabac", "1946cd2ac74e487d74bef152459752472db205a8728563c40f5031597c0abc86", "031e6b6d055900f32a1965681ebe3afceec0ac0452f896d71bf0fd94b1b754a9", "8d2b480451e0be73839cce5b6c51b194cf52d48ccff43878e27ea3f3cbc7dfd4", "98d6898cb2034ffc8da55a12b01f00544637bc16de6e46725b5ecce8dbfce32e", "d1a5d3885db263ce78788d615427fe77de7981351215a2da3c6217b951afe3af", "3b447dcbae9570c36fb018412d69927124ecc81156a020cbd48fdc9b45f215bd", "ad36a137641fdc62a51f05972ae06ca252cca57392a0c0c2b2937336523f9bbb", "f97f529aecad9beaa8699ba925b63f4433db74882f397fff82b21e6911974a08", "9416104ceaf7a4559822bab4a043f1bb7098ae3e9b2f1ac21d77c04155aa30ce", "4f34a3dd0fc0ae635817912ce2acc40a4646873b5ef3110fd34e88018d3ec0fe", "93aa5cb58b91dbba1e3363ff6a8d01116e952c523df514db5aaf1f56ccda6d34", "84a8006606b587a064d68ddf825f02d35ff59a7193959a16bab009b5327681c9", "f51da98feedc0ee979edb8854b70988fa04fba6f86680d1c8006c5c4fd7145ed", "8bc2b1bb5cf8ba3c4ddcdf87715cdf4c734b06ca368368fa88a2f34d76af9901", "1e7ba46498aface953315b1b0f5e6238ccc074ad626d708360812eeda7127f5f", "eb116435c3c14892a4dd88ef78bb140789e73c79afc8cf743faeba62a19ed88d", "f98394368c65f93962b92e0981b932c2660ebf11a07d1525d5df3e6e9670cdda", "ead78d1046d0cc4976316cc339ec6ab4a4ebdee7e54e6ab0dad75d11e8053e28"] }];
+  async function salaDireta(digitado){
+    try{
+      let n = digitado.toLowerCase();
+      try{ n = n.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }catch(e){}
+      n = n.replace(/[^a-z]/g, '');
+      const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('manda:' + n));
+      const h = Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');
+      const d = DIRETAS.find(x => x.h.indexOf(h) !== -1);
+      if(!d) return false;
+      salaSenha = null;
+      gate.hidden = true; codeInput.value = '';
+      sala.classList.remove('aberta');
+      salaRecado.textContent = 'Abrindo a proposta…';
+      sala.hidden = false;
+      document.documentElement.style.overflow = 'hidden';
+      clearTimeout(salaTimer);
+      salaFrame.onload = () => { if(!sala.hidden && salaFrame.src.indexOf(d.u) !== -1) sala.classList.add('aberta'); };
+      salaFrame.src = d.u;
+      salaTimer = setTimeout(() => sala.classList.add('aberta'), 20000);
+      return true;
+    }catch(e){ return false; }
+  }
   document.getElementById('sairSala').addEventListener('click', fecharSala);
   // O atalho para o painel só aparece no navegador que já entrou nele alguma vez.
   // É conveniência, não controle de acesso: o painel tem senha e login do Google.
