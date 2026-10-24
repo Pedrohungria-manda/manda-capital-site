@@ -68,11 +68,57 @@ body{background:#0A1C2A;color:#F3EBD9;font:15px/1.5 "Barlow",-apple-system,"Sego
 .stage iframe{flex:1;width:100%;border:0;background:#fff}
 @media(max-width:760px){ .bar{gap:8px 10px} .tabs{order:3;flex-basis:100%} .acts{margin-left:auto} .mnd{font-size:0;letter-spacing:0} .mnd b{font-size:11px} }
 
-.stage>section[hidden],.stage>iframe[hidden]{display:none}
-.upd{font:400 11px "DM Mono",monospace;color:rgba(255,255,255,.7);white-space:nowrap}
-.inicio .meta{font:400 12px "DM Mono",monospace;color:#5D6576;margin:4px 0 22px}
-.aviso{max-width:720px;margin:40px auto;padding:20px;background:#fff;border:1px solid #E4E7EA;border-radius:12px;color:#1D2433}
-@media(max-width:760px){ .upd{display:none} }
+/* ===== shell v3: menu lateral recolhível (Across × Manda) ===== */
+#app[hidden]{display:none}
+#app{display:flex;flex-direction:row;height:100%;background:#0E1A2B;color:#1D2433}
+.sb{--sb-bg:#0B2550;--sb-bg2:#0F2E61;--sb-ink:#E3EBF7;--sb-mut:#8FA6C8;--sb-line:rgba(255,255,255,.08);--sb-ac:#3FB6AE;--sb-gold:#F3BC49;
+  flex:0 0 auto;width:248px;height:100%;display:flex;flex-direction:column;background:var(--sb-bg);color:var(--sb-ink);
+  border-right:1px solid rgba(0,0,0,.25);transition:width .18s ease;position:relative;z-index:5}
+.sb .ic{width:18px;height:18px;flex:0 0 18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sb-top{display:flex;align-items:center;gap:10px;padding:14px 12px 12px 14px;border-bottom:1px solid var(--sb-line);min-height:64px}
+.mono{flex:0 0 36px;width:36px;height:36px;border:0;border-radius:9px;background:var(--sb-ac);color:#0B2550;font:800 21px/36px "Barlow",sans-serif;
+  text-align:center;padding:0;cursor:pointer;letter-spacing:-.02em}
+.brand{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;white-space:nowrap;overflow:hidden}
+.brand .acr{font:800 22px/1 "Barlow",sans-serif;letter-spacing:-.03em;color:#fff}
+.brand .por{display:flex;align-items:center;gap:5px;font:600 10.5px "Montserrat",sans-serif;letter-spacing:.16em;color:var(--sb-mut)}
+.brand .por b{font-weight:700;color:#F3EBD9} .brand .por i{font-style:normal;color:var(--sb-gold)}
+.tg{flex:0 0 30px;width:30px;height:30px;border:0;border-radius:7px;background:transparent;color:var(--sb-mut);cursor:pointer;display:grid;place-items:center}
+.tg:hover{background:var(--sb-bg2);color:#fff}
+.sb-nav{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:8px 8px 12px;scrollbar-width:none;-ms-overflow-style:none}
+.sb-nav::-webkit-scrollbar{display:none;width:0;height:0}
+.grp{font:500 10px "DM Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--sb-mut);padding:14px 10px 6px;white-space:nowrap}
+.it{position:relative;display:flex;align-items:center;gap:12px;width:100%;border:0;background:transparent;color:var(--sb-ink);
+  font:500 14px "Barlow",sans-serif;text-align:left;padding:8px 10px;border-radius:8px;cursor:pointer;white-space:nowrap;min-height:38px}
+.it:hover{background:var(--sb-bg2)}
+.it .lb{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.it.on{background:rgba(63,182,174,.16);color:#fff;font-weight:600}
+.it.on::before{content:"";position:absolute;left:-8px;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--sb-ac)}
+.it.on .ic{color:var(--sb-ac)}
+.bdg{min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--sb-gold);color:#0B2550;font:700 11px/20px "Montserrat",sans-serif;text-align:center}
+.sb-foot{border-top:1px solid var(--sb-line);padding:8px}
+.sb-foot .upd{font:400 10.5px "DM Mono",monospace;color:var(--sb-mut);padding:6px 10px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stage{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;background:#F4F6FA}
+.stage iframe{flex:1;width:100%;border:0;background:#fff}
+.stage iframe[hidden]{display:none}
+.veu[hidden]{display:none}
+.veu{position:fixed;inset:0;background:rgba(5,14,30,.45);z-index:4}
+
+/* recolhido: só o "A" em cima e os ícones */
+.sb.min{width:64px}
+.sb.min .sb-top{padding:14px 14px 12px;justify-content:center}
+.sb.min .brand,.sb.min .tg,.sb.min .lb,.sb.min .upd{display:none}
+.sb.min .grp{font-size:0;padding:10px 0 4px;margin:0 12px;border-top:1px solid var(--sb-line)}
+.sb.min .grp:first-child{border-top:0}
+.sb.min .it{justify-content:center;padding:8px 0;gap:0}
+.sb.min .bdg{position:absolute;top:3px;right:6px;min-width:16px;height:16px;padding:0 4px;font-size:9.5px;line-height:16px}
+.sb:not(.min) .mono{cursor:default}
+
+/* celular: menu recolhido por padrão; aberto, fica por cima do conteúdo */
+@media(max-width:760px){
+  .sb{position:fixed;left:0;top:0;bottom:0}
+  .stage{margin-left:64px}
+  .sb:not(.min){box-shadow:8px 0 30px rgba(0,0,0,.35)}
+}
 </style>
 </head>
 <body>
@@ -90,44 +136,39 @@ body{background:#0A1C2A;color:#F3EBD9;font:15px/1.5 "Barlow",-apple-system,"Sego
     <div class="foot"><span>Manda Capital · uso interno</span><span>Confidencial</span></div>
   </form>
 </section>
-<div id="app" hidden>
-<header class="bar">
-  <div class="brands">
-    <span class="acr">across</span><span class="x">×</span>
-    <span class="mnd"><svg viewBox="0 0 260 200" width="22" height="17" aria-hidden="true"><path d="M10,180 L95,20 L180,180" fill="none" stroke="#E56E2F" stroke-width="20" stroke-linejoin="round"/><path d="M165,20 L250,180 L80,180 Z" fill="none" stroke="#E56E2F" stroke-width="20" stroke-linejoin="round"/></svg><b>M<i>/</i>A</b>&nbsp;MANDA CAPITAL</span>
+<div id="app" hidden><aside class="sb" id="sb" aria-label="Menu">
+  <div class="sb-top">
+    <button class="mono" id="sb-mono" type="button" title="Abrir o menu" aria-label="Abrir o menu">A</button>
+    <div class="brand"><span class="acr">across</span><span class="por">× <svg viewBox="0 0 260 200" width="18" height="14" aria-hidden="true"><path d="M10,180 L95,20 L180,180" fill="none" stroke="#F3EBD9" stroke-width="20" stroke-linejoin="round"/><path d="M165,20 L250,180 L80,180 Z" fill="none" stroke="#F3EBD9" stroke-width="20" stroke-linejoin="round"/></svg><b>M<i>/</i>A</b></span></div>
+    <button class="tg" id="sb-tg" type="button" title="Recolher o menu" aria-label="Recolher o menu"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg></button>
   </div>
-  <nav class="tabs" role="tablist">
-    <button role="tab" data-v="inicio" aria-selected="true">Início</button>
-    <button role="tab" data-v="painel" aria-selected="false">Painel CFO</button>
-    <button role="tab" data-v="gestao" aria-selected="false">Gestão</button>
-    <button role="tab" data-v="projeto" aria-selected="false">Painel do projeto</button>
+  <nav class="sb-nav" id="sb-nav">
+    <div class="grp">Painel CFO</div>
+<button class="it" data-v="painel" data-ir="inicio" data-sino="1" title="Alertas"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="lb">Alertas</span><b class="bdg" hidden></b></button>
+<button class="it" data-v="painel" data-ir="inicio" title="Cockpit"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg><span class="lb">Cockpit</span></button>
+<button class="it" data-v="painel" data-ir="tesouraria" title="Tesouraria"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg><span class="lb">Tesouraria</span></button>
+<button class="it" data-v="painel" data-ir="controladoria" title="Controladoria"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg><span class="lb">Controladoria</span></button>
+<button class="it" data-v="painel" data-ir="orc" title="Orçamento"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg><span class="lb">Orçamento</span></button>
+<button class="it" data-v="painel" data-ir="rf" title="Rolling Forecast"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg><span class="lb">Rolling Forecast</span></button>
+<button class="it" data-v="painel" data-ir="contabil" title="Contábil"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg><span class="lb">Contábil</span></button>
+<button class="it" data-v="painel" data-ir="analises" title="Análises IC"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg><span class="lb">Análises IC</span></button>
+<button class="it" data-v="painel" data-ir="nibo" title="NIBO"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></svg><span class="lb">NIBO</span></button>
+<button class="it" data-v="painel" data-ir="rotinas" title="Rotinas financeiras"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg><span class="lb">Rotinas financeiras</span></button>
+<button class="it" data-v="painel" data-ir="planilhas" title="Planilhas gerenciais"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg><span class="lb">Planilhas gerenciais</span></button>
+<button class="it" data-v="painel" data-ir="fontes" title="Fontes e dados"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg><span class="lb">Fontes e dados</span></button>
+    <div class="grp">Empresa</div>
+    <button class="it" data-v="gestao" title="Gestão da empresa"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01"/></svg><span class="lb">Gestão da empresa</span></button>
+    <div class="grp">Projeto</div>
+    <button class="it" data-v="projeto" title="Painel do projeto"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h4"/></svg><span class="lb">Painel do projeto</span></button>
   </nav>
-  <span class="upd" id="upd"></span>
-  <div class="acts"><button id="sair" class="btn ghost">Sair</button></div>
-</header>
+  <div class="sb-foot">
+    <div class="upd" id="upd"></div>
+    <button class="it" id="sair" type="button" title="Sair"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span class="lb">Sair</span></button>
+  </div>
+</aside>
+<div class="veu" id="veu" hidden></div>
 <main class="stage">
-  <section id="v-inicio" class="inicio">
-    <h2>Painel CFO · Across RH</h2>
-    <p class="meta" id="meta"></p>
-    <div class="cards">
-      <button class="go" type="button" data-ir="painel">
-        <span class="t">Painel CFO</span>
-        <span class="d">Cockpit, tesouraria, controladoria, orçamento, rolling forecast, contábil, análises IC, NIBO e rotinas financeiras.</span>
-        <span class="cta">Abrir →</span>
-      </button>
-      <button class="go" type="button" data-ir="gestao">
-        <span class="t">Gestão da empresa</span>
-        <span class="d">Enterprise Management: funil comercial, projetos, metas e comissões, operação por área.</span>
-        <span class="cta">Abrir →</span>
-      </button>
-      <button class="go" type="button" data-ir="projeto">
-        <span class="t">Painel do projeto</span>
-        <span class="d">Situação do robô, arquitetura de pastas, links, pendências e histórico.</span>
-        <span class="cta">Abrir →</span>
-      </button>
-    </div>
-  </section>
-  <iframe id="v-painel" title="Painel CFO" hidden></iframe>
+  <iframe id="v-painel" title="Painel CFO"></iframe>
   <iframe id="v-gestao" title="Gestão da empresa" hidden></iframe>
   <iframe id="v-projeto" title="Painel do projeto" hidden></iframe>
 </main>
@@ -165,6 +206,7 @@ if(typeof module!=='undefined') module.exports={mcaChaveDaSenha,mcaSeparar,mcaAb
 (function(){
   var DATA_URL="https://raw.githubusercontent.com/Pedrohungria-manda/manda-capital-site/across-dados/d.bin", SK='ma-across-chave';
   var SHIM="<script>(function(){\nvar M=parent.__MCA||{}, L=M.leituras||{};\nvar SO_LEITURA='No site o painel \u00e9 s\u00f3 leitura: esta a\u00e7\u00e3o continua no painel do rob\u00f4 (com login Google).';\nfunction chamar(nome,args,ok,falha){\n  setTimeout(function(){\n    try{\n      var r;\n      if(nome==='dadosDoPainel') r=M.painel&&M.painel.dados;\n      else if(nome==='dadosGestao') r=M.gestao&&M.gestao.dados;\n      else if(nome==='paginaApp'){ parent.mcaVer(args[0]==='gestao'?'gestao':'painel', true); return; }\n      else { var k=nome+JSON.stringify(args), e=L[k];\n        if(!e){ for(var x in L){ if(x.indexOf(nome+'[')===0){ e=L[x]; break; } } }\n        if(!e){ if(falha) falha(new Error(SO_LEITURA)); return; }\n        if(e.erro){ if(falha) falha(new Error(e.erro)); return; }\n        r=e.ok; }\n      if(ok) ok(r);\n    }catch(err){ if(falha) falha(err); }\n  },0);\n}\nfunction mk(ok,falha,uo){\n  return new Proxy({},{get:function(t,n){\n    if(n==='withSuccessHandler') return function(f){return mk(f,falha,uo);};\n    if(n==='withFailureHandler') return function(f){return mk(ok,f,uo);};\n    if(n==='withUserObject') return function(u){return mk(ok,falha,u);};\n    if(typeof n!=='string'||n==='then') return undefined;\n    return function(){ chamar(n,[].slice.call(arguments),ok&&function(r){ok(r,uo);},falha&&function(e){falha(e,uo);}); };\n  }});\n}\nwindow.google={script:{run:mk(null,null),host:{close:function(){},setHeight:function(){},setWidth:function(){}},history:{push:function(){},replace:function(){},setChangeHandler:function(){}},url:{getLocation:function(cb){cb({hash:'',parameter:{},parameters:{}});}}}};\n})();<\/script>";
+  var SKIN="<style id=\"mca-skin\">\n/* site mandacap.com.br/across: o menu fica no site (lateral recolh\u00edvel); aqui s\u00f3 o conte\u00fado */\n.rail{display:none!important}\n#app{display:block!important;grid-template-columns:none!important}\nmain{max-width:1440px;margin:0 auto}\n@media(max-width:860px){ main{padding:18px 14px 48px!important} }\n/* sem barras de rolagem aparentes nos menus e abas */\nnav,.subnav,.tabs,[role=tablist]{scrollbar-width:none;-ms-overflow-style:none}\nnav::-webkit-scrollbar,.subnav::-webkit-scrollbar,.tabs::-webkit-scrollbar,[role=tablist]::-webkit-scrollbar{display:none;height:0;width:0}\n/* azul Across mais escuro e alerta em \u00e2mbar (sem o vermelho rosado) */\n:root{--rail:#0B2550;--rail-line:#163A73;--crit:#B4232A;--crit-bg:#FBE6E4}\n:root[data-theme=\"dark\"]{--rail:#0B2550;--rail-line:#163A73;--crit:#F07C6E;--crit-bg:#3A1F1C}\n@media (prefers-color-scheme: dark){ :root:not([data-theme=\"light\"]){--rail:#0B2550;--rail-line:#163A73;--crit:#F07C6E;--crit-bg:#3A1F1C} }\n.badge.crit{background:#F3BC49!important;color:#0B2550!important;animation:none!important}\n.nav-alerta.crit,.nav-sino.crit{background:transparent}\n<\/style>\n";
   var f=document.getElementById('gform'), btn=document.getElementById('gbtn'), err=document.getElementById('gerr'), pw=document.getElementById('gpw');
   var b64e=function(u){var s='';for(var i=0;i<u.length;i++)s+=String.fromCharCode(u[i]);return btoa(s);};
   var b64d=function(s){return Uint8Array.from(atob(s),function(c){return c.charCodeAt(0);});};
@@ -181,31 +223,68 @@ if(typeof module!=='undefined') module.exports={mcaChaveDaSenha,mcaSeparar,mcaAb
   var carregado={};
   function carregar(v){
     var fr=document.getElementById('v-'+v), M=window.__MCA;
-    if(v==='painel') fr.srcdoc=prep(M.painel.html);
+    if(v==='painel') fr.srcdoc=prep(M.painel.html).replace(/<\/head>/i, function(m){return SKIN+m;});
     else if(v==='gestao') fr.srcdoc=prep(M.gestao.html);
     else if(v==='projeto') fr.srcdoc=(M.projeto||'<p style="font-family:sans-serif;padding:24px">Painel do projeto indisponível.</p>').replace(/<head[^>]*>/i,function(m){return m+'<base target="_blank">';});
     carregado[v]=true;
   }
+  var SB_K='ma-across-menu';
+  var sb=null, veu=null, atualV='painel', viaSino=false;
+  var estreito=function(){ return window.matchMedia('(max-width:760px)').matches; };
+  function recolher(min, salvar){
+    sb.classList.toggle('min', !!min);
+    veu.hidden = !(estreito() && !min);
+    if(salvar && !estreito()){ try{ localStorage.setItem(SB_K, min?'1':'0'); }catch(e){} }
+  }
+  function docPainel(){ try{ return document.getElementById('v-painel').contentDocument; }catch(e){ return null; } }
+  function navPainel(){ var d=docPainel(); return d && d.querySelector('.rail nav'); }
+  function quando(teste, faz, n){ n=n||0; var r=teste(); if(r){ faz(r); return; } if(n<80) setTimeout(function(){ quando(teste, faz, n+1); },150); }
+  function marcar(){
+    var nav=navPainel(), atual=nav && nav.querySelector('button[aria-current="page"]');
+    var ir=atual && atual.getAttribute('data-ir'), sino=(atual && atual.hasAttribute('data-sino')) || (viaSino && ir==='inicio');
+    document.querySelectorAll('#sb-nav .it').forEach(function(b){
+      var on = b.dataset.v===atualV && (atualV!=='painel' || (b.dataset.ir===ir && (!!b.dataset.sino)===!!sino));
+      b.classList.toggle('on', on);
+    });
+    var bd=nav && nav.querySelector('.nav-sino .badge'), meu=document.querySelector('#sb-nav .bdg');
+    if(meu){ var t=bd ? bd.textContent.trim() : ''; meu.textContent=t; meu.hidden=!t || t==='0'; }
+  }
   window.mcaVer=function(v,recarregarOrigem){
-    var atual=(document.querySelector('.tabs button[aria-selected="true"]')||{}).dataset; atual=atual&&atual.v;
-    document.querySelectorAll('.tabs button').forEach(function(b){ b.setAttribute('aria-selected', b.dataset.v===v ? 'true':'false'); });
-    ['inicio','painel','gestao','projeto'].forEach(function(x){ document.getElementById('v-'+x).hidden = x!==v; });
-    if(v!=='inicio' && !carregado[v]) carregar(v);
-    if(recarregarOrigem && atual && atual!==v && atual!=='inicio') setTimeout(function(){ carregar(atual); },50);
+    var antes=atualV; atualV=v;
+    ['painel','gestao','projeto'].forEach(function(x){ document.getElementById('v-'+x).hidden = x!==v; });
+    if(!carregado[v]) carregar(v);
+    if(recarregarOrigem && antes!==v) setTimeout(function(){ carregar(antes); },50);
     try{ history.replaceState(null,'','#'+v); }catch(e){}
+    marcar();
   };
+  function irPainel(ir, sino){
+    viaSino=!!sino; mcaVer('painel');
+    quando(function(){ var nav=navPainel(); return nav && nav.querySelector(sino ? 'button[data-sino]' : 'button[data-ir="'+ir+'"]:not([data-sino])'); },
+      function(b){ b.click(); var d=docPainel(); try{ d.defaultView.scrollTo(0,0); }catch(e){} setTimeout(marcar,60); });
+  }
   function boot(M){
     window.__MCA=M;
     document.getElementById('gate').remove();
     document.getElementById('app').hidden=false;
-    var d=new Date(M.gerado), fmt=d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    sb=document.getElementById('sb'); veu=document.getElementById('veu');
+    var d=new Date(M.gerado), fmt=d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
     document.getElementById('upd').textContent='Atualizado em '+fmt;
-    document.getElementById('meta').textContent='Dados do robô de '+fmt+' (atualiza de hora em hora). No site o painel é só leitura.';
-    document.querySelectorAll('.tabs button').forEach(function(b){ b.addEventListener('click', function(){ mcaVer(b.dataset.v); }); });
-    document.querySelectorAll('[data-ir]').forEach(function(b){ b.addEventListener('click', function(){ mcaVer(b.dataset.ir); }); });
+    var salvo=null; try{ salvo=localStorage.getItem(SB_K); }catch(e){}
+    recolher(estreito() ? true : salvo==='1', false);
+    document.getElementById('sb-tg').addEventListener('click', function(){ recolher(true, true); });
+    document.getElementById('sb-mono').addEventListener('click', function(){ if(sb.classList.contains('min')) recolher(false, true); });
+    veu.addEventListener('click', function(){ recolher(true, false); });
+    document.querySelectorAll('#sb-nav .it').forEach(function(b){ b.addEventListener('click', function(){
+      if(b.dataset.v==='painel') irPainel(b.dataset.ir, !!b.dataset.sino); else mcaVer(b.dataset.v);
+      if(estreito()) recolher(true, false);
+    }); });
     document.getElementById('sair').addEventListener('click', function(){ try{ sessionStorage.removeItem(SK); }catch(e){} location.hash=''; location.reload(); });
-    var h=(location.hash||'').slice(1); if(['painel','gestao','projeto'].indexOf(h)>=0) mcaVer(h);
+    var h=(location.hash||'').slice(1);
+    mcaVer(['gestao','projeto'].indexOf(h)>=0 ? h : 'painel');
+    document.getElementById('v-painel').addEventListener('load', function(){ quando(navPainel, function(){ marcar(); }); });
+    setInterval(marcar, 800);
   }
+
   async function entrar(senha, chaveSalva){
     btn.disabled=true; btn.textContent='Abrindo…'; err.textContent='';
     try{
