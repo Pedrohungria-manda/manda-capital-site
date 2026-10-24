@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Across × Manda Capital · Painel CFO</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Montserrat:wght@600;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box} html,body{height:100%;margin:0}
+body{background:#0A1C2A;color:#F3EBD9;font:15px/1.5 "Barlow",-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+/* capa */
+.gate{position:fixed;inset:0;z-index:10;display:grid;grid-template-columns:1fr 1fr;overflow:auto;background:#0A1C2A}
+.half{position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:32px max(24px,env(safe-area-inset-left,0px));overflow:hidden;min-height:100%}
+.gl{background:#1A4B95;color:#fff}
+.gl::before{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:#3FB6AE}
+.gl::after{content:"";position:absolute;left:-90px;bottom:-90px;width:260px;height:260px;border:2px solid rgba(255,255,255,.08);border-radius:50%}
+.gr{background:#10283A;align-items:flex-end;text-align:right}
+.gr::after{content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;border:2px solid rgba(243,235,217,.07);transform:rotate(45deg)}
+.half>*{position:relative;z-index:1}
+.acrlogo{font:800 34px/1 "Barlow",sans-serif;letter-spacing:-.03em;color:#fff} .acrlogo small{display:block;font:500 11px "DM Mono",monospace;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-top:8px}
+.mlogo{display:flex;align-items:center;gap:12px;font:600 14px "Montserrat",sans-serif;letter-spacing:.2em;color:#F3EBD9} .mlogo b{font-weight:700} .mlogo i{font-style:normal;color:#E56E2F}
+.cap{font:400 12px "DM Mono",monospace;letter-spacing:.06em;color:rgba(255,255,255,.55)} .gr .cap{color:rgba(243,235,217,.5)}
+.card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(360px,calc(100vw - 32px));background:rgba(10,28,42,.74);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(243,235,217,.16);border-radius:14px;padding:24px 22px;z-index:3}
+.card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.card .tags span{font:400 10px "DM Mono",monospace;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(243,235,217,.22);border-radius:999px;padding:2px 8px;color:rgba(243,235,217,.75)}
+.card .tags span:first-child{border-color:rgba(63,182,174,.8);color:#7FD6CF}
+.card h1{font:700 19px/1.25 "Barlow",sans-serif;margin:0 0 6px;color:#fff}
+.card p{margin:0 0 18px;color:rgba(243,235,217,.62);font-size:13.5px}
+.card label{display:block;font:400 11px "DM Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:rgba(243,235,217,.55);margin-bottom:6px}
+.card input{width:100%;border:1px solid rgba(243,235,217,.25);border-radius:8px;padding:10px 12px;font:400 15px "Barlow",sans-serif;color:#F3EBD9;background:rgba(243,235,217,.06)}
+.card input:focus{outline:none;border-color:#3FB6AE}
+.card button{margin-top:12px;width:100%;border:0;border-radius:8px;padding:11px;background:#3FB6AE;color:#0A1C2A;font:700 13px "Montserrat",sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.card button:hover{background:#5CC8C0} .card button[disabled]{opacity:.6;cursor:wait}
+.err{color:#F3BC49;font-size:12.5px;margin-top:10px;min-height:16px}
+.foot{display:flex;justify-content:space-between;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid rgba(243,235,217,.12);font:400 10.5px "DM Mono",monospace;color:rgba(243,235,217,.42)}
+@media(max-width:760px){
+  .gate{grid-template-columns:1fr;grid-template-rows:auto 1fr auto}
+  .half{min-height:0;padding:22px 20px} .gr{grid-row:3;align-items:flex-start;text-align:left}
+  .card{position:relative;left:auto;top:auto;transform:none;grid-row:2;margin:16px auto;align-self:center}
+  .cap{display:none}
+}
+/* área do painel */
+#app[hidden]{display:none} #app{display:flex;flex-direction:column;height:100%;background:#F4F6FA;color:#1D2433}
+.bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:10px 16px;background:#1A4B95;color:#fff;border-bottom:4px solid #3FB6AE}
+.brands{display:flex;align-items:center;gap:10px;white-space:nowrap}
+.acr{font:800 22px/1 "Barlow",sans-serif;letter-spacing:-.03em} .x{opacity:.6}
+.mnd{display:flex;align-items:center;gap:6px;font:600 11px "Montserrat",sans-serif;letter-spacing:.18em;color:#F3EBD9} .mnd i{font-style:normal;color:#E56E2F}
+.tabs{display:flex;gap:4px;flex:1;min-width:0;overflow-x:auto}
+.tabs button{border:0;background:transparent;color:rgba(255,255,255,.75);font:600 14px "Barlow",sans-serif;padding:7px 12px;border-radius:7px;cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected="true"]{background:rgba(255,255,255,.16);color:#fff}
+.acts{display:flex;gap:8px}
+.btn{display:inline-block;border:1px solid rgba(255,255,255,.4);color:#fff;background:transparent;border-radius:7px;padding:6px 11px;font:600 13px "Barlow",sans-serif;text-decoration:none;cursor:pointer;white-space:nowrap}
+.btn:hover{background:rgba(255,255,255,.12)} .btn.ghost{border-color:transparent}
+.stage{flex:1;display:flex;flex-direction:column;min-height:0}
+.inicio{max-width:1080px;width:100%;margin:0 auto;padding:32px 16px 48px}
+.inicio[hidden]{display:none}
+.inicio h2{font:700 26px/1.2 "Barlow",sans-serif;color:#1A4B95;margin:0 0 6px}
+.inicio .sub{color:#5D6576;margin:0 0 24px;max-width:720px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.go{display:flex;flex-direction:column;gap:8px;text-align:left;padding:20px;border-radius:12px;background:#fff;border:1px solid #E4E7EA;border-top:4px solid #1A4B95;color:#1D2433;text-decoration:none;font:inherit;cursor:pointer;transition:transform .12s,box-shadow .12s}
+.go:nth-child(2){border-top-color:#3FB6AE} .go:nth-child(3){border-top-color:#E56E2F}
+.go:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,75,149,.12)}
+.go .t{font:700 19px "Barlow",sans-serif;color:#1A4B95} .go .d{color:#5D6576;font-size:14px;flex:1} .go .cta{font:600 13px "Montserrat",sans-serif;letter-spacing:.06em;color:#1A4B95}
+.hint{font-size:12.5px;color:#5D6576;padding:6px 16px;background:#EEF3FA;border-bottom:1px solid #E4E7EA}
+.stage iframe{flex:1;width:100%;border:0;background:#fff}
+@media(max-width:760px){ .bar{gap:8px 10px} .tabs{order:3;flex-basis:100%} .acts{margin-left:auto} .mnd{font-size:0;letter-spacing:0} .mnd b{font-size:11px} }
+</style>
+</head>
+<body>
+<section class="gate" id="gate" aria-label="Acesso">
+  <div class="half gl"><div class="acrlogo">across<small>Across RH · desenvolvimento humano</small></div><div class="cap">Painel CFO · Gestão da empresa</div></div>
+  <div class="half gr"><div class="mlogo"><svg viewBox="0 0 260 200" width="34" height="26" aria-hidden="true"><path d="M10,180 L95,20 L180,180" fill="none" stroke="#F3EBD9" stroke-width="20" stroke-linejoin="round"/><path d="M165,20 L250,180 L80,180 Z" fill="none" stroke="#F3EBD9" stroke-width="20" stroke-linejoin="round"/></svg><span><b>M<i>/</i>A</b> MANDA CAPITAL</span></div><div class="cap">CFO as a Service · Manda Capital</div></div>
+  <form class="card" id="gform" autocomplete="off">
+    <div class="tags"><span>Across RH</span><span>CFO as a Service</span></div>
+    <h1>Painel CFO · Across</h1>
+    <p>Tesouraria, controladoria, orçamento, rotinas e gestão da empresa, atualizados de hora em hora.</p>
+    <label for="gpw">Senha de acesso</label>
+    <input id="gpw" type="password" autocomplete="current-password" placeholder="Digite a senha" required>
+    <button id="gbtn" type="submit">Entrar</button>
+    <div class="err" id="gerr" role="alert"></div>
+    <div class="foot"><span>Manda Capital · uso interno</span><span>Confidencial</span></div>
+  </form>
+</section>
+<div id="app" hidden></div>
+<script id="payload" type="application/json">{"i":"AL6SLzv8NJhCvryQ","c":"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","chaves":[{"s":"lTa8jw2SNNkpqBKXXs0mQA==","i":"GUUozeXGy/GZXA+i","n":250000,"k":"YXtwd0Gy9RlE/RUo2O6EdnwK8BAHxN6AyLGyXf8aKXu3THEpZlV64PBPmAkafiZ5"},{"s":"4KpDwyTajXmJgGJqRN3lSw==","i":"34dWXVQzfDVGjVxX","n":250000,"k":"5ML2bXD4A+SSQGlgk9EZm27emDXyUnLzIo+Zy4lPnUozfvZU/GqTEJgpEALgc2Gu"}]}</script>
+<script>
+(function(){
+  var b64=function(s){return Uint8Array.from(atob(s),function(c){return c.charCodeAt(0);});};
+  async function unlock(pw){
+    var P=JSON.parse(document.getElementById('payload').textContent), te=new TextEncoder(), K=null, ult;
+    for(var i=0;i<P.chaves.length && !K;i++){
+      var w=P.chaves[i];
+      try{
+        var km=await crypto.subtle.importKey('raw',te.encode(pw),'PBKDF2',false,['deriveKey']);
+        var kek=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(w.s),iterations:w.n,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
+        K=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(w.i)},kek,b64(w.k));
+      }catch(e){ ult=e; }
+    }
+    if(!K) throw ult||new Error('senha');
+    var key=await crypto.subtle.importKey('raw',K,'AES-GCM',false,['decrypt']);
+    var gz=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(P.i)},key,b64(P.c));
+    var txt=await new Response(new Blob([gz]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+    return JSON.parse(txt);
+  }
+  function boot(o){
+    document.getElementById('gate').remove();
+    var app=document.getElementById('app'); app.innerHTML=o.html; app.hidden=false;
+    var s=document.createElement('script'); s.textContent=o.js; document.body.appendChild(s);
+  }
+  var f=document.getElementById('gform'), btn=document.getElementById('gbtn'), err=document.getElementById('gerr'), pw=document.getElementById('gpw');
+  async function tentar(p,silent){
+    btn.disabled=true; btn.textContent='Abrindo…'; err.textContent='';
+    try{ var o=await unlock(p); try{sessionStorage.setItem('ma-across-k',p);}catch(e){} boot(o); }
+    catch(e){ btn.disabled=false; btn.textContent='Entrar'; if(!silent){ err.textContent=(window.crypto&&crypto.subtle)?'Senha incorreta. Tente novamente.':'Este navegador não permite abrir com segurança. Use Chrome, Edge ou Safari atualizados.'; pw.select(); } }
+  }
+  f.addEventListener('submit',function(e){ e.preventDefault(); tentar(pw.value.trim().toLowerCase()); });
+  var k=null; try{k=sessionStorage.getItem('ma-across-k');}catch(e){} if(k) tentar(k,true); else pw.focus();
+})();
+</script>
+</body>
+</html>
