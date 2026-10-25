@@ -1,6 +1,6 @@
 /* Across CFO (mandacap.com.br/across): app instalável. Guarda só a casca da página e os ícones;
    os dados cifrados vêm sempre da rede (nada de dados fica guardado aqui). */
-const CACHE = 'across-app-v1';
+const CACHE = 'across-app-v2';
 const CASCA = ['./', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './favicon-32.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CASCA)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
