@@ -562,6 +562,28 @@ em.k{font-style:normal;color:var(--acc)}
 .resumo dl{grid-template-columns:1fr;gap:2px}
 .resumo dd{text-align:left;margin-bottom:8px;font-size:16.5px}
 
+/* ===== v4 ===== */
+.sim label b,.sim-l.tot b{color:#1D5FA8}
+.sim input[type=range]{accent-color:#2F7FD0}
+.reg{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}
+#regsvg .ct{font-size:9px;stroke-width:2.4px}
+#regsvg .rt{font-size:5.4px}
+#regsvg .km{font-size:6.4px;stroke-width:2px}
+#regsvg .ring{stroke-width:.7}
+.reg-r{padding:9px 0;gap:2px}
+.reg-r b{font-size:20px}
+.reg-r span{font-size:13.5px}
+.reg-r span strong{color:var(--ink)}
+.reg-r b em{display:none}
+.fx.navy.gest{background:linear-gradient(180deg,#1A4B86 0%,#2A6AB0 55%,#3C82C8 100%)}
+.gest .lede{color:#E3EEFB}.gest .eb{color:#CFE5FF}.gest .src{color:#D5E5F8}
+.gest .vals div{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.07)}.gest .vals span{color:#E3EEFB}
+.gest .ponte{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.5)}.gest .ponte b{color:#fff}
+.gest .ck{border-color:#0B2347;box-shadow:0 26px 54px -22px rgba(4,16,40,.7)}
+.ring b{font-size:42px;margin-top:-22px}
+.ring span{bottom:30px;font-size:10px;line-height:1.2}
+.pl.at,.ok{}
+
 </style>
 </head>
 <body>
@@ -600,7 +622,7 @@ em.k{font-style:normal;color:var(--acc)}
 <section class="fx creme tight" id="eu" data-cap="Quem sou eu">
   <div class="in">
     <span class="eb">Quem eu sou</span>
-    <h2 class="t2 rev pre">Já sentei dos dois lados da mesa de uma venda</h2>
+    <h2 class="t2 rev pre">Já sentei dos dois lados da mesa</h2>
     <div class="eu2">
       <div class="rev pre">
         <p>Sou o Pedro Hungria, economista e sócio da Manda Capital. Tenho mais de 15 anos em fusões e aquisições, private equity e venture capital, e acompanho empresas médias de todo o Brasil.</p>
@@ -626,7 +648,7 @@ em.k{font-style:normal;color:var(--acc)}
 <section class="fx" id="lugar" data-cap="O lugar">
   <div class="in">
     <span class="eb">Primeiro passo · o lugar</span>
-    <h2 class="t2 rev pre" style="max-width:24ch">São 1.323 m² no centro de Bebedouro: a esquina do hotel e o galpão a meia quadra</h2>
+    <h2 class="t2 rev pre" style="max-width:none">São 1.323 m² no centro de Bebedouro: a esquina do hotel e o galpão a meia quadra</h2>
     <p class="lede rev pre">O hotel fica no cruzamento da R. Dr. Brandão Veras com a R. Dr. Oscar Werneck. A cerca de 230 m está a Matriz, e a Prefeitura fica a cerca de 440 m. Dá para fazer tudo a pé.</p>
 
     <div class="fotos rev pre">
@@ -687,12 +709,12 @@ em.k{font-style:normal;color:var(--acc)}
   <div class="in">
     <span class="eb">Onde Bebedouro fica</span>
     <h2 class="t2 rev pre" style="max-width:26ch">Bebedouro está a poucas horas de cidades grandes do interior</h2>
-    <p class="lede rev pre">É uma cidade central para o norte paulista: Barretos e Olímpia a menos de uma hora, Ribeirão Preto e Rio Preto a pouco mais de uma hora e meia. Ao lado, o mapa e as distâncias.</p>
+    <p class="lede rev pre">É uma cidade central para o norte paulista: Barretos e Olímpia a cerca de uma hora de carro, Ribeirão Preto a pouco mais de uma hora e Rio Preto a cerca de uma hora e meia. São Paulo fica a cerca de quatro horas e meia. Tempos médios estimados.</p>
     <div class="reg rev pre">
-      <div class="reg-map"><svg id="regsvg" viewBox="-125 -75 235 150" role="img" aria-label="Mapa esquemático de Bebedouro e das cidades vizinhas"></svg></div>
+      <div class="reg-map"><svg id="regsvg" viewBox="-120 -65 335 385" role="img" aria-label="Mapa esquemático de Bebedouro e das cidades vizinhas"></svg></div>
       <div class="reg-l" id="reglist"></div>
     </div>
-    <p class="src">Mapa esquemático: as posições vêm das coordenadas das cidades e as linhas são retas, só para dar ideia de direção e escala. As distâncias em km são por estrada e aproximadas <em class="est">estimativa</em>; confira no Google Maps pelos botões ao lado. A cidade de São Paulo fica fora do quadro, no sentido sudeste.</p>
+    <p class="src">Mapa esquemático: as posições vêm das coordenadas das cidades e as linhas são retas, só para dar direção e escala. Km e tempos de carro são médias por estrada, arredondadas, calculadas sem trânsito <em class="est">estimativa</em>. Confira no Google Maps antes de viajar.</p>
   </div>
 </section>
 
@@ -700,10 +722,10 @@ em.k{font-style:normal;color:var(--acc)}
 <section class="fx nevoa" id="vocacao" data-cap="Vocação">
   <div class="in">
     <span class="eb">Terceiro passo · quem dorme em hotel aqui</span>
-    <h2 class="t2 rev pre" style="max-width:26ch">A demanda é de trabalho, eventos e saúde. O lazer fica em Olímpia</h2>
+    <h2 class="t2 rev pre" style="max-width:none">A demanda é de trabalho, eventos e saúde. O lazer normalmente fica em Olímpia</h2>
     <div class="papel rev pre">
       <div><b>Agro e cooperativas</b><span>Coopercitrus (sede na cidade), Credicitrus e a fábrica de suco da Louis Dreyfus trazem técnicos, fornecedores e compradores durante a semana.</span></div>
-      <div><b>Eventos</b><span>A Coopercitrus Expo reúne cerca de 25 mil visitantes. Barretos (Festa do Peão) fica a 45 km e Olímpia, a 50 km.</span></div>
+      <div><b>Eventos</b><span>A Coopercitrus Expo reúne cerca de 25 mil visitantes. Barretos (Festa do Peão) fica a cerca de 50 km e Olímpia, a cerca de 60 km.</span></div>
       <div><b>Saúde</b><span>Hospitais como o Unimed Samaritano, a 510 m do hotel, geram acompanhantes e familiares que pernoitam.</span></div>
       <div><b>Passagem</b><span>SP-326 e SP-322. Ribeirão Preto e o aeroporto ficam a cerca de 80 km. Não há hotel de rede na cidade.</span></div>
     </div>
@@ -719,10 +741,10 @@ em.k{font-style:normal;color:var(--acc)}
 <section class="fx" id="mercado" data-cap="Mercado">
   <div class="in">
     <span class="eb">Quarto passo · o que o mercado pede por imóveis assim</span>
-    <h2 class="t2 rev pre" style="max-width:26ch">O valor está mais no terreno do que no hotel</h2>
+    <h2 class="t2 rev pre" style="max-width:26ch">O valor está mais no terreno do que no imóvel</h2>
     <p class="lede rev pre">Não achei vendas fechadas, só anúncios. Anúncio é o preço que o dono pede, e a venda costuma sair 15% a 25% abaixo. Por isso as contas abaixo são <em class="est">estimativas</em>.</p>
     <div class="fotos3 rev pre">
-      <div><small>Anúncio · Praça Barão do Rio Branco, 09</small><b>R$ 7 milhões</b><span>1.198 m² de terreno e cerca de 1.978 m² construídos, ou cerca de R$ 3.538 por m² construído. Anúncio de julho de 2026 (Zap Imóveis). <a href="https://www.zapimoveis.com.br/imovel/venda-predio-centro-bebedouro-sp-1978m2-id-2900390881/" target="_blank" rel="noopener">Ver o anúncio ↗</a></span></div>
+      <div><small>Anúncio · Praça Barão do Rio Branco, 09</small><b>R$ 7 milhões</b><span>1.198 m² de terreno e cerca de 1.978 m² construídos, ou cerca de R$ 3.538 por m² construído. Anúncio de julho de 2026 (Zap Imóveis). <a href="https://www.zapimoveis.com.br/imovel/venda-predio-com-deposito-privativo-centro-bebedouro-sp-1978m2-id-2900390881/" target="_blank" rel="noopener">Ver o anúncio ↗</a></span></div>
       <div><small>Anúncios de terreno no centro</small><b>R$ 3.700 a 5.800 / m²</b><span>Com 15% a 25% de desconto de negociação, entre R$ 3.000 e R$ 4.600 por m² <em class="est">estimativa</em>.</span></div>
       <div><small>Anúncio local de hotel</small><b>cerca de R$ 25 mil por quarto</b><span>Hotel de 30 quartos anunciado na região. Para 45 quartos, a operação vale pouco perto do terreno <em class="est">estimativa</em>.</span></div>
     </div>
@@ -731,7 +753,7 @@ em.k{font-style:normal;color:var(--acc)}
     <p class="lede" style="margin-top:8px">Mude os números e veja o que acontece com os dois imóveis. É uma simulação com as minhas premissas, não é avaliação.</p>
     <div class="sim rev pre">
       <div class="sim-c">
-        <label for="s-pm">Preço pedido por m² de terreno <b id="o-pm"></b></label>
+        <label for="s-pm">Preço médio por m² de terreno <b id="o-pm"></b></label>
         <input id="s-pm" type="range" min="2500" max="6500" step="100" value="4700">
         <label for="s-dc">Desconto de negociação <b id="o-dc"></b></label>
         <input id="s-dc" type="range" min="0" max="35" step="1" value="20">
@@ -757,7 +779,7 @@ em.k{font-style:normal;color:var(--acc)}
         <label for="a-di">Diária média <b id="o-di"></b></label>
         <input id="a-di" type="range" min="120" max="320" step="5" value="200">
         <label for="a-pc">Parte da receita paga ao dono <b id="o-pc"></b></label>
-        <input id="a-pc" type="range" min="6" max="18" step="1" value="11">
+        <input id="a-pc" type="range" min="6" max="18" step="1" value="10">
         <p class="nota">45 apartamentos, 365 dias. Valores exemplo, ainda sem os números reais do hotel.</p>
       </div>
       <div class="sim-r">
@@ -818,7 +840,7 @@ em.k{font-style:normal;color:var(--acc)}
 
     <h3 class="t3" style="margin-top:56px">Escolha um caminho e veja o calendário</h3>
     <div class="ops" role="radiogroup" aria-label="Caminho">
-      <label class="op" id="op1"><input type="radio" name="cam" value="1"><small>Caminho 1</small><h3>Só arrendar</h3><div class="v">A</div><div class="pz"><i>Prazo estimado</i><b>30 a 60 dias</b></div><div class="p">Renda rápida e hotel aberto, sem esperar o inventário.</div><div class="go"></div></label>
+      <label class="op" id="op1"><input type="radio" name="cam" value="1"><small>Caminho 1</small><h3>Só arrendar</h3><div class="v">A</div><div class="pz"><i>Prazo estimado</i><b>2 a 4 meses</b></div><div class="p">Renda rápida e hotel aberto, sem esperar o inventário.</div><div class="go"></div></label>
       <label class="op" id="op2"><span class="selo">Recomendado</span><input type="radio" name="cam" value="2" checked><small>Caminho 2</small><h3>Arrendar e vender os imóveis</h3><div class="v">A + D</div><div class="pz"><i>Prazo estimado</i><b>6 a 12 meses</b></div><div class="p">Renda agora e, quando o inventário andar, a venda dos dois imóveis juntos.</div><div class="go"></div></label>
       <label class="op" id="op3"><input type="radio" name="cam" value="3"><small>Caminho 3</small><h3>Só vender os imóveis</h3><div class="v">D</div><div class="pz"><i>Prazo estimado</i><b>6 a 12 meses</b></div><div class="p">Foco total em destravar o inventário e vender.</div><div class="go"></div></label>
     </div>
@@ -890,13 +912,13 @@ em.k{font-style:normal;color:var(--acc)}
 <section class="fx navy gest" id="gestao" data-cap="Gestão">
   <div class="in">
     <span class="eb">E se a ideia for otimizar a operação?</span>
-    <h2 class="t2 rev pre" style="max-width:26ch">Também podemos ajudar a tornar a operação atual rentável, por meio de um processo de gestão</h2>
-    <p class="lede rev pre">Em vez de arrendar ou vender, a família pode querer que o hotel volte a dar resultado. Nesse caso, o trabalho é entender o que o hotel realmente ganha e perde, corrigir o produto (as reclamações públicas são de banheiro, cama e chaves) e acompanhar tudo em um painel. Abaixo, o que eu poderia montar. Tudo com números inventados, só para mostrar como fica.</p>
+    <h2 class="t2 rev pre" style="max-width:30ch">Também podemos ajudar a tornar a operação atual rentável</h2>
+    <p class="lede rev pre" style="max-width:80ch">Em vez de arrendar ou vender, a família pode querer que o hotel volte a dar resultado. Nesse caso, o trabalho é entender o que o hotel realmente ganha e perde, corrigir o produto (as reclamações públicas são de banheiro, cama e chaves) e acompanhar tudo em um painel. Abaixo, o que eu poderia montar. Tudo com números inventados, só para mostrar como fica.</p>
 
     <div class="mm rev pre" id="gm">
       <div class="mm-tabs" role="tablist"><button role="tab" aria-selected="true" data-m="0"><small>Mês 1</small><b>Levantar</b></button><button role="tab" aria-selected="false" data-m="1"><small>Mês 2</small><b>Corrigir</b></button><button role="tab" aria-selected="false" data-m="2"><small>Mês 3</small><b>Rodar</b></button></div>
       <div class="mm-body">
-        <div class="mm-ring"><div class="ring" id="gm-ring"><b id="gm-p">25%</b><span>operação sob controle</span></div><p class="mm-n">Índice ilustrativo: quanto da operação já tem número, rotina e responsável.</p></div>
+        <div class="mm-ring"><div class="ring" id="gm-ring"><b id="gm-p">25%</b><span>operação<br>sob controle</span></div><p class="mm-n">Índice ilustrativo: quanto da operação já tem número, rotina e responsável.</p></div>
         <div class="mm-list" id="gm-list"></div>
         <div class="mm-ve"><small>O que a família enxergaria</small><p id="gm-ve"></p></div>
       </div>
@@ -938,9 +960,9 @@ em.k{font-style:normal;color:var(--acc)}
     <div class="veilc"></div>
   </div>
   <div class="in">
-    <span class="eb">Para guardar</span>
+    <span class="eb">Para guardar e decidir</span>
     <h2 class="t1">O dossiê completo,<br>com todas as fontes</h2>
-    <p class="lede" style="color:#D3DEE6">Contas, fontes, ressalvas e perguntas para a primeira conversa, em um documento para guardar e imprimir. Tudo com base em informação pública.</p>
+    <p class="lede" style="color:#D3DEE6">Contas, fontes, ressalvas e perguntas em um documento para guardar e para decidir qual caminho seguir. Tudo com base em informação pública.</p>
     <div class="dl">
       <a class="btn big" href="Dossie-Hotel-Rio-Branco.pdf" target="_blank" rel="noopener"><span>↓</span> Baixar o dossiê em PDF</a>
       <a class="btn big alt" href="dossie.html" target="_blank" rel="noopener">Ler no navegador</a>
@@ -998,17 +1020,17 @@ var MAP={"roads": [{"cls": "thin", "d": "M-717.7 633.0 L-700.9 627.1 L-659.2 576
 
   /* caminhos + calendário (12 meses) */
   var O={
-   1:{n:'Só arrendar o hotel',prazo:'30 a 60 dias para arrendar',ganho:'Aluguel de R$ 11 a 20 mil por mês',
+   1:{n:'Só arrendar o hotel',prazo:'2 a 4 meses para arrendar',ganho:'Aluguel de R$ 11 a 20 mil por mês',
       inc:['Dados do hotel, fotos e minuta de contrato prontos','Rodada com o grupo que já opera hotéis na região, operadores regionais e hoteleiros locais','Negociação do prazo, da carência para reforma e da saída'],
       eco:'O hotel segue aberto e gerando renda, e o imóvel continua de vocês.',
       sub:'O caminho mais rápido: não depende do inventário.',
-      rows:[['Dados do hotel, fotos e minuta',1,1,'mat'],['Rodada com operadores',1,2,'mkt'],['Negociação e contrato',2,3,'prop'],['Hotel arrendado, gerando renda',3,12,'pre']],
+      rows:[['Dados do hotel, fotos e minuta',1,1,'mat'],['Rodada com operadores',1,3,'mkt'],['Negociação e contrato',3,4,'prop'],['Hotel arrendado, gerando renda',4,12,'pre']],
       nota:'Quem arrenda costuma pedir carência para reformar. A renda vem depois dela.'},
-   2:{n:'Arrendar agora e vender os imóveis',prazo:'arrendar em 1 a 3 meses; vender em 6 a 12',ganho:'Aluguel já, e R$ 3,7 a 5,5 mi na venda',
+   2:{n:'Arrendar agora e vender os imóveis',prazo:'arrendar em 2 a 4 meses; vender em 6 a 12',ganho:'Aluguel já, e R$ 3,7 a 5,5 mi na venda',
       inc:['Arrendamento com cláusula de saída caso o imóvel seja vendido','Inventário e certidões andando em paralelo','Dossiê do imóvel e laudo de avaliação','Venda dos dois imóveis juntos, como esquina central de 1.323 m²'],
       eco:'A renda não para enquanto o inventário anda, e a venda chega com o imóvel pronto.',
       sub:'Renda agora e valor máximo depois: o que eu recomendaria como ponto de partida.',
-      rows:[['Arrendamento do hotel',1,3,'pre'],['Inventário e certidões',1,8,'mat'],['Dossiê do imóvel e laudo',2,4,'buy'],['Rodada de compradores',5,10,'mkt'],['Propostas e negociação',9,12,'prop']],
+      rows:[['Arrendamento do hotel',1,4,'pre'],['Inventário e certidões',1,8,'mat'],['Dossiê do imóvel e laudo',2,4,'buy'],['Rodada de compradores',5,10,'mkt'],['Propostas e negociação',9,12,'prop']],
       nota:'A venda só fecha quando o inventário permitir. O arrendamento cobre esse tempo.'},
    3:{n:'Só vender os imóveis',prazo:'6 a 12 meses',ganho:'R$ 3,7 a 5,5 mi na venda',
       inc:['Inventário e certidões em primeiro lugar','Dossiê do imóvel e laudo de avaliação','Rodada com incorporadoras, investidores locais, fundos e redes de farmácia'],
@@ -1111,25 +1133,22 @@ var MAP={"roads": [{"cls": "thin", "d": "M-717.7 633.0 L-700.9 627.1 L-659.2 576
   var $=function(id){return document.getElementById(id)};
   /* ===== mapa regional ===== */
   var LAT0=-20.949,LON0=-48.479,KX=111.32*Math.cos(LAT0*Math.PI/180),KY=110.57;
-  var CT=[['Barretos',-20.557,-48.568,'45'],['Olímpia',-20.737,-48.915,'50'],['Catanduva',-21.137,-48.973,'55'],['Ribeirão Preto',-21.177,-47.810,'80'],['São José do Rio Preto',-20.812,-49.376,'110']];
+  var CT=[['Barretos',-20.557,-48.568,'49','45 min'],['Olímpia',-20.737,-48.915,'58','55 min'],['Catanduva',-21.137,-48.973,'62','1h05'],['Ribeirão Preto',-21.177,-47.810,'81','1h10'],['São José do Rio Preto',-20.812,-49.376,'110','1h30'],['São Paulo',-23.550,-46.633,'381','4h30']];
   var NS='http://www.w3.org/2000/svg',svg=$('regsvg');
   function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);svg.appendChild(e);return e}
-  [50,100].forEach(function(r){el('circle',{cx:0,cy:0,r:r,'class':'ring'});var t=el('text',{x:r*0.707+1,y:-r*0.707-1,'class':'rt'});t.textContent=r+' km em linha reta'});
+  [50,100,200,300].forEach(function(r){el('circle',{cx:0,cy:0,r:r,'class':'ring'});var t=el('text',{x:-r*0.17,y:r*0.98-1.5,'class':'rt','text-anchor':'middle'});t.textContent=r+' km em linha reta'});
   CT.forEach(function(c){
-    var x=(c[2]-LON0)*KX,y=-(c[1]-LAT0)*KY;
+    var x=(c[2]-LON0)*KX,y=-(c[1]-LAT0)*KY,sp=c[0]==='São Paulo',rp=c[0].indexOf('Rio Preto')>=0;
     el('line',{x1:0,y1:0,x2:x,y2:y,'class':'rl'});
-    el('circle',{cx:x,cy:y,r:2.6,fill:'#1B3A52',stroke:'#fff','stroke-width':1});
-    var rp=c[0].indexOf('Rio Preto')>=0,left=false,t=el('text',{x:x+(rp?-6:4),y:y+(rp?9:(y>0?8:-4)),'class':'ct','text-anchor':'start'});t.textContent=c[0];
-    var k=el('text',{x:x/2,y:y/2-2,'class':'km','text-anchor':'middle'});k.textContent='~'+c[3]+' km';
+    el('circle',{cx:x,cy:y,r:sp?4.5:3.6,fill:'#1B3A52',stroke:'#fff','stroke-width':1.2});
+    var ol=c[0]==='Olímpia',ca=c[0]==='Catanduva',ax=sp?'end':(ol?'end':'start');
+    var t=el('text',{x:x+(sp?-8:ol?-7:rp?-16:ca?-6:7),y:y+(sp?3:rp?14:ol?-3:ca?14:-5),'class':'ct','text-anchor':ax});t.textContent=rp?'Rio Preto':c[0];
+    if(sp){var k=el('text',{x:x/2+4,y:y/2-3,'class':'km','text-anchor':'middle'});k.textContent='~'+c[4]+' de carro';}
   });
-  /* São Paulo fora do quadro */
-  el('line',{x1:0,y1:0,x2:62,y2:72,'class':'rl'});
-  el('path',{d:'M62 72 l-5 -3 l3 -2 z',fill:'#8FA3B5'});
-  var sp=el('text',{x:104,y:64,'class':'ct','text-anchor':'end'});sp.textContent='São Paulo · ~379 km →';
-  el('circle',{cx:0,cy:0,r:5,fill:'rgba(169,18,42,.25)'});el('circle',{cx:0,cy:0,r:3.2,fill:'#A9122A',stroke:'#fff','stroke-width':1.2});
-  var bt=el('text',{x:5,y:-5,'class':'ct',style:'fill:#A9122A;font-size:6.4px'});bt.textContent='Bebedouro';
-  var rows=[['Bebedouro','Hotel Rio Branco, no centro',null,'me']].concat(CT.map(function(c){return [c[0],'cerca de <em>'+c[3]+' km</em> por estrada','https://www.google.com/maps/dir/?api=1&origin=Bebedouro,+SP&destination='+encodeURIComponent(c[0]+', SP')]})).concat([['São Paulo','cerca de <em>379 km</em> por estrada','https://www.google.com/maps/dir/?api=1&origin=Bebedouro,+SP&destination=S%C3%A3o+Paulo,+SP']]);
-  $('reglist').innerHTML=rows.map(function(r){return '<div class="reg-r'+(r[3]?' me':'')+'"><b>'+r[0]+'</b><span>'+r[1].replace('<em>','<strong>').replace('</em>','</strong>')+'</span>'+(r[2]?'<a href="'+r[2]+'" target="_blank" rel="noopener">Rota ↗</a>':'')+'</div>'}).join('');
+  el('circle',{cx:0,cy:0,r:7,fill:'rgba(169,18,42,.25)'});el('circle',{cx:0,cy:0,r:4.6,fill:'#A9122A',stroke:'#fff','stroke-width':1.5});
+  var bt=el('text',{x:8,y:-8,'class':'ct',style:'fill:#A9122A;font-size:10.5px'});bt.textContent='Bebedouro';
+  var rows=[['Bebedouro','Hotel Rio Branco, no centro','me']].concat(CT.map(function(c){return [c[0],'cerca de <strong>'+c[3]+' km</strong> · tempo médio estimado de carro: <strong>'+c[4]+'</strong>']}));
+  $('reglist').innerHTML=rows.map(function(r){return '<div class="reg-r'+(r[2]?' me':'')+'"><b>'+r[0]+'</b><span>'+r[1]+'</span></div>'}).join('');
 
   /* ===== mês a mês da gestão ===== */
   var MM=[{p:25,ve:'Um hotel com bons números em papéis soltos: ninguém sabe ao certo quanto cada canal rende nem quanto cada quarto custa.',it:[['Receita por canal e ocupação','at'],['Custos e folha','at'],['Estado dos quartos','lv'],['Tabela de diárias','lv'],['Reputação nos portais','lv'],['Painel de gestão','lv'],['Resultado do hotel','lv']]},
