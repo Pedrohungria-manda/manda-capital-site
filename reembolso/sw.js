@@ -1,8 +1,8 @@
 // Service worker do Reembolso. Cacheia SOMENTE a casca (HTML, manifest, ícones).
 // Dado clínico nunca passa por aqui: qualquer requisição que não seja da própria
 // origem (a API do Apps Script) vai direto à rede, sem cache, e POST nunca é interceptado.
-var VERSAO = 'reemb-casca-v2';
-var CASCA = ['./', 'index.html', 'validacao.js', 'manifest.webmanifest', 'icone.svg', 'icone-192.png', 'icone-512.png'];
+var VERSAO = 'reemb-casca-v3';
+var CASCA = ['./', 'index.html', 'validacao.js', 'dominio.js', 'painel.js', 'ciclo.js', 'profissionais.js', 'documentos.js', 'manifest.webmanifest', 'icone.svg', 'icone-192.png', 'icone-512.png'];
 
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(VERSAO).then(function (c) { return c.addAll(CASCA); }).then(function () { return self.skipWaiting(); }));

@@ -128,6 +128,35 @@ table.tb2{border-collapse:collapse;width:100%;min-width:760px;font-size:14.5px}
 .sl .d{font-family:var(--f-mono);font-size:13px;color:var(--mudo)}.sl .h{font-weight:600}.sl .pc{grid-column:2/-1}
 .sl button{background:none;border:0;color:var(--mudo);cursor:pointer;min-width:44px;min-height:44px;font-size:18px}
 .esc{display:grid;grid-template-columns:90px 1fr 1fr;gap:8px;align-items:center;margin-bottom:8px}.esc input{padding:8px;border:1px solid var(--linha);border-radius:8px;min-height:44px}
+/* módulos: lista de ações, tabelas clicáveis, abas, calendário, gaveta */
+.chip.neutro{background:var(--fundo);color:var(--mudo);border:1px solid var(--linha)}
+.ac{font-size:13.5px;white-space:normal;color:var(--mudo)}.ac.crit{color:var(--crit);font-weight:600}.ac.at{color:var(--atencao);font-weight:600}.ac.ok{color:var(--ok)}
+.tb2 tr.clic{cursor:pointer}.tb2 tr.clic:hover td{background:#F0F5FB}.tb2 tr.gh td{background:var(--creme);color:var(--azesc);font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px}
+.tb2 td small{color:var(--mudo)}.tb2 td .ac{display:block;max-width:340px}
+.lst{margin:8px 0 0;padding:0;list-style:none;font-size:14.5px}.lst li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:7px 0;border-bottom:1px dashed var(--linha)}
+.lst li .ac{flex:1;text-align:right}.lst li .v{font-weight:600;min-width:96px;text-align:right}
+.lk3{background:none;border:0;padding:6px 0;color:var(--az);cursor:pointer;text-align:left;font-size:14.5px;min-height:36px}.lk3:hover{text-decoration:underline}
+.lk2{font-size:13px;margin-left:8px}
+.gh2{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px 16px;margin:22px 0 10px}.gh2 h3{margin:0;color:var(--azesc)}.gh2 h3 small{color:var(--mudo);font-weight:400}.gh2 span{color:var(--mudo);font-size:13.5px}
+.pl .stats{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:13.5px;color:var(--mudo)}.pl .stats b{color:var(--tinta)}
+.abas{display:flex;gap:4px;overflow-x:auto;margin:6px 0 12px;border-bottom:1px solid var(--linha)}
+.aba{background:none;border:0;border-bottom:3px solid transparent;padding:12px 14px;font-weight:600;color:var(--mudo);cursor:pointer;white-space:nowrap;min-height:44px}.aba.on{color:var(--azesc);border-color:var(--az)}
+.cab-prof h3{font-size:22px}
+.gp{margin-bottom:14px}.gp h4,.cx h4{margin:16px 0 4px;color:var(--azesc);font-size:15px}
+.up-card{background:var(--fundo);border-radius:10px;padding:14px 16px;margin-bottom:16px}
+.ups{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}.bt.peq{padding:8px 12px;min-height:38px;font-size:12px}.bt.perigo{color:var(--crit);border-color:var(--crit)}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.cdh{font-family:var(--f-mono);font-size:11px;color:var(--mudo);text-align:center;padding:4px 0}
+.cd{background:var(--branco);border:1px solid var(--linha);border-radius:8px;min-height:74px;padding:4px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px;font-size:12px;overflow:hidden}
+.cd.vazio{border:0;background:none;cursor:default}.cd b{font-size:12px;color:var(--mudo);font-weight:600}.cd.hoje{border-color:var(--az);box-shadow:inset 0 0 0 1px var(--az)}.cd.sel{background:#EAF2FB}
+.m{font-style:normal;border-radius:4px;padding:1px 4px;font-size:10.5px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.m.s{background:#DCE8F7;color:var(--azesc)}.m.p{background:#EFE6CC;color:#6B5316}.m.a{background:#DDF1EF;color:#1D6B65}.m.r{background:#E7E3F3;color:#4A3F7A}
+.cal-leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--mudo);margin-top:10px}.cal-leg .m{display:inline-block;width:14px;height:10px;padding:0;margin-right:5px}
+#cal-det{margin-top:12px}
+.dr{position:fixed;inset:0;z-index:30;display:flex;justify-content:flex-end}.dr-bg{position:absolute;inset:0;background:rgba(11,37,80,.45)}
+.dr-in{position:relative;background:var(--branco);width:min(560px,100%);height:100%;overflow-y:auto;padding:22px 24px 32px;box-shadow:-10px 0 30px rgba(0,0,0,.2)}
+.dr-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:6px}.dr-top h3{margin:0 0 4px;color:var(--azesc)}.dr .x{background:none;border:0;font-size:30px;line-height:1;cursor:pointer;color:var(--mudo);min-width:44px;min-height:44px}
+.dr-bt{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:18px;position:sticky;bottom:0;background:var(--branco);padding:12px 0 0}
+@media(max-width:760px){.dr-in{padding:18px 16px 28px}.cd{min-height:58px;font-size:11px}.m{font-size:9.5px;padding:1px 2px}.tb select{max-width:100%}}
 @media(max-width:760px){.reg{grid-template-columns:1fr 1fr}.tiles{grid-template-columns:repeat(2,1fr);gap:10px}.tile b{font-size:20px}.tile{padding:12px 14px}.par{height:130px}.barras{gap:2px}.mes{font-size:9px;min-width:0}.par i{width:44%}.cx{padding:18px 16px}}
 @media(max-width:760px){
   #app,#app.min{grid-template-columns:minmax(0,1fr)}
@@ -183,6 +212,11 @@ table.tb2{border-collapse:collapse;width:100%;min-width:760px;font-size:14.5px}
 </div>
 
 <script src="validacao.js"></script>
+<script src="dominio.js"></script>
+<script src="painel.js"></script>
+<script src="ciclo.js"></script>
+<script src="profissionais.js"></script>
+<script src="documentos.js"></script>
 <script>
 window.__API_URL = "https://script.google.com/macros/s/AKfycbzI9RukpWjjUxzs15vbvtbapxLYGiTGhOjzQdsiVD0GMZAkEtefYFzenKsA5geZN7UqLw/exec";   // URL do App da Web publicado (…/exec). Única constante a trocar no deploy.
 
@@ -330,13 +364,13 @@ window.__API_URL = "https://script.google.com/macros/s/AKfycbzI9RukpWjjUxzs15vbv
   function abrirMenu(on){ $('#sb').classList.toggle('aberto', on); $('#veu').hidden = !on; }
 
   // ------------------------------------------------------------ telas (cada bloco renderiza isolado)
-  var FASE = { painel:'Fase 3', ciclo:'Fase 5', sessoes:'Fase 4', profissionais:'Fase 2', documentos:'Fase 5', envio:'Fase 5' };
-  var TELAS = {
-    perfil: telaPerfil, painel: telaPainel, sessoes: telaSessoes, envio: telaEnvio, ciclo: telaCiclo, profissionais: telaProfissionais
-  };
+  var TELAS = { perfil: telaPerfil, sessoes: telaSessoes, envio: telaEnvio };      // painel, ciclo, profissionais e documentos vêm dos módulos .js
+  var bool = function(x){ return x===true || String(x).toLowerCase()==='true' ? 1 : 0; };
+  var mapaProf = function(){ var m = {}; S.M.profissionais.forEach(function(p){ m[p.id] = p; }); return m; };
+  var TERAPIA_NOME = { aba:'ABA', fono:'Fonoaudiologia', to:'Terapia ocupacional', psicomot:'Psicomotricidade' };
   function placeholder(id){
     var a = S.areas.filter(function(x){ return x.id===id; })[0] || { nome:id };
-    return '<div class="cx"><h3>'+esc(a.nome)+'</h3><p class="sub">Esta tela entra na '+esc(FASE[id]||'próxima fase')+'.</p><span class="tag">Em construção</span></div>';
+    return '<div class="cx"><h3>'+esc(a.nome)+'</h3><p class="sub">Esta tela ainda não está disponível.</p></div>';
   }
   function ir(v){
     S.v = v; var rod = $('#aviso'); rod.textContent = '';
@@ -413,11 +447,13 @@ window.__API_URL = "https://script.google.com/macros/s/AKfycbzI9RukpWjjUxzs15vbv
         '<label class="campo" style="max-width:280px"><span>Psicomotricidade (h/semana)</span><select id="pm-h"><option value="2"'+(H.psicomot===2?' selected':'')+'>2 h (autos, ev. 1.6)</option><option value="1"'+(H.psicomot===1?' selected':'')+'>1 h (laudo 14/11/2025)</option></select></label>'+
         '<button class="bt" id="pm-salvar">Salvar parâmetros</button><span class="msg" id="pm-msg"></span></details>';
     }
-    return form + bans + grade + cabLista + param;
+    var cal = '<div class="cx"><h3>Calendário de '+esc(ciclo)+'</h3><p class="sub">Horas de sessão por dia. Toque num dia para ver as sessões e preencher a data do registro.</p>'+window.App.D.calendario(ciclo, window.App.D.ctx())+'</div>';
+    return form + bans + grade + cal + cabLista + param;
   }
   telaSessoes.depois = function(){
     var calc = function(){ var h = V.horasDaSessao($('#ss-ini').value, $('#ss-fim').value); $('#ss-h').value = h===null ? '—' : hh(h)+' h'; };
     $('#ss-ini').oninput = $('#ss-fim').oninput = calc; calc();
+    window.App.D.ligarCalendario(window.App.D.ctx(), function(d){ if(d <= hojeISO()){ $('#ss-data').value = d; } });
     $('#ss-mes').onchange = function(){ S.sesMes = this.value; ir('sessoes'); };
     $('#ss-salvar').onclick = async function(){
       var b = this, mg = $('#ss-msg'), s = { data:$('#ss-data').value, profId:$('#ss-prof').value, horaIni:$('#ss-ini').value, horaFim:$('#ss-fim').value, local:$('#ss-local').value, obs:$('#ss-obs').value };
@@ -455,112 +491,6 @@ window.__API_URL = "https://script.google.com/macros/s/AKfycbzI9RukpWjjUxzs15vbv
     };
   };
 
-  // ------------------------------------------------------------ painel (§9)
-  var DIA = 864e5;
-  function dias(a, b){ var x = Date.parse(a), y = Date.parse(b); return isNaN(x)||isNaN(y) ? null : Math.round((y-x)/DIA); }
-  function mediana(v){ if(!v.length) return null; v = v.slice().sort(function(a,b){ return a-b; }); var m = v.length>>1; return v.length%2 ? v[m] : Math.round((v[m-1]+v[m])/2); }
-  /** Cada lançamento cai em no máximo uma causa, na ordem de prioridade abaixo. */
-  function calcPainel(L, P){
-    var r = { fat:0, reemb:0, falta:0, nunca:0, meses:{}, prazos:{}, todosA:[], todosB:[],
-      causas:[ { id:'falta',  t:'Falta lançar o valor recebido', d:'Tem data de reembolso e valor em branco. O dinheiro provavelmente já entrou; falta registrar.', itens:[] },
-               { id:'nunca',  t:'Nunca entrou na Amil', d:'Sem data de entrada. Está parado aqui, não lá. Normalmente falta nota fiscal ou lista de frequência.', itens:[] },
-               { id:'glosa',  t:'Glosado por tabela própria', d:'Reembolso abaixo de 50% do valor pago.', itens:[] },
-               { id:'espera', t:'Na Amil, sem reembolso ainda', d:'Já protocolado, sem data de reembolso.', itens:[] } ] };
-    var causa = {}; r.causas.forEach(function(c){ causa[c.id] = c; });
-    L.forEach(function(l){
-      var v = num(l.valor)||0, rv = num(l.vReembolsado), m = r.meses[l.ciclo] = r.meses[l.ciclo] || { fat:0, reemb:0, a:[], b:[] };
-      r.fat += v; m.fat += v; if(rv!==null){ r.reemb += rv; m.reemb += rv; }
-      var a = dias(l.dtPagamento, l.dtEntrada), b = dias(l.dtEntrada, l.dtReembolso);
-      if(a!==null && a>=0){ m.a.push(a); r.todosA.push(a); } if(b!==null && b>=0){ m.b.push(b); r.todosB.push(b); }
-      var c = null;
-      if(!l.dtEntrada){ c = 'nunca'; r.nunca += v; }
-      else if(l.status==='Pagamento Confirmado' && l.dtReembolso && rv===null){ c = 'falta'; r.falta += v; }
-      else if(rv!==null && v>0 && rv/v < .5) c = 'glosa';
-      else if(!l.dtReembolso && rv===null) c = 'espera';
-      if(c) causa[c].itens.push({ ciclo:l.ciclo, quem:(P[l.profId]||{}).apelido||l.profId, valor:v, dif:rv===null ? v : v-rv });
-    });
-    r.causas.forEach(function(c){ c.total = c.itens.reduce(function(s,i){ return s + (c.id==='glosa' ? i.dif : i.valor); }, 0);
-      c.itens.sort(function(x,y){ return y.ciclo.localeCompare(x.ciclo) || x.quem.localeCompare(y.quem,'pt-BR'); }); });
-    r.causas.sort(function(x,y){ return y.total - x.total; });
-    r.saldo = r.fat - r.reemb; r.provavel = r.saldo - r.falta;
-    return r;
-  }
-  function telaPainel(){
-    var L = S.M.lancamentos;
-    if(!L.length) return '<div class="cx"><h3>Painel</h3><p class="sub">Nenhum lançamento ainda.</p></div>';
-    var c = calcPainel(L, mapaProf());
-    var nFalta = c.causas.filter(function(x){ return x.id==='falta'; })[0].itens.length, nNunca = c.causas.filter(function(x){ return x.id==='nunca'; })[0].itens.length;
-    var tile = function(t, v, s, at){ return '<div class="tile'+(at?' at':'')+'"><span>'+t+'</span><b>'+brl(v)+'</b><small>'+s+'</small></div>'; };
-    var tiles = '<div class="tiles">'+
-      tile('Faturado no ano', c.fat, L.length+' lançamentos')+
-      tile('Reembolsado', c.reemb, c.fat ? Math.round(100*c.reemb/c.fat)+'% do faturado registrado' : '')+
-      tile('Saldo aparente', c.saldo, 'faturado − reembolsado registrado')+
-      tile('Falta lançar', c.falta, nFalta+' linhas pagas sem valor registrado', c.falta>0)+
-      tile('Saldo provável', c.provavel, 'saldo aparente − falta lançar')+
-      tile('Nunca protocolado', c.nunca, nNunca+' lançamentos sem entrada na Amil', c.nunca>0)+'</div>';
-    var ciclos = Object.keys(c.meses).sort(), max = Math.max.apply(null, ciclos.map(function(k){ return Math.max(c.meses[k].fat, c.meses[k].reemb); }).concat([1]));
-    var barras = ciclos.map(function(k){ var m = c.meses[k], rot = k.slice(5)+'/'+k.slice(2,4);
-      return '<div class="mes" role="img" aria-label="'+rot+': faturado '+brl(m.fat)+', reembolsado '+brl(m.reemb)+'" title="Faturado '+brl(m.fat)+' · Reembolsado '+brl(m.reemb)+'"><div class="par"><i class="f" style="height:'+(100*m.fat/max)+'%"></i><i class="r" style="height:'+(100*m.reemb/max)+'%"></i></div>'+rot+'<br>'+(m.fat ? Math.round(100*m.reemb/m.fat)+'%' : '—')+'</div>'; }).join('');
-    var trava = c.causas.filter(function(x){ return x.itens.length; }).map(function(x){
-      return '<details class="causa"><summary><span class="ct">'+esc(x.t)+' · '+x.itens.length+'</span><span class="cv">'+brl(x.total)+'</span><span class="cd">'+esc(x.d)+'</span></summary><ul>'+
-        x.itens.map(function(i){ return '<li><span>'+esc(i.ciclo.slice(5)+'/'+i.ciclo.slice(2,4)+' · '+i.quem)+'</span><span>'+brl(x.id==='glosa' ? i.dif : i.valor)+'</span></li>'; }).join('')+'</ul></details>'; }).join('') || '<p class="sub">Nada travado.</p>';
-    var onde = function(a, b){ if(a===null || b===null) return '—'; if(Math.abs(a-b) <= 3) return 'Equilibrado'; return a > b ? 'Do nosso lado' : 'Na Amil'; };
-    var linha = function(rot, a, b, tf){ var ma = mediana(a), mb = mediana(b); return '<tr><td>'+rot+'</td><td class="n">'+(ma===null?'—':ma+' d')+'</td><td class="n">'+(mb===null?'—':mb+' d')+'</td><td>'+onde(ma, mb)+'</td></tr>'; };
-    var prazo = ciclos.slice().reverse().map(function(k){ return linha(k.slice(5)+'/'+k.slice(0,4), c.meses[k].a, c.meses[k].b); }).join('');
-    return '<div class="tb"><span class="gap"></span><span class="msg" id="pn-msg"></span><button class="bt cl" id="pn-prova">Exportar prova (PDF)</button></div>'+tiles+
-      '<div class="cx"><h3>Mês a mês</h3><p class="sub">Faturado contra reembolsado registrado, por competência. O percentual embaixo é reembolsado ÷ faturado.</p><div class="barras">'+barras+'</div>'+
-      '<div class="leg"><span><i style="background:var(--azesc)"></i>Faturado</span><span><i style="background:#8DB4DB"></i>Reembolsado</span></div></div>'+
-      '<div class="cx"><h3>O que trava hoje</h3><p class="sub">Agrupado por causa. Toque para ver as linhas.</p>'+trava+'</div>'+
-      '<div class="cx"><h3>Prazo por competência</h3><p class="sub">Mediana em dias corridos. Nosso lado: pagamento → entrada na Amil. Amil: entrada → reembolso.</p><div class="tw"><table class="tb2" style="min-width:0"><thead><tr><th>Competência</th><th class="n">Nosso lado</th><th class="n">Amil</th><th>Atraso</th></tr></thead><tbody>'+prazo+'</tbody><tfoot>'+linha('Todas', c.todosA, c.todosB)+'</tfoot></table></div></div>';
-  }
-
-  telaPainel.depois = function(){ var b = $('#pn-prova'); if(b) b.onclick = function(){ exportarProva(this, $('#pn-msg')); }; };
-
-  // ------------------------------------------------------------ ciclo (leitura nesta fase)
-  var mapaProf = function(){ var m = {}; S.M.profissionais.forEach(function(p){ m[p.id] = p; }); return m; };
-  function telaCiclo(){
-    var L = S.M.lancamentos, P = mapaProf();
-    var uni = L.reduce(function(a,l){ a[l.ciclo]=1; return a; }, {}); (S.M.sessoes||[]).forEach(function(s){ uni[s.data.slice(0,7)] = 1; }); uni[hojeISO().slice(0,7)] = 1;
-    var ciclos = Object.keys(uni).sort().reverse();
-    if(!S.ciclo || ciclos.indexOf(S.ciclo)<0) S.ciclo = ciclos[0];
-    var rows = L.filter(function(l){ return l.ciclo===S.ciclo; }).sort(function(a,b){
-      var x = (P[a.profId]||{}).apelido||a.profId, y = (P[b.profId]||{}).apelido||b.profId; return x.localeCompare(y,'pt-BR') || String(a.parcela).localeCompare(String(b.parcela)); });
-    var tv = 0, tr = 0;
-    var sim = function(v){ return v==='Sim' ? '<span class="chip ok">Sim</span>' : '<span class="chip">falta</span>'; };
-    var corpo = rows.map(function(l){
-      var v = num(l.valor), r = num(l.vReembolsado); tv += v||0; tr += r||0;
-      var falta = l.status==='Pagamento Confirmado' && l.dtReembolso && r===null;
-      return '<tr><td>'+esc((P[l.profId]||{}).apelido||l.profId)+'</td><td>'+esc(l.parcela||'')+'</td><td class="n">'+brl(v)+'</td>'+
-        '<td>'+sim(l.nf)+'</td><td>'+sim(l.freq)+'</td><td>'+sim(l.comp)+'</td>'+
-        '<td>'+dataBR(l.dtPagamento)+'</td><td>'+dataBR(l.dtEntrada)+'</td><td>'+esc(l.status||'—')+'</td><td>'+dataBR(l.dtReembolso)+'</td>'+
-        '<td class="n">'+(falta ? '<span class="chip">falta lançar</span>' : brl(r))+'</td></tr>';
-    }).join('');
-    return '<div class="tb"><select id="cic-sel" aria-label="Competência">'+ciclos.map(function(c){ return '<option'+(c===S.ciclo?' selected':'')+'>'+esc(c)+'</option>'; }).join('')+'</select>'+
-      (S.u.perfil==='familia' ? '<span class="gap"></span><button class="bt cl" id="cic-pasta">Criar pastas do mês</button><button class="bt" id="cic-gerar">Gerar listas do mês</button>' : '')+'</div><div id="cic-res"></div>'+
-      '<div class="resumo"><div><b>'+brl(tv)+'</b><span>Pago</span></div><div><b>'+brl(tr)+'</b><span>Reembolsado</span></div><div><b>'+rows.length+'</b><span>Lançamentos</span></div></div>'+
-      '<div class="tw"><table class="tb2"><thead><tr><th>Profissional</th><th>Parc.</th><th class="n">Valor</th><th>NF</th><th>Lista</th><th>Comp.</th><th>Pagamento</th><th>Entrada</th><th>Status</th><th>Reembolso</th><th class="n">Reembolsado</th></tr></thead><tbody>'+corpo+'</tbody></table></div>';
-  }
-  telaCiclo.depois = function(){
-    $('#cic-sel').onchange = function(){ S.ciclo = this.value; ir('ciclo'); };
-    var res = $('#cic-res'), trava = function(b, on, txt){ $$('#cic-pasta,#cic-gerar').forEach(function(x){ x.disabled = on; }); if(txt) b.textContent = txt; };
-    if($('#cic-pasta')) $('#cic-pasta').onclick = async function(){
-      var b = this, t0 = b.textContent; trava(b, true, 'Criando…');
-      try{ var o = await api('pastaCiclo', { ciclo:S.ciclo }); if(!o.ok) throw new Error(o.msg);
-        res.innerHTML = '<div class="ban ok">Pasta de '+esc(S.ciclo)+' pronta, com '+o.profissionais+' subpastas. <a href="'+esc(o.url)+'" target="_blank" rel="noopener noreferrer">Abrir no Drive</a></div>'; }
-      catch(x){ res.innerHTML = '<div class="ban crit">'+esc(msgErro(x, 'Não foi possível criar as pastas.'))+'</div>'; }
-      trava(b, false, t0);
-    };
-    if($('#cic-gerar')) $('#cic-gerar').onclick = async function(){
-      var b = this, t0 = b.textContent; trava(b, true, 'Gerando…'); res.innerHTML = '<div class="ban">Gerando as listas. Pode levar alguns segundos por profissional.</div>';
-      try{ var o = await api('gerarListaFrequencia', { ciclo:S.ciclo }); if(!o.ok) throw new Error(o.msg);
-        var okN = o.resultados.filter(function(r){ return r.ok; }).length;
-        res.innerHTML = '<div class="ban '+(okN===o.resultados.length?'ok':'')+'"><b>'+okN+' de '+o.resultados.length+' listas geradas</b> em '+esc(S.ciclo)+'. <a href="'+esc(o.pasta)+'" target="_blank" rel="noopener noreferrer">Abrir a pasta do mês</a><ul style="margin:8px 0 0;padding-left:18px">'+
-          o.resultados.map(function(r){ return '<li>'+esc(r.apelido)+': '+(r.ok ? r.sessoes+' sessões, '+hh(r.horas)+' h · <a href="'+esc(r.url)+'" target="_blank" rel="noopener noreferrer">abrir</a>' : esc(r.msg)) +'</li>'; }).join('')+'</ul></div>'; }
-      catch(x){ res.innerHTML = '<div class="ban crit">'+esc(msgErro(x, 'Não foi possível gerar as listas.'))+'</div>'; }
-      trava(b, false, t0);
-    };
-  };
-
   // ------------------------------------------------------------ download e envio de arquivos (Fase 5)
   function baixarB64(b64, nome){
     var u = Uint8Array.from(atob(b64), function(c){ return c.charCodeAt(0); }), url = URL.createObjectURL(new Blob([u], { type:'application/pdf' }));
@@ -588,7 +518,8 @@ window.__API_URL = "https://script.google.com/macros/s/AKfycbzI9RukpWjjUxzs15vbv
     }
     throw new Error('O envio terminou sem confirmação.');
   }
-  async function enviarLote(tipo, files, extra, barra, info){
+  /** depois(): o que redesenhar ao terminar (recebe o texto de resultado e se deu certo). */
+  async function enviarLote(tipo, files, extra, barra, info, depois){
     files = files.filter(function(f){ return f.size > 0; });
     if(!files.length){ info.className = 'msg er'; info.textContent = 'Arquivo vazio.'; return; }
     var total = files.reduce(function(a, f){ return a + f.size; }, 0), feito = 0, falhas = [], certos = 0;
@@ -599,8 +530,10 @@ window.__API_URL = "https://script.google.com/macros/s/AKfycbzI9RukpWjjUxzs15vbv
     }));
     barra.hidden = true;
     if(certos){ try{ await carregarDados(); }catch(_){} }
-    if(falhas.length){ info.className = 'msg er'; info.textContent = 'Não subiu: '+falhas.join('; ')+'. Tente de novo.'; if(certos) ir('envio'); return; }
-    ir('envio'); var m = $('#info-'+tipo); if(m){ m.className = 'msg ok'; m.textContent = (files.length===1 ? 'Recebido.' : files.length+' arquivos recebidos.')+' Obrigado.'; }
+    var erro = falhas.length ? 'Não subiu: '+falhas.join('; ')+'. Tente de novo.' : '';
+    var ok = !falhas.length ? (files.length===1 ? 'Recebido.' : files.length+' arquivos recebidos.')+' Obrigado.' : '';
+    if(depois){ await depois(certos > 0); }
+    var m = $('#info-'+tipo) || info; m.className = 'msg '+(erro?'er':'ok'); m.textContent = erro || ok;
   }
 
   // ------------------------------------------------------------ envio (visão da profissional)
@@ -640,7 +573,7 @@ window.__API_URL = "https://script.google.com/macros/s/AKfycbzI9RukpWjjUxzs15vbv
     var inp = $('#env-arq');
     if(!inp){ inp = document.createElement('input'); inp.id = 'env-arq'; inp.type = 'file'; inp.accept = 'application/pdf,image/jpeg,image/png'; inp.multiple = true; inp.hidden = true; document.body.appendChild(inp); }
     $$('[data-up]').forEach(function(b){ b.onclick = function(){
-      inp.onchange = function(){ var files = [].slice.call(inp.files); inp.value = ''; if(files.length) enviarLote(b.dataset.up, files, { ciclo:S.envMes }, $('#barra-'+b.dataset.up), $('#info-'+b.dataset.up)); };
+      inp.onchange = function(){ var files = [].slice.call(inp.files); inp.value = ''; if(files.length) enviarLote(b.dataset.up, files, { ciclo:S.envMes }, $('#barra-'+b.dataset.up), $('#info-'+b.dataset.up), function(){ ir('envio'); }); };
       inp.click(); }; });
   };
 
@@ -651,88 +584,6 @@ window.__API_URL = "https://script.google.com/macros/s/AKfycbzI9RukpWjjUxzs15vbv
     catch(x){ msgEl.className = 'msg er'; msgEl.textContent = msgErro(x, 'Não foi possível gerar.'); }
     btn.disabled = false; btn.textContent = t0;
   }
-
-  // ------------------------------------------------------------ painel (§9)
-
-  // ------------------------------------------------------------ profissionais
-  var TERAPIA_NOME = { aba:'ABA', fono:'Fonoaudiologia', to:'Terapia ocupacional', psicomot:'Psicomotricidade' };
-  function pendencias(p, todos){
-    var r = [], d = digitos(p.docFiscal);
-    if(!p.terapia) r.push({ t:'Sem terapia: as horas não entram na validação', n:'' });
-    if(!d) r.push({ t:'Sem CPF/CNPJ', n:'' });
-    else if(todos.some(function(o){ return o.id!==p.id && digitos(o.docFiscal)===d; })) r.push({ t:'CPF/CNPJ repetido em outro cadastro', n:'crit' });
-    if(!p.registro) r.push({ t:'Sem registro no conselho', n:'' });
-    if(!p.endereco) r.push({ t:'Sem endereço de atendimento', n:'' });
-    if(!p.email) r.push({ t:'Sem e-mail (não consegue entrar)', n:'' });
-    if(p.actValidade){ var dias = Math.floor((Date.parse(p.actValidade)-Date.now())/864e5);
-      if(dias < 0) r.push({ t:'Atestado vencido', n:'crit' }); else if(dias < 30) r.push({ t:'Atestado vence em '+dias+' dias', n:'' }); }
-    if(p.alerta) r.push({ t:p.alerta, n:'' });
-    return r;
-  }
-  var chips = function(l){ return l.map(function(x){ return '<span class="chip'+(x.n?' '+x.n:'')+'">'+esc(x.t)+'</span>'; }).join(''); };
-  function telaProfissionais(){
-    var P = S.M.profissionais.slice().sort(function(a,b){
-      return (bool(b.ativo)-bool(a.ativo)) || String(a.apelido||a.nome).localeCompare(String(b.apelido||b.nome),'pt-BR'); });
-    var com = P.filter(function(p){ return bool(p.ativo) && pendencias(p, P).length; }).length;
-    var lista = P.map(function(p){
-      var pe = pendencias(p, P);
-      return '<button class="pi'+(S.prof===p.id?' on':'')+'" data-id="'+esc(p.id)+'"><span class="nm">'+esc(p.apelido||p.nome)+' <small>'+esc(p.nome!==p.apelido?p.nome:'')+'</small></span>'+
-        '<span><span class="tag">'+esc(TERAPIA_NOME[p.terapia]||'sem terapia')+'</span>'+(bool(p.ativo)?'':' <span class="tag">inativa</span>')+'</span>'+
-        (pe.length?'<span class="pc">'+chips(pe)+'</span>':'')+'</button>';
-    }).join('');
-    var ed = S.prof ? formProfissional(S.prof==='novo' ? {} : P.filter(function(p){ return p.id===S.prof; })[0] || {}) : '';
-    return '<div class="tb"><div><b>'+P.length+'</b> profissionais · <b>'+com+'</b> ativas com pendência de cadastro</div><div class="gap"></div><button class="bt" id="pr-novo">+ Novo</button></div>'+
-      ed+'<div class="pl">'+lista+'</div>';
-  }
-  var bool = function(x){ return x===true || String(x).toLowerCase()==='true' ? 1 : 0; };
-  function formProfissional(p){
-    var novo = !p.id, campo = function(id, rot, val, extra){ return '<label class="campo"><span>'+rot+'</span><input id="pf-'+id+'" value="'+esc(val)+'" '+(extra||'')+'></label>'; };
-    var terap = '<option value="">— a definir —</option>'+Object.keys(TERAPIA_NOME).map(function(k){ return '<option value="'+k+'"'+(p.terapia===k?' selected':'')+'>'+TERAPIA_NOME[k]+'</option>'; }).join('');
-    return '<div class="cx" id="pr-form"><h3>'+(novo?'Novo profissional':esc(p.nome))+'</h3><p class="sub">'+(novo?'Preencha e salve.':'Os dados do cadastro entram na lista de frequência.')+'</p>'+
-      '<div class="duas">'+campo('nome','Nome completo (como na nota fiscal)',p.nome||'','maxlength="120"')+campo('apelido','Apelido',p.apelido||'','maxlength="60"')+'</div>'+
-      '<div class="duas"><label class="campo"><span>Terapia</span><select id="pf-terapia">'+terap+'</select></label>'+campo('papel','Papel (opcional)',p.papel||'','maxlength="40"')+'</div>'+
-      '<div class="duas">'+campo('conselho','Conselho (CRP, CRFa, CREFITO)',p.conselho||'','maxlength="20"')+campo('registro','Registro',p.registro||'','maxlength="30"')+'</div>'+
-      '<div class="duas">'+campo('doc','CPF ou CNPJ',p.docFiscal||'','maxlength="20" inputmode="numeric"')+campo('email','E-mail (também é o login)',p.email||'','type="email" inputmode="email" autocapitalize="none"')+'</div>'+
-      campo('end','Endereço onde atende',p.endereco||'','maxlength="240"')+
-      '<div class="duas">'+campo('vh','Valor/hora (R$)',p.valorHora||'','inputmode="decimal"')+campo('act','Validade do atestado de capacidade técnica',p.actValidade||'','type="date"')+'</div>'+
-      '<label class="campo"><span>Alerta de cadastro (nota interna; apague quando resolver)</span><textarea id="pf-alerta" rows="2" maxlength="300">'+esc(p.alerta||'')+'</textarea></label>'+
-      '<label class="tgl"><input type="checkbox" id="pf-ativo"'+(novo||bool(p.ativo)?' checked':'')+'> Ativa</label>'+
-      '<button class="bt" id="pf-salvar">Salvar</button> <button class="bt cl" id="pf-fechar">Fechar</button>'+
-      (!novo && S.u.admin ? ' <button class="bt cl" id="pf-conv">Gerar convite de acesso</button>' : '')+
-      '<span class="msg" id="pf-msg"></span><div id="pf-convbox"></div></div>';
-  }
-  telaProfissionais.depois = function(){
-    $$('.pi').forEach(function(b){ b.onclick = function(){ S.prof = b.dataset.id; ir('profissionais'); var f = $('#pr-form'); if(f) f.scrollIntoView({block:'start'}); }; });
-    $('#pr-novo').onclick = function(){ S.prof = 'novo'; ir('profissionais'); };
-    if(!S.prof) return;
-    $('#pf-fechar').onclick = function(){ S.prof = null; ir('profissionais'); };
-    $('#pf-salvar').onclick = async function(){
-      var b = this, mg = $('#pf-msg'), v = function(i){ return $('#pf-'+i).value; };
-      var atual = S.prof==='novo' ? null : S.M.profissionais.filter(function(x){ return x.id===S.prof; })[0];
-      var p = { id: atual ? atual.id : '', nome:v('nome'), apelido:v('apelido'), terapia:v('terapia'), papel:v('papel'), conselho:v('conselho'),
-        registro:v('registro'), docFiscal:v('doc'), email:v('email'), endereco:v('end'), valorHora:v('vh'), actValidade:v('act'),
-        alerta:v('alerta'), ativo:$('#pf-ativo').checked };
-      b.disabled = true; mg.className = 'msg'; mg.textContent = 'Salvando…';
-      try{
-        var o = await api('salvarProfissional', { p:p }); if(!o.ok) throw new Error(o.msg);
-        var i = -1; S.M.profissionais.forEach(function(x, k){ if(x.id===o.profissional.id) i = k; });
-        if(i>=0) S.M.profissionais[i] = o.profissional; else S.M.profissionais.push(o.profissional);
-        S.prof = o.profissional.id; ir('profissionais');
-        var m = $('#pf-msg'); m.className = 'msg ok'; m.textContent = 'Salvo. ' + (o.avisos||[]).join(' ');
-      }catch(x){ mg.className = 'msg er'; mg.textContent = msgErro(x, 'Não foi possível salvar.'); b.disabled = false; }
-    };
-    var cv = $('#pf-conv');
-    if(cv) cv.onclick = async function(){
-      var mg = $('#pf-msg'); mg.className = 'msg'; mg.textContent = 'Gerando…';
-      try{
-        var o = await api('convidarProfissional', { profId:S.prof }); if(!o.ok) throw new Error(o.msg);
-        mg.textContent = '';
-        var txt = 'Seu acesso ao app de reembolso: abra mandacap.com.br/reembolso, toque em "Primeiro acesso", use o e-mail '+o.email+' e o código '+o.codigo+' (vale até '+o.validade+') e crie a sua senha.';
-        $('#pf-convbox').innerHTML = '<div class="conv">Código de primeiro acesso: <span class="cod">'+esc(o.codigo)+'</span><br><span class="sub">Vale até '+esc(o.validade)+'.</span><div style="margin-top:8px"><button class="bt cl" id="cv-cp">Copiar mensagem</button></div></div>';
-        $('#cv-cp').onclick = function(){ try{ navigator.clipboard.writeText(txt); this.textContent = 'Copiado'; }catch(_){} };
-      }catch(x){ mg.className = 'msg er'; mg.textContent = msgErro(x, 'Não foi possível gerar.'); }
-    };
-  };
 
   // ------------------------------------------------------------ perfil
   function telaPerfil(){
@@ -759,6 +610,12 @@ window.__API_URL = "https://script.google.com/macros/s/AKfycbzI9RukpWjjUxzs15vbv
       b.disabled = false;
     };
   };
+
+  // ------------------------------------------------------------ módulos (dominio, painel, ciclo, profissionais, documentos)
+  window.App = { S:S, $:$, $$:$$, esc:esc, api:api, ir:ir, brl:brl, num:num, dataBR:dataBR, hh:hh, hojeISO:hojeISO, bool:bool, msgErro:msgErro,
+    TELAS:TELAS, enviarLote:enviarLote, baixarB64:baixarB64, mapaProf:mapaProf, carregarDados:carregarDados, TERAPIA_NOME:TERAPIA_NOME,
+    V:V, DS:DS, exportarProva:exportarProva, digitos:digitos };
+  (window.__mods || []).forEach(function(m){ try{ m(window.App); }catch(e){ console.error(e); } });
 
   // ------------------------------------------------------------ PWA e partida
   if('serviceWorker' in navigator){ try{ navigator.serviceWorker.register('sw.js', { scope:'./' }).catch(function(){}); }catch(_){} }
