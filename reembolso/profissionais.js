@@ -37,6 +37,8 @@
       '<div class="duas">'+campo('conselho','Conselho (CRP, CRFa, CREFITO)',p.conselho||'','maxlength="20"')+campo('registro','Registro',p.registro||'','maxlength="30"')+'</div>'+
       '<div class="duas">'+campo('doc','CPF ou CNPJ',p.docFiscal||'','maxlength="20" inputmode="numeric"')+campo('email','E-mail (também é o login)',p.email||'','type="email" inputmode="email" autocapitalize="none"')+'</div>'+
       campo('end','Endereço onde atende',p.endereco||'','maxlength="240"')+
+      '<div class="duas">'+campo('tel','Telefone / WhatsApp',p.telefone||'','inputmode="tel" maxlength="30"')+campo('pix','Chave Pix ou conta para pagamento',p.pix||'','maxlength="120"')+'</div>'+
+      '<label class="campo" style="max-width:360px"><span>Local de atendimento padrão (vem preenchido na agenda)</span><select id="pf-localp"><option value="">— nenhum —</option>'+App.V.LOCAIS.map(function(l){ return '<option'+(p.localPadrao===l?' selected':'')+'>'+esc(l)+'</option>'; }).join('')+'</select></label>'+
       '<div class="duas">'+campo('vh','Valor/hora (R$)',p.valorHora||'','inputmode="decimal"')+campo('act','Validade do atestado de capacidade técnica',p.actValidade||'','type="date"')+'</div>'+
       '<label class="campo"><span>Alerta de cadastro (nota interna; apague quando resolver)</span><textarea id="pf-alerta" rows="2" maxlength="300">'+esc(p.alerta||'')+'</textarea></label>'+
       '<label class="tgl"><input type="checkbox" id="pf-ativo"'+(novo||bool(p.ativo)?' checked':'')+'> Ativo (entra no "Abrir ciclo")</label>'+
@@ -65,7 +67,8 @@
     }
     var abas = '<div class="abas" role="tablist">'+ABAS.map(function(a){ return '<button role="tab" class="aba'+(a[0]===tab?' on':'')+'" data-aba="'+a[0]+'" aria-selected="'+(a[0]===tab)+'">'+a[1]+'</button>'; }).join('')+'</div>';
     return '<div class="tb"><button class="bt cl" id="pf-voltar">‹ Profissionais</button><span class="gap"></span>'+(bool(p.ativo)?'':'<span class="tag">inativo</span>')+'</div>'+
-      '<div class="cx cab-prof"><h3>'+esc(p.nome)+'</h3><p class="sub">'+esc(D.GRUPO_NOME[p.terapia||''])+(p.papel ? ' · '+esc(p.papel) : '')+(p.conselho ? ' · '+esc(p.conselho+' '+p.registro) : '')+(p.email ? ' · '+esc(p.email) : '')+'</p></div>'+
+      '<div class="cx cab-prof"><h3>'+esc(p.nome)+'</h3><p class="sub">'+esc(D.GRUPO_NOME[p.terapia||''])+(p.papel ? ' · '+esc(p.papel) : '')+(p.conselho ? ' · '+esc(p.conselho+' '+p.registro) : '')+'</p><p class="sub dados">'+
+        [p.docFiscal ? (App.digitos(p.docFiscal).length===14 ? 'CNPJ ' : 'CPF ')+esc(p.docFiscal) : '', p.email ? esc(p.email) : '', p.telefone ? esc(p.telefone) : '', p.pix ? 'Pix: '+esc(p.pix) : '', p.localPadrao ? 'Local: '+esc(p.localPadrao) : ''].filter(Boolean).join(' · ')+'</p></div>'+
       tiles+devendo+abas+'<div class="cx" id="aba-corpo">'+abaCorpo(p, r, tab)+'</div>';
   }
 
@@ -83,7 +86,10 @@
       var meses = Object.keys(r.porMes).sort().reverse(), mc = S.profMes || meses[0] || App.hojeISO().slice(0,7);
       var linhas = meses.map(function(m){ return '<tr class="clic" data-m="'+m+'"><td><b>'+D.mmaa(m)+'</b></td><td class="n">'+r.porMes[m].n+'</td><td class="n">'+hh(r.porMes[m].h)+' h</td></tr>'; }).join('');
       return (meses.length ? '<div class="tw"><table class="tb2" style="min-width:0"><thead><tr><th>Mês</th><th class="n">Sessões</th><th class="n">Horas</th></tr></thead><tbody>'+linhas+'</tbody></table></div>' : '<p class="sub">Nenhuma sessão registrada no app ainda. As horas de antes do app não estão no histórico.</p>')+
-        '<h4 style="margin-top:18px">Calendário de '+esc(mc)+'</h4>'+D.calendario(mc, D.ctx(p.id));
+        '<h4 style="margin-top:18px">Horas por semana (últimas 12)</h4>'+semanasProf(p)+
+        '<h4 style="margin-top:18px">Atendimentos de '+esc(mc)+'</h4>'+D.calendario(mc, D.ctx(p.id), 'atend')+
+        '<h4 style="margin-top:18px">Horas por semana do ciclo</h4>'+D.tabelaSemanas(D.horasDoCiclo(mc, S.M.sessoes, App.mapaProf(), p.id))+
+        '<div class="ups"><button class="bt cl peq" id="pf-agenda">Marcar atendimentos na agenda</button></div>';
     }
     if(tab==='docs'){
       var opt = D.meses().map(function(m){ return '<option>'+esc(m)+'</option>'; }).join('');
@@ -92,6 +98,12 @@
         '<div id="dc-lista"><p class="sub">Carregando arquivos do Drive…</p></div>';
     }
     return '';
+  }
+
+  function semanasProf(p){
+    var sem = D.ultimasSemanas(12), t = p.terapia||'x', h = {};
+    S.M.sessoes.forEach(function(s){ if(s.profId===p.id){ var w = D.segundaDe(s.data); h[w] = (h[w]||0) + (num(s.horas)||0); } });
+    return D.chartStack(sem.map(function(w){ return { k:w, rot:D.rotSemana(w) }; }), [{ k:'h', nome:p.apelido||p.nome, cor:D.CORES[t] }], function(c){ return h[c]; });
   }
 
   function tela(){
@@ -113,12 +125,15 @@
     $$('.lk3[data-l]').forEach(function(x){ x.onclick = function(){ S.ciclo = x.dataset.c; S.lanSel = x.dataset.l; App.ir('ciclo'); }; });
     $$('tr.clic[data-l]').forEach(function(x){ x.onclick = function(){ S.ciclo = x.dataset.c; S.lanSel = x.dataset.l; App.ir('ciclo'); }; });
     $$('tr.clic[data-m]').forEach(function(x){ x.onclick = function(){ S.profMes = x.dataset.m; App.ir('profissionais'); }; });
-    if(atual && (S.profTab||'cad')==='sess'){ D.ligarCalendario(D.ctx(atual.id)); }
+    if(atual && (S.profTab||'cad')==='sess'){
+      D.ligarCalendario(D.ctx(atual.id));
+      if($('#pf-agenda')) $('#pf-agenda').onclick = function(){ S.agProf = atual.id; S.sesMes = S.profMes || App.hojeISO().slice(0,7); S.sesTab = 'agenda'; S.agSel = {}; S.agFoco = null; S.agMsg = ''; App.ir('sessoes'); };
+    }
 
     if($('#pf-salvar')) $('#pf-salvar').onclick = async function(){
       var b = this, mg = $('#pf-msg'), v = function(i){ return $('#pf-'+i).value; };
       var o = { id: atual ? atual.id : '', nome:v('nome'), apelido:v('apelido'), terapia:v('terapia'), papel:v('papel'), conselho:v('conselho'), registro:v('registro'),
-        docFiscal:v('doc'), email:v('email'), endereco:v('end'), valorHora:v('vh'), actValidade:v('act'), alerta:v('alerta'), ativo:$('#pf-ativo').checked };
+        docFiscal:v('doc'), email:v('email'), endereco:v('end'), telefone:v('tel'), pix:v('pix'), localPadrao:v('localp'), valorHora:v('vh'), actValidade:v('act'), alerta:v('alerta'), ativo:$('#pf-ativo').checked };
       b.disabled = true; mg.className = 'msg'; mg.textContent = 'Salvando…';
       try{
         var r = await api('salvarProfissional', { p:o }); if(!r.ok) throw new Error(r.msg);

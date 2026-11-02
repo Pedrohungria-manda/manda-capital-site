@@ -24,6 +24,19 @@
     return r;
   }
 
+  /** Os lançamentos do mês, abertos logo abaixo da linha do painel (sem trocar de página). */
+  function detalheMes(c){
+    var P = App.mapaProf(), L = S.M.lancamentos.filter(function(l){ return l.ciclo===c; }).sort(function(a,b){
+      var pa = P[a.profId]||{}, pb = P[b.profId]||{};
+      return (D.TERAPIAS.indexOf(pa.terapia||'')-D.TERAPIAS.indexOf(pb.terapia||'')) || String(pa.apelido||'').localeCompare(String(pb.apelido||''),'pt-BR'); });
+    var rows = L.map(function(l){
+      var p = P[l.profId]||{}, a = D.acao(l), ds = D.diasSolic(l), rv = num(l.vReembolsado);
+      return '<tr class="clic" data-l="'+esc(l.id)+'" data-c="'+esc(c)+'"><td><b>'+esc(p.apelido||l.profId)+'</b>'+(l.parcela?' <small>p'+esc(l.parcela)+'</small>':'')+'</td><td>'+esc(D.SIGLA[p.terapia||'x'])+'</td><td>'+brl(num(l.valor))+'</td>'+
+        '<td>'+(l.dtEntrada ? App.dataBR(l.dtEntrada)+(ds ? '<br><small>'+(ds.fechado ? ds.dias+' d até o reembolso' : 'há '+ds.dias+' dias')+'</small>' : '') : '—')+'</td><td>'+esc(l.numProtocolo||'—')+'</td><td>'+D.statusChip(l.status)+'</td><td>'+(rv!==null ? brl(rv) : '—')+'</td><td><span class="ac '+a.nivel+'">'+esc(a.texto)+'</span></td></tr>'; }).join('');
+    return '<div class="det-in"><div class="tw"><table class="tb2 ctr" style="min-width:820px"><thead><tr><th>Profissional</th><th>Terapia</th><th>Valor</th><th>Solicitado em</th><th>Protocolo</th><th>Status na Amil</th><th>Reembolsado</th><th>O que fazer</th></tr></thead><tbody>'+(rows || '<tr><td colspan="8">Sem lançamentos.</td></tr>')+'</tbody></table></div>'+
+      '<div class="ups" style="justify-content:center"><button class="bt cl peq" data-abrir="'+esc(c)+'">Abrir o ciclo completo</button></div></div>';
+  }
+
   function tela(){
     var L = S.M.lancamentos;
     if(!L.length) return '<div class="cx"><h3>Painel</h3><p class="sub">Nenhum lançamento ainda. Abra o primeiro ciclo na tela Ciclo.</p></div>';
@@ -61,14 +74,21 @@
 
     return '<div class="tb"><span class="gap"></span><span class="msg" id="pn-msg"></span><button class="bt cl" id="pn-prova">Exportar prova (PDF)</button></div>'+tiles+
       '<div class="cx"><h3>O que fazer agora</h3><p class="sub">Tudo que está em aberto, agrupado pelo que precisa ser feito. Toque num item para abrir o lançamento.</p>'+fazer+'</div>'+
-      '<div class="cx"><h3>Mês a mês</h3><p class="sub">Valor do mês, quanto já foi solicitado e reembolsado, e a situação de cada solicitação. Toque numa linha para abrir o ciclo.</p>'+
-      '<div class="tw"><table class="tb2" style="min-width:900px"><thead><tr><th>Mês</th><th class="n">Prof.</th><th class="n">Valor</th><th class="n">Solicitado</th><th class="n">Reembolsado</th><th class="n">%</th><th class="n">Situação</th><th>Status na Amil</th><th class="n">Prazo Amil</th></tr></thead><tbody>'+linhas+'</tbody></table></div>'+
+      '<div class="cx"><h3>Mês a mês</h3><p class="sub">Valor do mês, quanto já foi solicitado e reembolsado, e a situação de cada solicitação. Toque numa linha para ver os lançamentos do mês logo abaixo.</p>'+
+      '<div class="tw"><table class="tb2 ctr" style="min-width:900px"><thead><tr><th>Mês</th><th class="n">Prof.</th><th class="n">Valor</th><th class="n">Solicitado</th><th class="n">Reembolsado</th><th class="n">%</th><th class="n">Situação</th><th>Status na Amil</th><th class="n">Prazo Amil</th></tr></thead><tbody>'+linhas+'</tbody></table></div>'+
       '<div class="barras" style="margin-top:18px">'+barras+'</div><div class="leg"><span><i style="background:var(--azesc)"></i>Valor do mês</span><span><i style="background:#8DB4DB"></i>Reembolsado</span></div></div>';
   }
   tela.depois = function(){
     var b = $('#pn-prova'); if(b) b.onclick = function(){ App.exportarProva(this, $('#pn-msg')); };
     $$('.lk3[data-l]').forEach(function(x){ x.onclick = function(){ S.ciclo = x.dataset.c; S.lanSel = x.dataset.l; App.ir('ciclo'); }; });
-    $$('tr.clic').forEach(function(x){ x.onclick = function(){ S.ciclo = x.dataset.c; S.lanSel = null; App.ir('ciclo'); }; });
+    $$('tr.clic[data-c]').forEach(function(x){ x.onclick = function(){
+      var prox = x.nextElementSibling;
+      if(prox && prox.classList.contains('det')){ prox.remove(); x.classList.remove('aberto'); return; }
+      x.classList.add('aberto'); x.insertAdjacentHTML('afterend', '<tr class="det"><td colspan="9">'+detalheMes(x.dataset.c)+'</td></tr>');
+      var det = x.nextElementSibling;
+      $$('[data-l]', det).forEach(function(tr){ tr.onclick = function(){ S.ciclo = tr.dataset.c; S.lanSel = tr.dataset.l; App.ir('ciclo'); }; });
+      $$('[data-abrir]', det).forEach(function(b){ b.onclick = function(){ S.ciclo = b.dataset.abrir; S.lanSel = null; App.ir('ciclo'); }; });
+    }; });
   };
   App.TELAS.painel = tela;
 });

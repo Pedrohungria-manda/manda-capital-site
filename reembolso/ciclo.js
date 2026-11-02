@@ -34,7 +34,7 @@
     L.forEach(function(l){
       var p = P[l.profId]||{}, t = p.terapia||'', a = D.acao(l), ds = D.diasSolic(l);
       if(t!==grupo){ grupo = t; corpo += '<tr class="gh"><td colspan="11">'+esc(D.GRUPO_NOME[t])+'</td></tr>'; }
-      corpo += '<tr class="clic" data-l="'+esc(l.id)+'"><td><b>'+esc(p.apelido||l.profId)+'</b>'+(l.parcela?' <small>parc. '+esc(l.parcela)+'</small>':'')+'</td><td class="n">'+brl(num(l.valor))+'</td>'+
+      corpo += '<tr class="clic" data-l="'+esc(l.id)+'"><td><b>'+esc(p.apelido||l.profId)+'</b>'+(l.parcela?' <small>parc. '+esc(l.parcela)+'</small>':'')+'<br><button class="lk3 mini" data-agenda="'+esc(l.profId)+'">Agenda</button></td><td class="n">'+brl(num(l.valor))+'</td>'+
         '<td>'+D.sim(l.nf)+'</td><td>'+D.sim(l.freq)+'</td><td>'+D.sim(l.comp)+'</td><td>'+dataBR(l.dtPagamento)+'</td>'+
         '<td>'+(l.dtEntrada ? dataBR(l.dtEntrada)+(ds ? ' <small>'+(ds.fechado ? ds.dias+' d até o reembolso' : 'há '+ds.dias+' d')+'</small>' : '') : '—')+'</td>'+
         '<td>'+(l.numProtocolo ? esc(l.numProtocolo) : '—')+'</td><td>'+D.statusChip(l.status)+'</td><td class="n">'+(num(l.vReembolsado)!==null ? brl(num(l.vReembolsado)) : '—')+'</td>'+
@@ -46,7 +46,12 @@
     var nav = '<div class="tb"><button class="bt cl" id="cic-ant" aria-label="Mês anterior">‹</button><select id="cic-sel" aria-label="Competência">'+meses.concat(meses.indexOf(S.ciclo)<0?[S.ciclo]:[]).sort().reverse().map(function(c){ return '<option'+(c===S.ciclo?' selected':'')+'>'+esc(c)+'</option>'; }).join('')+'</select><button class="bt cl" id="cic-prox" aria-label="Próximo mês">›</button>'+
       (familia ? '<span class="gap"></span><button class="bt" id="cic-abrir">Abrir ciclo</button><button class="bt cl" id="cic-pasta">Criar pastas</button><button class="bt cl" id="cic-gerar">Gerar listas</button>' : '')+'</div><div id="cic-res"></div>';
 
-    var cal = '<div class="cx"><h3>Calendário de '+esc(S.ciclo)+'</h3><p class="sub">Sessões (horas), pagamentos aos profissionais, solicitações na Amil e reembolsos recebidos neste mês. Toque num dia para ver os detalhes.</p>'+D.calendario(S.ciclo, D.ctx())+'</div>';
+    var modoCal = S.cicCal || 'atend', ctxCal = D.ctx();
+    var abasCal = '<div class="abas" role="tablist"><button role="tab" class="aba'+(modoCal==='atend'?' on':'')+'" data-cal="atend">Calendário de atendimentos</button><button role="tab" class="aba'+(modoCal==='reemb'?' on':'')+'" data-cal="reemb">Calendário de reembolsos</button></div>';
+    var cal = '<div class="cx"><h3>'+(modoCal==='atend' ? 'Atendimentos de ' : 'Reembolsos de ')+esc(S.ciclo)+'</h3>'+abasCal+
+      (modoCal==='atend'
+        ? '<p class="sub">Horas de cada dia, por terapia. Toque num dia para ver as sessões.</p>'+D.calendario(S.ciclo, ctxCal, 'atend')+'<h4>Horas por semana e por terapia</h4><p class="sub">As quatro semanas do ciclo (1–7, 8–14, 15–21 e 22 até o fim do mês) e o total de cada terapia.</p>'+D.tabelaSemanas(D.horasDoCiclo(S.ciclo, S.M.sessoes, App.mapaProf()))
+        : '<p class="sub">Pagamentos aos profissionais, solicitações na Amil e reembolsos recebidos neste mês. Toque num dia para ver os detalhes.</p>'+D.calendario(S.ciclo, ctxCal, 'reemb'))+'</div>';
     var docs = familia ? '<div class="cx"><h3>Arquivos de '+esc(S.ciclo)+' no Drive</h3><p class="sub">Notas, listas assinadas e comprovantes de cada profissional neste mês.</p><button class="bt cl" id="cic-arq">Carregar arquivos do mês</button><div id="cic-arqs" style="margin-top:12px"></div></div>' : '';
     return nav+tiles+'<div class="cx"><div class="tb" style="margin:0 0 8px"><h3 style="margin:0">Profissionais de '+esc(S.ciclo)+'</h3><span class="gap"></span>'+(familia ? '<button class="bt cl" id="cic-novo">+ Lançamento avulso</button>' : '')+'</div>'+
       '<p class="sub">Toque numa linha para abrir o lançamento, registrar o protocolo da Amil e acompanhar.</p>'+tabela+'</div>'+cal+docs;
@@ -64,17 +69,9 @@
     $('#cic-novo').onclick = function(){ abrirGaveta(null); };
     var trava = function(on, b, txt){ $$('#cic-abrir,#cic-pasta,#cic-gerar').forEach(function(x){ x.disabled = on; }); if(b && txt) b.textContent = txt; };
 
-    $('#cic-abrir').onclick = async function(){
-      var b = this, t0 = b.textContent, tem = {}; doMes(S.ciclo).forEach(function(l){ tem[l.profId] = 1; });
-      var faltam = ativos().filter(function(p){ return !tem[p.id]; });
-      if(!faltam.length){ res.innerHTML = '<div class="ban ok">Todos os profissionais ativos já têm lançamento em '+esc(S.ciclo)+'.</div>'; return; }
-      if(!confirm('Criar o lançamento de '+S.ciclo+' para '+faltam.length+' profissional(is)?\n\n'+faltam.map(function(p){ return '• '+(p.apelido||p.nome); }).join('\n')+'\n\nQuem não atende mais deve ser marcado como inativo em Profissionais.')) return;
-      trava(true, b, 'Abrindo…');
-      try{ var o = await api('abrirCiclo', { ciclo:S.ciclo, profIds:faltam.map(function(p){ return p.id; }) }); if(!o.ok) throw new Error(o.msg);
-        S.M.lancamentos = S.M.lancamentos.concat(o.criados); S.msgCiclo = o.criados.length+' lançamento(s) criado(s) e pastas do mês prontas no Drive.'; App.ir('ciclo'); return; }
-      catch(x){ res.innerHTML = '<div class="ban crit">'+esc(msgErro(x, 'Não foi possível abrir o ciclo.'))+'</div>'; }
-      trava(false, b, t0);
-    };
+    $('#cic-abrir').onclick = abrirDialogo;
+    $$('[data-cal]').forEach(function(b){ b.onclick = function(){ S.cicCal = b.dataset.cal; App.ir('ciclo'); }; });
+    $$('[data-agenda]').forEach(function(b){ b.onclick = function(e){ e.stopPropagation(); irAgenda(b.dataset.agenda, S.ciclo); }; });
     $('#cic-pasta').onclick = async function(){
       var b = this, t0 = b.textContent; trava(true, b, 'Criando…');
       try{ var o = await api('pastaCiclo', { ciclo:S.ciclo }); if(!o.ok) throw new Error(o.msg);
@@ -99,6 +96,37 @@
     };
     if(S.lanSel){ var id = S.lanSel; S.lanSel = null; abrirGaveta(id); }
   };
+
+  function irAgenda(profId, ciclo){ S.agProf = profId; S.sesMes = ciclo; S.sesTab = 'agenda'; S.agSel = {}; S.agFoco = null; S.agMsg = ''; App.ir('sessoes'); }
+
+  // ------------------------------------------------------------ abrir o ciclo: primeiro, quem são os profissionais
+  function abrirDialogo(){
+    fecharGaveta();
+    var tem = {}; doMes(S.ciclo).forEach(function(l){ tem[l.profId] = 1; });
+    var anterior = {}, ant = D.cicloVizinho(S.ciclo, -1); doMes(ant).forEach(function(l){ anterior[l.profId] = 1; });
+    var comSessao = {}; S.M.sessoes.forEach(function(s){ if(s.data.slice(0,7)===S.ciclo) comSessao[s.profId] = 1; });
+    var P = ativos().sort(function(a,b){ return (D.TERAPIAS.indexOf(a.terapia||'')-D.TERAPIAS.indexOf(b.terapia||'')) || String(a.apelido||a.nome).localeCompare(String(b.apelido||b.nome),'pt-BR'); });
+    var h = '', g = null;
+    P.forEach(function(p){
+      var t = p.terapia||''; if(t!==g){ g = t; h += '<h4>'+esc(D.GRUPO_NOME[t])+'</h4>'; }
+      var ja = !!tem[p.id], marca = ja || anterior[p.id] || comSessao[p.id];
+      h += '<label class="tgl esc-p"><input type="checkbox" data-p="'+esc(p.id)+'"'+(marca?' checked':'')+(ja?' disabled':'')+'> <b>'+esc(p.apelido||p.nome)+'</b> <small>'+(ja ? 'já tem lançamento neste mês' : anterior[p.id] ? 'teve lançamento em '+D.mmaa(ant) : comSessao[p.id] ? 'tem sessões neste mês' : 'sem lançamento recente')+'</small></label>';
+    });
+    document.body.insertAdjacentHTML('beforeend', '<div class="dr" id="dr"><div class="dr-bg" id="dr-bg"></div><div class="dr-in" role="dialog" aria-label="Abrir ciclo"><div class="dr-top"><div><h3>Abrir ciclo de '+esc(S.ciclo)+'</h3><p class="sub">Escolha quem entra neste mês. Para cada um, o app cria o lançamento e a pasta no Drive; depois você marca os atendimentos na agenda.</p></div><button class="x" id="dr-x" aria-label="Fechar">×</button></div>'+
+      (P.length ? h : '<p class="sub">Nenhum profissional ativo. Cadastre em Profissionais.</p>')+
+      '<div class="dr-bt"><button class="bt" id="ab-ok">Criar lançamentos</button><button class="bt cl" id="ab-todos">Marcar todos</button><span class="msg" id="ab-msg"></span></div></div></div>');
+    document.addEventListener('keydown', escFecha);
+    $('#dr-x').onclick = $('#dr-bg').onclick = fecharGaveta;
+    $('#ab-todos').onclick = function(){ $$('#dr input[data-p]:not(:disabled)').forEach(function(c){ c.checked = true; }); };
+    $('#ab-ok').onclick = async function(){
+      var ids = $$('#dr input[data-p]:not(:disabled)').filter(function(c){ return c.checked; }).map(function(c){ return c.dataset.p; }), mg = $('#ab-msg');
+      if(!ids.length){ mg.className = 'msg er'; mg.textContent = 'Marque pelo menos um profissional.'; return; }
+      $$('.dr-bt button').forEach(function(x){ x.disabled = true; }); mg.className = 'msg'; mg.textContent = 'Criando…';
+      try{ var o = await api('abrirCiclo', { ciclo:S.ciclo, profIds:ids }); if(!o.ok) throw new Error(o.msg);
+        S.M.lancamentos = S.M.lancamentos.concat(o.criados); fecharGaveta(); S.msgCiclo = o.criados.length+' lançamento(s) criado(s) e pastas prontas no Drive. Agora marque os atendimentos de cada um com o botão "Agenda".'; App.ir('ciclo'); }
+      catch(x){ mg.className = 'msg er'; mg.textContent = msgErro(x, 'Não foi possível abrir o ciclo.'); $$('.dr-bt button').forEach(function(y){ y.disabled = false; }); }
+    };
+  }
 
   // ------------------------------------------------------------ gaveta de edição do lançamento
   function fecharGaveta(){ var d = $('#dr'); if(d) d.remove(); document.removeEventListener('keydown', escFecha); }
@@ -128,6 +156,7 @@
       (novo ? '<label class="campo"><span>Profissional</span><select id="lf-prof"><option value="">— escolha —</option>'+optProf+'</select></label>' : '')+
       '<h4>1. Documentos do profissional</h4><div class="duas"><div>'+chk('nf','Nota fiscal recebida', l.nf)+chk('freq','Lista de frequência assinada recebida', l.freq)+'</div><div>'+chk('comp','Comprovante de pagamento anexado', l.comp)+'</div></div>'+
       (novo ? '' : '<div class="ups">'+up('nf','Enviar NF')+up('lista','Enviar lista assinada')+up('comp','Enviar comprovante')+up('outro','Outro documento')+'</div><div class="bar" id="barra-up" hidden><i style="width:4%;background:var(--az)"></i></div><span class="msg" id="info-up"></span>')+
+      (novo ? '' : '<h4>Atendimentos</h4><div class="ups"><button class="bt cl peq" id="lf-agenda">Marcar atendimentos de '+esc(p.apelido||l.profId)+' em '+esc(l.ciclo)+'</button></div>')+
       '<h4>2. Pagamento ao profissional</h4><div class="duas">'+campo('valor','Valor do mês (R$)', l.valor, 'inputmode="decimal"')+campo('parcela','Parcela (se dividir o envio)', l.parcela, 'inputmode="numeric" maxlength="2"')+'</div>'+
       campo('dtPagamento','Pago em', l.dtPagamento, 'type="date"')+
       '<h4>3. Solicitação na Amil</h4><div class="duas">'+campo('dtEntrada','Data da solicitação', l.dtEntrada, 'type="date"')+campo('numSolicitacao','Nº da solicitação', l.numSolicitacao)+'</div>'+
@@ -140,6 +169,7 @@
     document.body.insertAdjacentHTML('beforeend', html);
     document.addEventListener('keydown', escFecha);
     $('#dr-x').onclick = $('#dr-bg').onclick = fecharGaveta;
+    if($('#lf-agenda')) $('#lf-agenda').onclick = function(){ fecharGaveta(); irAgenda(l.profId, l.ciclo); };
 
     var v = function(i){ return $('#lf-'+i).value; }, ck = function(i){ return $('#lf-'+i).checked ? 'Sim' : ''; };
     var dias = function(){ var e = v('dtEntrada'), r = v('dtReembolso'); $('#lf-dias').textContent = e ? (r ? 'Reembolsado '+D.dias(e, r)+' dias após a solicitação' : 'Solicitado há '+D.dias(e, hojeISO())+' dias (prazo normal da Amil: '+D.PRAZO_AMIL+')') : ''; };

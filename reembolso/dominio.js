@@ -105,21 +105,35 @@
     ctx.lancamentos.forEach(function(l){ add(l.dtPagamento, 'p', l); add(l.dtEntrada, 'a', l); add(l.dtReembolso, 'r', l); });
     return por;
   };
-  D.calendario = function(ciclo, ctx){
+  D.SIGLA = { aba:'ABA', fono:'Fono', to:'TO', psicomot:'Psico', x:'S/T' };
+  D.CORES = { aba:'#0B2550', fono:'#0B63B1', to:'#3FB6AE', psicomot:'#8A7BC8', x:'#9AA3B5' };
+  D.terapiaDe = function(profs, id){ return (profs[id]||{}).terapia || 'x'; };
+
+  /** modo: 'reemb' (pagamentos, solicitações, reembolsos), 'atend' (horas por terapia) ou 'todos'. */
+  D.calendario = function(ciclo, ctx, modo){
+    modo = modo || 'todos';
     var n = V.diasDoMes(ciclo), pri = V.diaSemana(ciclo+'-01'), por = ev(ctx, ciclo), hoje = hojeISO(), h = '';
     ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].forEach(function(d){ h += '<div class="cdh">'+d+'</div>'; });
     for(var i = 0; i < pri; i++) h += '<div class="cd vazio"></div>';
     for(var d = 1; d <= n; d++){
       var iso = ciclo+'-'+(d<10?'0':'')+d, x = por[iso], m = '';
       if(x){
-        if(x.s.length) m += '<i class="m s" title="Sessões">'+hh(x.s.reduce(function(t,s){ return t+(num(s.horas)||0); }, 0))+' h</i>';
-        if(x.p.length) m += '<i class="m p" title="Pagamentos ao profissional">Pgto '+x.p.length+'</i>';
-        if(x.a.length) m += '<i class="m a" title="Solicitações na Amil">Solic. '+x.a.length+'</i>';
-        if(x.r.length) m += '<i class="m r" title="Reembolsos recebidos">Reemb. '+x.r.length+'</i>';
+        if(x.s.length && modo==='atend'){
+          var pt = {}; x.s.forEach(function(s){ var t = D.terapiaDe(ctx.profs, s.profId); pt[t] = (pt[t]||0) + (num(s.horas)||0); });
+          Object.keys(pt).sort().forEach(function(t){ m += '<i class="m tt" style="background:'+D.CORES[t]+'" title="'+esc(D.GRUPO_NOME[t==='x'?'':t])+'">'+D.SIGLA[t]+' '+hh(pt[t])+'</i>'; });
+        } else if(x.s.length && modo==='todos') m += '<i class="m s" title="Sessões">'+hh(x.s.reduce(function(t,s){ return t+(num(s.horas)||0); }, 0))+' h</i>';
+        if(modo!=='atend'){
+          if(x.p.length) m += '<i class="m p" title="Pagamentos ao profissional">Pgto '+x.p.length+'</i>';
+          if(x.a.length) m += '<i class="m a" title="Solicitações na Amil">Solic. '+x.a.length+'</i>';
+          if(x.r.length) m += '<i class="m r" title="Reembolsos recebidos">Reemb. '+x.r.length+'</i>';
+        }
       }
       h += '<button type="button" class="cd'+(iso===hoje?' hoje':'')+(x?' tem':'')+'" data-d="'+iso+'"><b>'+d+'</b>'+m+'</button>';
     }
-    return '<div class="cal" id="cal">'+h+'</div><div class="cal-leg"><span><i class="m s"></i>horas de sessão</span><span><i class="m p"></i>pagamento</span><span><i class="m a"></i>solicitação</span><span><i class="m r"></i>reembolso</span></div><div id="cal-det"></div>';
+    var leg = modo==='atend'
+      ? '<div class="cal-leg">'+['aba','fono','to','psicomot','x'].map(function(t){ return '<span><i class="m" style="background:'+D.CORES[t]+'"></i>'+esc(D.GRUPO_NOME[t==='x'?'':t])+'</span>'; }).join('')+'</div>'
+      : '<div class="cal-leg">'+(modo==='todos' ? '<span><i class="m s"></i>horas de sessão</span>' : '')+'<span><i class="m p"></i>pagamento</span><span><i class="m a"></i>solicitação</span><span><i class="m r"></i>reembolso</span></div>';
+    return '<div class="cal" id="cal">'+h+'</div>'+leg+'<div id="cal-det"></div>';
   };
   D.detalheDia = function(iso, ctx){
     var x = ev(ctx, iso.slice(0,7))[iso], P = ctx.profs; if(!x) return '<p class="sub">Nada neste dia.</p>';
@@ -152,6 +166,44 @@
     return y+'-'+(m<10?'0':'')+m;
   };
   D.fmtTam = function(b){ b = +b||0; return b>1048576 ? (b/1048576).toFixed(1).replace('.',',')+' MB' : Math.max(1,Math.round(b/1024))+' KB'; };
+  // ------------------------------------------------------------ horas por semana do ciclo e por terapia
+  /** Horas do mês nas 4 janelas do ciclo (1–7, 8–14, 15–21, 22–fim), por terapia. profId opcional. */
+  D.horasDoCiclo = function(ciclo, sessoes, profs, profId){
+    var r = { jan: V.janelas(ciclo).map(function(j){ return { n:j.n, ini:j.ini, fim:j.fim, t:{}, tot:0 }; }), t:{}, tot:0 };
+    sessoes.forEach(function(s){
+      if(s.data.slice(0,7)!==ciclo || (profId && s.profId!==profId)) return;
+      var h = num(s.horas)||0, t = D.terapiaDe(profs, s.profId), dia = +s.data.slice(8), w = r.jan[dia<=7?0:dia<=14?1:dia<=21?2:3];
+      w.t[t] = (w.t[t]||0) + h; w.tot += h; r.t[t] = (r.t[t]||0) + h; r.tot += h;
+    });
+    return r;
+  };
+  /** Tabela semana × terapia, com o total das 4 semanas embaixo. */
+  D.tabelaSemanas = function(r){
+    var cols = ['aba','fono','to','psicomot','x'].filter(function(t){ return t!=='x' || r.t.x; });
+    var cel = function(v){ return '<td class="n">'+(v ? hh(v)+' h' : '—')+'</td>'; };
+    return '<div class="tw"><table class="tb2 ctr" style="min-width:0"><thead><tr><th>Semana</th>'+cols.map(function(t){ return '<th><i class="pt" style="background:'+D.CORES[t]+'"></i>'+D.SIGLA[t]+'</th>'; }).join('')+'<th>Total</th></tr></thead><tbody>'+
+      r.jan.map(function(w){ return '<tr><td><b>S'+w.n+'</b> <small>dias '+w.ini+'–'+w.fim+'</small></td>'+cols.map(function(t){ return cel(w.t[t]); }).join('')+'<td class="n"><b>'+(w.tot ? hh(w.tot)+' h' : '—')+'</b></td></tr>'; }).join('')+
+      '</tbody><tfoot><tr><td>Ciclo completo</td>'+cols.map(function(t){ return cel(r.t[t]); }).join('')+'<td class="n">'+hh(r.tot)+' h</td></tr></tfoot></table></div>';
+  };
+
+  // ------------------------------------------------------------ semanas (segunda a domingo) e gráficos
+  var isoDe = function(n){ return new Date(n*864e5).toISOString().slice(0,10); };
+  D.segundaDe = function(iso){ return V.numDia(iso) - ((V.diaSemana(iso)+6)%7); };         // nº do dia da segunda-feira da semana
+  D.ultimasSemanas = function(n){ var s = D.segundaDe(hojeISO()), r = []; for(var i = n-1; i >= 0; i--) r.push(s - 7*i); return r; };
+  D.rotSemana = function(num){ var d = isoDe(num); return d.slice(8)+'/'+d.slice(5,7); };
+  D.PALETA = ['#0B2550','#0B63B1','#3FB6AE','#8A7BC8','#C27BA0','#7A8B3F','#B8864B','#4F6D7A','#A05A5A','#6B9AC4','#5E5E7A','#9AA3B5','#2F7D6B'];
+  /** Barras empilhadas. cats: [{k, rot}], series: [{k, nome, cor}], val(catK, serieK) → horas. */
+  D.chartStack = function(cats, series, val){
+    var tot = cats.map(function(c){ return series.reduce(function(s,x){ return s + (val(c.k, x.k)||0); }, 0); });
+    var max = Math.max.apply(null, tot.concat([1]));
+    var col = cats.map(function(c, i){
+      var seg = series.map(function(x){ var v = val(c.k, x.k)||0; return v ? '<i style="height:'+(100*v/max)+'%;background:'+x.cor+'" title="'+esc(x.nome)+': '+hh(v)+' h"></i>' : ''; }).join('');
+      return '<div class="gcol" role="img" aria-label="Semana de '+c.rot+': '+hh(tot[i])+' horas"><b>'+(tot[i] ? hh(tot[i]) : '')+'</b><div class="gbar">'+seg+'</div><span>'+c.rot+'</span></div>';
+    }).join('');
+    var leg = series.map(function(x){ return '<span><i style="background:'+x.cor+'"></i>'+esc(x.nome)+'</span>'; }).join('');
+    return '<div class="graf" style="--n:'+cats.length+'">'+col+'</div><div class="cal-leg">'+leg+'</div>';
+  };
+
   /** Grupos de arquivos do Drive (resposta de listarArquivos) como HTML. */
   D.arquivosHtml = function(grupos, aviso){
     if(!grupos.length) return '<p class="sub">'+esc(aviso||'Nenhum arquivo ainda.')+'</p>';
