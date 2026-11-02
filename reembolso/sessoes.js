@@ -30,10 +30,38 @@
   };
 
   // ------------------------------------------------------------ agenda
+  /** Registro do dia a dia: um atendimento, em poucos toques. */
+  function rapido(){
+    var f = S.rpForm = S.rpForm || {}, P = App.mapaProf(), at = ativos(), pid = f.profId || S.agProf || (at[0] && at[0].id) || '', p = P[pid] || {};
+    var locais = V.LOCAIS.map(function(l){ var def = f.local || p.localPadrao || 'Clínica/consultório'; return '<option'+(l===def?' selected':'')+'>'+esc(l)+'</option>'; }).join('');
+    return '<div class="cx"><h3>Registrar atendimento</h3><p class="sub">Para o dia a dia: escolha o profissional, o horário e salve. Para marcar vários dias de uma vez, use o calendário logo abaixo.</p><div class="reg">'+
+      '<label class="campo"><span>Data</span><input type="date" id="rp-data" value="'+(f.data||hojeISO())+'" max="'+hojeISO()+'"></label>'+
+      '<label class="campo"><span>Profissional</span><select id="rp-prof">'+optProfs(pid, false)+'</select></label>'+
+      '<label class="campo"><span>Local</span><select id="rp-local">'+locais+'</select></label>'+
+      '<label class="campo"><span>Início</span><input type="time" id="rp-ini" value="'+esc(f.ini||'')+'"></label>'+
+      '<label class="campo"><span>Fim</span><input type="time" id="rp-fim" value="'+esc(f.fim||'')+'"></label>'+
+      '<div class="campo" style="align-self:end"><button class="bt" id="rp-salvar">Registrar</button></div></div><span class="msg" id="rp-msg"></span></div>';
+  }
+  function rapidoDepois(){
+    var P = App.mapaProf(), f = S.rpForm = S.rpForm || {};
+    $('#rp-prof').onchange = function(){ var p = P[this.value] || {}; f.profId = this.value; f.local = ''; $('#rp-local').value = p.localPadrao || 'Clínica/consultório'; };
+    $('#rp-salvar').onclick = async function(){
+      var b = this, mg = $('#rp-msg'), s = { data:$('#rp-data').value, profId:$('#rp-prof').value, horaIni:$('#rp-ini').value, horaFim:$('#rp-fim').value, local:$('#rp-local').value };
+      if(!s.profId){ mg.className = 'msg er'; mg.textContent = 'Escolha o profissional.'; return; }
+      if(V.horasDaSessao(s.horaIni, s.horaFim)===null){ mg.className = 'msg er'; mg.textContent = 'Confira início e fim: o fim precisa ser depois do início.'; return; }
+      b.disabled = true; mg.className = 'msg'; mg.textContent = 'Registrando…';
+      try{
+        var o = await api('salvarSessao', { s:s }); if(!o.ok) throw new Error(o.msg);
+        S.M.sessoes = S.M.sessoes.concat([o.sessao]); f.profId = s.profId; f.local = s.local; f.ini = s.horaIni; f.fim = s.horaFim; f.data = s.data;
+        agPintar(); b.disabled = false; var m = $('#rp-msg'); m.className = 'msg ok'; m.textContent = 'Registrado: '+dataBR(s.data)+', '+hh(num(o.sessao.horas)||0)+' h.';
+      }catch(x){ mg.className = 'msg er'; mg.textContent = msgErro(x, 'Não foi possível registrar.'); b.disabled = false; }
+    };
+  }
+
   function agenda(){
     var c = ciclo(), P = App.mapaProf(); if(S.agProf && !P[S.agProf]) S.agProf = '';
     var meses = D.meses(); if(meses.indexOf(c)<0) meses.push(c); meses.sort().reverse();
-    return '<div class="tb"><button class="bt cl" id="ag-ant" aria-label="Mês anterior">‹</button><select id="ag-mes" aria-label="Mês">'+meses.map(function(m){ return '<option'+(m===c?' selected':'')+'>'+esc(m)+'</option>'; }).join('')+'</select><button class="bt cl" id="ag-prox" aria-label="Próximo mês">›</button>'+
+    return rapido()+'<div class="tb"><button class="bt cl" id="ag-ant" aria-label="Mês anterior">‹</button><select id="ag-mes" aria-label="Mês">'+meses.map(function(m){ return '<option'+(m===c?' selected':'')+'>'+esc(m)+'</option>'; }).join('')+'</select><button class="bt cl" id="ag-prox" aria-label="Próximo mês">›</button>'+
       '<select id="ag-prof" aria-label="Profissional">'+optProfs(S.agProf, true)+'</select></div><div id="ag-corpo">'+corpo()+'</div>';
   }
 
@@ -117,6 +145,7 @@
     $('#ag-ant').onclick = function(){ S.sesMes = D.cicloVizinho(ciclo(), -1); troca(); };
     $('#ag-prox').onclick = function(){ S.sesMes = D.cicloVizinho(ciclo(), 1); troca(); };
     $('#ag-prof').onchange = function(){ S.agProf = this.value; troca(); };
+    rapidoDepois();
     agBind();
   }
 

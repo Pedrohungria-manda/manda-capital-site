@@ -6,7 +6,7 @@
 
   function calc(){
     var L = S.M.lancamentos, P = App.mapaProf();
-    var r = { fat:0, solic:0, reemb:0, falta:0, nunca:0, nFalta:0, nNunca:0, nAbertos:0, meses:{}, fazer:{} };
+    var r = { fat:0, solic:0, reemb:0, falta:0, nunca:0, nFalta:0, nNunca:0, nAbertos:0, meses:{}, fazer:{}, dA:[], dT:[], emAberto:0 };
     Object.keys(D.CATS).forEach(function(k){ r.fazer[k] = []; });
     L.forEach(function(l){
       var v = num(l.valor)||0, rv = num(l.vReembolsado), a = D.acao(l), ds = D.diasSolic(l);
@@ -15,6 +15,9 @@
       if(l.dtEntrada){ r.solic += v; m.solic += v; }
       if(rv!==null){ r.reemb += rv; m.reemb += rv; }
       if(l.dtReembolso && l.dtEntrada){ var d = D.dias(l.dtEntrada, l.dtReembolso); if(d!==null && d>=0) m.d.push(d); }
+      var dA = D.dias(l.dtEntrada, l.dtReembolso), dT = D.dias(l.dtPagamento, l.dtReembolso), faltaLanc = l.dtEntrada && l.dtReembolso && rv===null;
+      if(dA!==null && dA>=0) r.dA.push(dA); if(dT!==null && dT>=0) r.dT.push(dT);
+      if(rv===null && !faltaLanc) r.emAberto += v; else if(a.cat==='glosa') r.emAberto += Math.max(0, v-rv);
       if(!l.dtEntrada){ r.nunca += v; r.nNunca++; }
       else if(l.dtReembolso && rv===null){ r.falta += v; r.nFalta++; }
       if(a.cat!=='ok'){ m.abertos++; r.nAbertos++; }
@@ -42,13 +45,19 @@
     if(!L.length) return '<div class="cx"><h3>Painel</h3><p class="sub">Nenhum lançamento ainda. Abra o primeiro ciclo na tela Ciclo.</p></div>';
     var c = calc();
     var tile = function(t, v, s, at){ return '<div class="tile'+(at?' at':'')+'"><span>'+t+'</span><b>'+brl(v)+'</b><small>'+s+'</small></div>'; };
+    var media = function(v){ return v.length ? Math.round(v.reduce(function(s,x){ return s+x; }, 0)/v.length) : null; };
+    var pA = media(c.dA), pT = media(c.dT);
+    var tileTxt = function(t, v, s){ return '<div class="tile"><span>'+t+'</span><b>'+v+'</b><small>'+s+'</small></div>'; };
     var tiles = '<div class="tiles">'+
-      tile('Valor dos meses', c.fat, L.length+' lançamentos')+
-      tile('Solicitado na Amil', c.solic, c.fat ? Math.round(100*c.solic/c.fat)+'% do valor dos meses' : '')+
-      tile('Reembolsado', c.reemb, c.solic ? Math.round(100*c.reemb/c.solic)+'% do solicitado' : '')+
-      tile('Falta lançar', c.falta, c.nFalta+' reembolsos pagos sem valor registrado', c.falta>0)+
-      tile('Ainda não solicitado', c.nunca, c.nNunca+' lançamentos sem protocolo na Amil', c.nunca>0)+
-      tile('A receber (provável)', c.provavel, 'valor − reembolsado − falta lançar')+'</div>';
+      tile('Total reembolsado', c.reemb, c.solic ? Math.round(100*c.reemb/c.solic)+'% do que foi solicitado' : '')+
+      tile('Total em aberto', c.emAberto, 'ainda a receber da Amil ('+c.nAbertos+' lançamentos com algo a fazer)', c.emAberto>0)+
+      tileTxt('Prazo médio de recebimento', pA===null ? '—' : pA+' dias', pT===null ? 'da solicitação ao depósito' : 'da solicitação ao depósito · do pagamento ao depósito: '+pT+' d')+
+      tile('Falta lançar', c.falta, c.nFalta+' reembolsos já pagos, sem valor registrado', c.falta>0)+
+      tile('Não lançado na Amil', c.nunca, c.nNunca+' lançamentos ainda sem protocolo', c.nunca>0)+
+      tile('Valor dos meses', c.fat, L.length+' lançamentos · '+brl(c.solic)+' solicitados')+'</div>';
+    var gr = S.pnGr || 'sem', dh = D.dadosHoras(gr);
+    var horas = '<div class="cx"><h3>Horas dos profissionais</h3><div class="abas" role="tablist"><button role="tab" class="aba'+(gr==='sem'?' on':'')+'" data-gr="sem">Por semana</button><button role="tab" class="aba'+(gr==='ciclo'?' on':'')+'" data-gr="ciclo">Por ciclo (mês)</button></div>'+
+      (dh.vazio ? '<p class="sub">Ainda não há atendimentos registrados. Marque os atendimentos na Agenda (Sessões) e o gráfico aparece aqui.</p>' : '<p class="sub">'+(gr==='sem' ? 'Horas de atendimento por semana (segunda a domingo), nas últimas 12 semanas.' : 'Horas de atendimento por ciclo mensal.')+' Cada cor é um profissional.</p>'+D.chartStack(dh.cats, dh.series, dh.val))+'</div>';
 
     var ordem = Object.keys(D.CATS).filter(function(k){ return k!=='ok' && c.fazer[k].length; }).sort(function(a,b){ return D.CATS[a].ordem - D.CATS[b].ordem; });
     var fazer = ordem.map(function(k, i){
@@ -72,7 +81,7 @@
     var barras = ciclos.slice().reverse().map(function(k){ var m = c.meses[k], rot = D.mmaa(k);
       return '<div class="mes" role="img" aria-label="'+rot+': valor '+brl(m.fat)+', reembolsado '+brl(m.reemb)+'" title="Valor '+brl(m.fat)+' · Reembolsado '+brl(m.reemb)+'"><div class="par"><i class="f" style="height:'+(100*m.fat/max)+'%"></i><i class="r" style="height:'+(100*m.reemb/max)+'%"></i></div>'+rot+'</div>'; }).join('');
 
-    return '<div class="tb"><span class="gap"></span><span class="msg" id="pn-msg"></span><button class="bt cl" id="pn-prova">Exportar prova (PDF)</button></div>'+tiles+
+    return '<div class="tb"><span class="gap"></span><span class="msg" id="pn-msg"></span><button class="bt cl" id="pn-prova">Exportar prova (PDF)</button></div>'+tiles+horas+
       '<div class="cx"><h3>O que fazer agora</h3><p class="sub">Tudo que está em aberto, agrupado pelo que precisa ser feito. Toque num item para abrir o lançamento.</p>'+fazer+'</div>'+
       '<div class="cx"><h3>Mês a mês</h3><p class="sub">Valor do mês, quanto já foi solicitado e reembolsado, e a situação de cada solicitação. Toque numa linha para ver os lançamentos do mês logo abaixo.</p>'+
       '<div class="tw"><table class="tb2 ctr" style="min-width:900px"><thead><tr><th>Mês</th><th class="n">Prof.</th><th class="n">Valor</th><th class="n">Solicitado</th><th class="n">Reembolsado</th><th class="n">%</th><th class="n">Situação</th><th>Status na Amil</th><th class="n">Prazo Amil</th></tr></thead><tbody>'+linhas+'</tbody></table></div>'+
@@ -80,6 +89,7 @@
   }
   tela.depois = function(){
     var b = $('#pn-prova'); if(b) b.onclick = function(){ App.exportarProva(this, $('#pn-msg')); };
+    $$('[data-gr]').forEach(function(x){ x.onclick = function(){ S.pnGr = x.dataset.gr; App.ir('painel'); }; });
     $$('.lk3[data-l]').forEach(function(x){ x.onclick = function(){ S.ciclo = x.dataset.c; S.lanSel = x.dataset.l; App.ir('ciclo'); }; });
     $$('tr.clic[data-c]').forEach(function(x){ x.onclick = function(){
       var prox = x.nextElementSibling;

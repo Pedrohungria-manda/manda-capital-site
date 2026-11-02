@@ -165,6 +165,24 @@
     var y = +ciclo.slice(0,4), m = +ciclo.slice(5,7) + delta; while(m<1){ m += 12; y--; } while(m>12){ m -= 12; y++; }
     return y+'-'+(m<10?'0':'')+m;
   };
+  D.urlBaixar = function(id){ return 'https://drive.google.com/uc?export=download&id='+encodeURIComponent(id); };
+  D.urlPasta = function(id){ return 'https://drive.google.com/drive/folders/'+encodeURIComponent(id); };
+
+  /** Horas dos profissionais por semana (modo 'sem', últimas 12) ou por mês/ciclo (modo 'ciclo'), empilhadas por profissional. */
+  D.dadosHoras = function(modo){
+    var P = App.mapaProf(), SS = App.S.M.sessoes, cats, chave;
+    if(modo==='ciclo'){
+      var m = {}; SS.forEach(function(s){ m[s.data.slice(0,7)] = 1; });
+      cats = Object.keys(m).sort().slice(-12).map(function(k){ return { k:k, rot:D.mmaa(k) }; }); chave = function(s){ return s.data.slice(0,7); };
+    } else { cats = D.ultimasSemanas(12).map(function(w){ return { k:w, rot:D.rotSemana(w) }; }); chave = function(s){ return D.segundaDe(s.data); }; }
+    var ok = {}; cats.forEach(function(c){ ok[c.k] = 1; });
+    var val = {}, tot = {};
+    SS.forEach(function(s){ var k = chave(s); if(!ok[k]) return; var h = num(s.horas)||0; val[k+'|'+s.profId] = (val[k+'|'+s.profId]||0) + h; tot[s.profId] = (tot[s.profId]||0) + h; });
+    var ids = Object.keys(tot).sort(function(a,b){ return tot[b]-tot[a]; });
+    var series = ids.map(function(id, i){ var p = P[id]||{}; return { k:id, nome:(p.apelido||id)+' ('+D.SIGLA[p.terapia||'x']+')', cor:D.PALETA[i % D.PALETA.length] }; });
+    return { cats:cats, series:series, val:function(c, k){ return val[c+'|'+k]; }, vazio:!ids.length };
+  };
+
   D.fmtTam = function(b){ b = +b||0; return b>1048576 ? (b/1048576).toFixed(1).replace('.',',')+' MB' : Math.max(1,Math.round(b/1024))+' KB'; };
   // ------------------------------------------------------------ horas por semana do ciclo e por terapia
   /** Horas do mês nas 4 janelas do ciclo (1–7, 8–14, 15–21, 22–fim), por terapia. profId opcional. */
@@ -209,7 +227,7 @@
     if(!grupos.length) return '<p class="sub">'+esc(aviso||'Nenhum arquivo ainda.')+'</p>';
     return grupos.map(function(g){
       return '<div class="gp"><h4>'+esc(g.titulo)+' <a class="lk2" href="'+esc(g.url)+'" target="_blank" rel="noopener noreferrer">abrir pasta</a></h4>'+
-        (g.arquivos.length ? '<ul class="lst">'+g.arquivos.map(function(a){ return '<li><a href="'+esc(a.url)+'" target="_blank" rel="noopener noreferrer">'+esc(a.nome)+'</a><span>'+dataBR(a.em)+' · '+D.fmtTam(a.tam)+'</span></li>'; }).join('')+'</ul>' : '<p class="sub">Pasta vazia.</p>')+'</div>';
+        (g.arquivos.length ? '<ul class="lst">'+g.arquivos.map(function(a){ return '<li><a href="'+esc(a.url)+'" target="_blank" rel="noopener noreferrer">'+esc(a.nome)+'</a><span>'+dataBR(a.em)+' · '+D.fmtTam(a.tam)+' · <a href="'+D.urlBaixar(a.id)+'" rel="noopener noreferrer">baixar</a></span></li>'; }).join('')+'</ul>' : '<p class="sub">Pasta vazia.</p>')+'</div>';
     }).join('');
   };
 });

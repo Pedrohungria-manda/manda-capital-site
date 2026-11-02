@@ -4,30 +4,64 @@
   var D = App.D, $ = App.$, $$ = App.$$, esc = App.esc, brl = App.brl, num = App.num, S = App.S, hh = App.hh, dataBR = App.dataBR, bool = App.bool, api = App.api, msgErro = App.msgErro;
   var ABAS = [['cad','Cadastro'], ['hist','Histórico'], ['sess','Sessões e calendário'], ['docs','Documentos']];
 
-  // ------------------------------------------------------------ lista, por terapia
-  function lista(){
-    var P = S.M.profissionais.slice().sort(function(a,b){ return (bool(b.ativo)-bool(a.ativo)) || String(a.apelido||a.nome).localeCompare(String(b.apelido||b.nome),'pt-BR'); });
-    var ativos = P.filter(function(p){ return bool(p.ativo); }).length, h = '';
-    D.TERAPIAS.forEach(function(t){
-      var G = P.filter(function(p){ return (p.terapia||'')===t; }); if(!G.length) return;
-      var R = G.map(function(p){ return D.resumoProf(p); });
-      var pago = R.reduce(function(s,r){ return s+r.pago; }, 0), re = R.reduce(function(s,r){ return s+r.reemb; }, 0), hs = R.reduce(function(s,r){ return s+r.horas; }, 0);
-      h += '<div class="gh2"><h3>'+esc(D.GRUPO_NOME[t])+' <small>'+G.length+'</small></h3><span>Pago '+brl(pago)+' · Reembolsado '+brl(re)+' · '+hh(hs)+' h no app</span></div><div class="pl">';
-      G.forEach(function(p, i){
-        var r = R[i], pend = D.pendCadastro(p, P);
-        var deve = r.deve.length ? '<span class="chip crit">Deve: '+esc(r.deve.slice(-2).join(', '))+(r.deve.length>2 ? ' +'+(r.deve.length-2) : '')+'</span>' : '';
-        h += '<button class="pi" data-id="'+esc(p.id)+'"><span class="nm">'+esc(p.apelido||p.nome)+' <small>'+esc(p.nome!==p.apelido ? p.nome : '')+'</small></span>'+
-          '<span>'+(p.papel ? '<span class="tag">'+esc(p.papel)+'</span> ' : '')+(bool(p.ativo) ? '' : '<span class="tag">inativo</span>')+'</span>'+
-          '<span class="pc stats"><span><b>'+brl(r.pago)+'</b> pago</span><span><b>'+brl(r.reemb)+'</b> reembolsado</span><span><b>'+hh(r.horas)+' h</b> no app</span><span><b>'+r.nNF+'/'+r.lan.length+'</b> notas</span>'+
-          (r.abertos.length ? '<span><b>'+r.abertos.length+'</b> em aberto</span>' : '<span>sem pendência</span>')+'</span>'+
-          '<span class="pc">'+deve+(pend.length ? '<span class="chip">'+pend.length+' pendência'+(pend.length>1?'s':'')+' de cadastro</span>' : '')+'</span></button>';
-      });
-      h += '</div>';
+  // ------------------------------------------------------------ lista: uma linha por profissional, com filtro
+  var COLS = [['nome','Profissional','l'], ['terapia','Terapia','l'], ['pagoTotal','Pago (histórico)','n'], ['pagoAno','Pago no ano','n'], ['reembAno','Reembolsado no ano','n'], ['horas','Horas (no app)','n'], ['abertos','Em aberto','n']];
+  function linhasProf(P){
+    var ano = App.hojeISO().slice(0,4);
+    return P.map(function(p){
+      var r = D.resumoProf(p), pagoAno = 0, reembAno = 0, valAberto = 0;
+      r.lan.forEach(function(l){ if(l.ciclo.slice(0,4)===ano){ pagoAno += num(l.valor)||0; reembAno += num(l.vReembolsado)||0; } });
+      r.abertos.forEach(function(x){ valAberto += num(x.l.valor)||0; });
+      return { p:p, r:r, nome:p.nome||p.apelido, terapia:p.terapia||'', pagoTotal:r.pago, pagoAno:pagoAno, reembAno:reembAno, horas:r.horas, abertos:r.abertos.length, valAberto:valAberto, pend:D.pendCadastro(p, P).length };
     });
-    return '<div class="tb"><div><b>'+P.length+'</b> profissionais · <b>'+ativos+'</b> ativos</div><span class="gap"></span><button class="bt" id="pr-novo">+ Novo profissional</button></div>'+
-      '<p class="sub" style="margin-top:-6px">Cadastre só o nome e os dados. O app já cria a pasta do profissional no Drive e abre o lançamento do mês.</p>'+(h || '<div class="cx"><p class="sub">Nenhum profissional ainda.</p></div>');
   }
-
+  function corpoTabela(){
+    var P = S.M.profissionais, q = App.digitos(''), txt = String(S.pfQ||'').trim().toLowerCase(), ft = S.pfT||'', sit = S.pfSit||'ativos';
+    var semAc = function(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); };
+    var L = linhasProf(P).filter(function(x){
+      if(ft!=='' && (x.terapia||'x')!==ft) return false;
+      if(sit==='ativos' && !bool(x.p.ativo)) return false;
+      if(sit==='inativos' && bool(x.p.ativo)) return false;
+      if(sit==='abertos' && !x.abertos) return false;
+      if(txt && semAc(x.p.nome+' '+x.p.apelido+' '+x.p.docFiscal+' '+x.p.email).indexOf(semAc(txt))<0) return false;
+      return true;
+    });
+    var so = S.pfSort || { k:'nome', d:1 };
+    var cmp = function(a,b){ var x = a[so.k], y = b[so.k]; return (typeof x==='number' ? x-y : String(x).localeCompare(String(y),'pt-BR')) * so.d; };
+    var h = '';
+    D.TERAPIAS.forEach(function(t){
+      var G = L.filter(function(x){ return x.terapia===t; }).sort(cmp); if(!G.length) return;
+      var soma = function(k){ return G.reduce(function(s,x){ return s+x[k]; }, 0); };
+      h += '<tr class="gh"><td colspan="7">'+esc(D.GRUPO_NOME[t])+' · '+G.length+'</td></tr>';
+      G.forEach(function(x){
+        h += '<tr class="clic" data-id="'+esc(x.p.id)+'"><td class="l"><b>'+esc(x.p.nome)+'</b>'+(bool(x.p.ativo) ? '' : ' <span class="chip neutro">inativo</span>')+(x.pend ? ' <span class="chip" title="Pendências de cadastro">'+x.pend+'</span>' : '')+'</td><td class="l">'+esc(D.SIGLA[x.terapia||'x']==='S/T' ? '—' : App.TERAPIA_NOME[x.terapia])+'</td>'+
+          '<td class="n">'+brl(x.pagoTotal)+'</td><td class="n">'+brl(x.pagoAno)+'</td><td class="n">'+brl(x.reembAno)+'</td><td class="n">'+hh(x.horas)+' h</td>'+
+          '<td class="n">'+(x.abertos ? '<span class="chip">'+x.abertos+' · '+brl(x.valAberto)+'</span>' : '<span class="chip ok">em dia</span>')+'</td></tr>';
+      });
+      h += '<tr class="sub-tot"><td class="l">Subtotal</td><td></td><td class="n">'+brl(soma('pagoTotal'))+'</td><td class="n">'+brl(soma('pagoAno'))+'</td><td class="n">'+brl(soma('reembAno'))+'</td><td class="n">'+hh(soma('horas'))+' h</td><td class="n">'+soma('abertos')+'</td></tr>';
+    });
+    return { html: h || '<tr><td colspan="7" class="l">Nenhum profissional com esse filtro.</td></tr>', n:L.length };
+  }
+  function lista(){
+    var P = S.M.profissionais, ano = App.hojeISO().slice(0,4), so = S.pfSort || { k:'nome', d:1 };
+    var cab = COLS.map(function(c){ var on = so.k===c[0]; return '<th class="ord'+(on?' on':'')+'" data-k="'+c[0]+'" role="button" tabindex="0" aria-sort="'+(on ? (so.d>0?'ascending':'descending') : 'none')+'">'+(c[0]==='pagoAno' ? 'Pago em '+ano : c[0]==='reembAno' ? 'Reembolsado em '+ano : c[1])+(on ? (so.d>0?' ▲':' ▼') : '')+'</th>'; }).join('');
+    var ter = '<select id="pf-ft" aria-label="Terapia"><option value="">Todas as terapias</option>'+D.TERAPIAS.map(function(t){ return '<option value="'+(t||'x')+'"'+((S.pfT||'')===(t||'x')?' selected':'')+'>'+esc(D.GRUPO_NOME[t])+'</option>'; }).join('')+'</select>';
+    var sit = '<select id="pf-fs" aria-label="Situação">'+[['ativos','Ativos'],['todos','Todos'],['inativos','Inativos'],['abertos','Com algo em aberto']].map(function(o){ return '<option value="'+o[0]+'"'+((S.pfSit||'ativos')===o[0]?' selected':'')+'>'+o[1]+'</option>'; }).join('')+'</select>';
+    var c = corpoTabela();
+    return '<div class="tb"><input id="pf-q" type="search" placeholder="Buscar por nome, CPF ou e-mail" value="'+esc(S.pfQ||'')+'" aria-label="Buscar profissional" class="busca">'+ter+sit+'<span class="gap"></span><button class="bt" id="pr-novo">+ Novo profissional</button></div>'+
+      '<p class="sub" style="margin-top:-4px"><span id="pf-n">'+c.n+'</span> de '+P.length+' profissionais. Toque numa linha para abrir a ficha completa. Cadastre só o nome e os dados: o app cria a pasta no Drive e abre o lançamento do mês.</p>'+
+      '<div class="tw"><table class="tb2 tprof" style="min-width:900px"><thead><tr>'+cab+'</tr></thead><tbody id="pf-tb">'+c.html+'</tbody></table></div>';
+  }
+  function ligaLista(){
+    var rep = function(){ var c = corpoTabela(); $('#pf-tb').innerHTML = c.html; $('#pf-n').textContent = c.n; ligaLinhas(); };
+    var ligaLinhas = function(){ $$('#pf-tb tr.clic').forEach(function(tr){ tr.onclick = function(){ S.prof = tr.dataset.id; S.profTab = 'cad'; App.ir('profissionais'); }; }); };
+    $('#pf-q').oninput = function(){ S.pfQ = this.value; rep(); };
+    $('#pf-ft').onchange = function(){ S.pfT = this.value; rep(); };
+    $('#pf-fs').onchange = function(){ S.pfSit = this.value; rep(); };
+    $$('th.ord').forEach(function(th){ var go = function(){ var k = th.dataset.k, so = S.pfSort || { k:'nome', d:1 }; S.pfSort = { k:k, d: so.k===k ? -so.d : (k==='nome'||k==='terapia' ? 1 : -1) }; App.ir('profissionais'); };
+      th.onclick = go; th.onkeydown = function(e){ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); go(); } }; });
+    ligaLinhas();
+  }
   // ------------------------------------------------------------ cadastro (formulário)
   function formCad(p){
     var novo = !p.id, campo = function(id, rot, val, extra){ return '<label class="campo"><span>'+rot+'</span><input id="pf-'+id+'" value="'+esc(val)+'" '+(extra||'')+'></label>'; };
@@ -117,8 +151,7 @@
     if(S.msgProf){ var m0 = $('#pf-msg'); if(m0){ m0.className = 'msg ok'; m0.textContent = S.msgProf; } S.msgProf = null; }
     if(!S.prof || S.prof==='novo'){
       if($('#pr-novo')) $('#pr-novo').onclick = function(){ S.prof = 'novo'; App.ir('profissionais'); };
-      $$('.pi').forEach(function(b){ b.onclick = function(){ S.prof = b.dataset.id; S.profTab = 'cad'; App.ir('profissionais'); }; });
-      if(S.prof!=='novo') return;
+      if(S.prof!=='novo'){ ligaLista(); return; }
     }
     var atual = S.prof==='novo' ? null : S.M.profissionais.filter(function(x){ return x.id===S.prof; })[0];
     $$('.aba').forEach(function(b){ b.onclick = function(){ S.profTab = b.dataset.aba; App.ir('profissionais'); }; });
