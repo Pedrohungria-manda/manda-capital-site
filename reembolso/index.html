@@ -131,6 +131,29 @@ table.tb2{border-collapse:collapse;width:100%;min-width:760px;font-size:14.5px}
 .esc{display:grid;grid-template-columns:90px 1fr 1fr;gap:8px;align-items:center;margin-bottom:8px}.esc input{padding:8px;border:1px solid var(--linha);border-radius:8px;min-height:44px}
 a.bt{display:inline-block;text-decoration:none;text-align:center;line-height:1.2}a.solta{color:var(--az);font-size:14px}
 .det-in.l{text-align:left}.det-in.l .gp h4{text-align:left}
+/* grade mensal de horários */
+.semanas{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px;margin-top:10px}
+.sem h4{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 6px;color:var(--azesc);font-size:14px}.sem h4 small{font-weight:400;color:var(--mudo)}.sem h4 span{font-family:var(--f-mono);font-size:12px}
+.grade{border-collapse:collapse;width:100%;table-layout:fixed;font-size:10px}
+.grade th.h{width:30px;font-family:var(--f-mono);font-weight:400;font-size:9.5px;color:var(--mudo);text-align:right;padding-right:4px;line-height:1}
+.grade th.dia{background:var(--fundo);border:1px solid var(--linha);padding:2px 0;line-height:1.1}.grade th.dia small{display:block;color:var(--mudo);font-weight:400}.grade th.dia b{font-size:11px;color:var(--azesc)}
+.grade th.dia.fim{background:#DADFE6}.grade th.dia.hoje{box-shadow:inset 0 -2px 0 var(--az)}.grade th.dia[role=button]{cursor:pointer}
+.grade td.c{height:14px;padding:0;border:1px solid #EEF1F5;text-align:center;color:#fff;font-size:9px;line-height:14px;background:var(--branco)}
+.grade td.c.fim{background:#EDEFF3;border-color:#E2E5EB}.grade td.c.clic{cursor:pointer}.grade td.c.clic:hover{outline:2px solid var(--az);outline-offset:-2px}
+.grade td.c.mar{background:repeating-linear-gradient(45deg,#0B63B1 0 3px,#8DB4DB 3px 6px)!important}
+.grade td.tt{border-top:1px solid var(--linha);text-align:center;font-family:var(--f-mono);font-size:10px;color:var(--azesc);padding:2px 0}.grade td.tt.fim{background:#EDEFF3}
+.grade-tot{text-align:right;margin:10px 0 0;color:var(--mudo)}.grade-tot b{color:var(--azesc)}
+/* tabela do ciclo, sem rolagem lateral */
+table.tb2.tcic{table-layout:auto;min-width:0;width:100%}.tcic th,.tcic td{white-space:normal;padding:8px 6px;font-size:13.5px;vertical-align:middle}.tcic td.ck,.tcic th.ck{width:30px;padding:8px 4px}
+.tcic td.sdo{color:var(--atencao);font-weight:700}.tcic td.zero{color:var(--mudo)}.tcic .dab{color:var(--atencao);font-weight:600}
+.barra-sel{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:#EAF2FB;border:1px solid var(--az);border-radius:10px;padding:10px 14px;margin:6px 0 10px;position:sticky;top:60px;z-index:4}.barra-sel #sel-txt{flex:1;font-weight:600;color:var(--azesc);min-width:160px}
+@media(max-width:760px){
+  .tcic thead{display:none}.tcic,.tcic tbody{display:block}.tcic tr.clic{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px 8px;border:1px solid var(--linha);border-radius:10px;padding:8px 10px;margin-bottom:8px;background:var(--branco);position:relative}
+  .tcic tr.gh{display:block}.tcic tr.gh td{display:block}
+  .tcic td{display:block;text-align:left!important;padding:2px 0;font-size:13px}.tcic td.ck{position:absolute;top:6px;right:8px;width:auto}
+  .tcic td.nm{grid-column:1/-1;font-size:15px}.tcic td[data-r]::before{content:attr(data-r);display:block;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mudo)}
+  .semanas{grid-template-columns:1fr}
+}
 /* tabela de profissionais */
 .tprof th.l,.tprof td.l{text-align:left}.tprof th.n,.tprof td.n{text-align:right}.tprof td{padding:9px 12px}
 .tprof th.ord{cursor:pointer;user-select:none}.tprof th.ord:hover,.tprof th.ord.on{color:var(--azesc)}

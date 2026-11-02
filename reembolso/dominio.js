@@ -165,6 +165,55 @@
     var y = +ciclo.slice(0,4), m = +ciclo.slice(5,7) + delta; while(m<1){ m += 12; y--; } while(m>12){ m -= 12; y++; }
     return y+'-'+(m<10?'0':'')+m;
   };
+  D.moeda = function(n){ return (+n||0).toLocaleString('pt-BR', { minimumFractionDigits:2, maximumFractionDigits:2 }); };
+  D.dataCurta = function(iso){ var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso||''); return m ? (+m[3])+'/'+(+m[2])+'/'+m[1].slice(2) : '—'; };
+
+  // ------------------------------------------------------------ grade mensal: dias em colunas, horários de 30 em 30 min
+  var minutos = function(t){ var m = /^(\d{1,2}):(\d{2})$/.exec(t||''); return m ? +m[1]*60 + +m[2] : null; };
+  var hora = function(min){ var h = Math.floor(min/60); return (h<10?'0':'')+h+':'+(min%60 ? min%60 : '00'); };
+  /** Faixa do dia mostrada: 7h às 18h, ampliada se houver sessão fora dela (até 5h–22h). */
+  D.faixa = function(sessoes){
+    var ini = 7*60, fim = 18*60;
+    sessoes.forEach(function(s){ var a = minutos(s.horaIni), b = minutos(s.horaFim); if(a!==null) ini = Math.min(ini, Math.floor(a/30)*30); if(b!==null) fim = Math.max(fim, Math.ceil(b/30)*30); });
+    return { ini:Math.max(ini, 5*60), fim:Math.min(fim, 22*60) };
+  };
+  /**
+   * O mês inteiro em blocos de semana (1–7, 8–14, 15–21, 22–fim). Cada bloco: dias em colunas, horários em linhas.
+   * opts: profId (só um profissional), interativo (células clicáveis), marcadas ({'AAAA-MM-DD|i': 1}).
+   * Sessões salvas ficam coloridas pela terapia; marcadas (ainda não salvas) listradas; fim de semana cinza.
+   */
+  D.gradeMensal = function(ciclo, ctx, opts){
+    opts = opts || {};
+    var P = ctx.profs, pid = opts.profId || '', hoje = hojeISO(), marc = opts.marcadas || {};
+    var SS = ctx.sessoes.filter(function(s){ return s.data.slice(0,7)===ciclo && (!pid || s.profId===pid); });
+    var fx = D.faixa(SS), n = (fx.fim - fx.ini)/30, occ = {}, dia = {};
+    SS.forEach(function(s){
+      var a = minutos(s.horaIni), b = minutos(s.horaFim); dia[s.data] = (dia[s.data]||0) + (num(s.horas)||0);
+      if(a===null || b===null) return;
+      for(var t = Math.floor(a/30)*30; t < b; t += 30){ var i = (t - fx.ini)/30; if(i < 0 || i >= n) continue; (occ[s.data+'|'+i] = occ[s.data+'|'+i] || []).push(s); }
+    });
+    var nomeDia = ['D','S','T','Q','Q','S','S'], tot = 0;
+    var blocos = V.janelas(ciclo).map(function(w){
+      var dias = [], soma = 0; for(var d = w.ini; d <= w.fim; d++){ var iso = ciclo+'-'+(d<10?'0':'')+d; dias.push({ d:d, iso:iso, wd:V.diaSemana(iso) }); soma += dia[iso]||0; }
+      tot += soma;
+      var cab = '<th class="h"></th>'+dias.map(function(x){ var fim = x.wd===0 || x.wd===6;
+        return '<th class="dia'+(fim?' fim':'')+(x.iso===hoje?' hoje':'')+'" data-d="'+x.iso+'"'+(opts.interativo && x.iso<=hoje && !fim ? ' role="button" title="Marcar o horário padrão neste dia"' : '')+'><small>'+nomeDia[x.wd]+'</small><b>'+x.d+'</b></th>'; }).join('');
+      var linhas = '';
+      for(var i = 0; i < n; i++){
+        var min = fx.ini + 30*i;
+        linhas += '<tr><th class="h">'+(min%60===0 ? hora(min).slice(0,2)+'h' : '')+'</th>'+dias.map(function(x){
+          var fim = x.wd===0 || x.wd===6, ls = occ[x.iso+'|'+i], mk = marc[x.iso+'|'+min], fut = x.iso > hoje, cls = 'c'+(fim?' fim':'')+(ls?' ocu':'')+(mk?' mar':'')+(opts.interativo && !fut && !ls ? ' clic' : '');
+          var cor = ls ? ' style="background:'+D.CORES[D.terapiaDe(P, ls[0].profId)]+'"' : '';
+          var tip = ls ? ls.map(function(s){ return (P[s.profId]||{}).apelido+' '+s.horaIni+'–'+s.horaFim; }).join(' · ') : hora(min);
+          return '<td class="'+cls+'"'+cor+' data-d="'+x.iso+'" data-m="'+min+'" title="'+esc(tip)+'">'+(!pid && ls && ls.length>1 ? ls.length : '')+'</td>';
+        }).join('')+'</tr>';
+      }
+      var rod = '<th class="h">h</th>'+dias.map(function(x){ var h = dia[x.iso]; return '<td class="tt'+((x.wd===0||x.wd===6)?' fim':'')+'">'+(h ? hh(h).replace(',0','') : '')+'</td>'; }).join('');
+      return '<div class="sem"><h4>Semana '+w.n+' <small>dias '+w.ini+'–'+w.fim+'</small><span>'+(soma ? hh(soma)+' h' : '—')+'</span></h4><table class="grade"><thead><tr>'+cab+'</tr></thead><tbody>'+linhas+'</tbody><tfoot><tr>'+rod+'</tr></tfoot></table></div>';
+    });
+    return '<div class="semanas">'+blocos.join('')+'</div><p class="grade-tot">Total do mês: <b>'+hh(tot)+' h</b></p>';
+  };
+
   D.urlBaixar = function(id){ return 'https://drive.google.com/uc?export=download&id='+encodeURIComponent(id); };
   D.urlPasta = function(id){ return 'https://drive.google.com/drive/folders/'+encodeURIComponent(id); };
 

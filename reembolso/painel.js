@@ -55,6 +55,10 @@
       tile('Falta lançar', c.falta, c.nFalta+' reembolsos já pagos, sem valor registrado', c.falta>0)+
       tile('Não lançado na Amil', c.nunca, c.nNunca+' lançamentos ainda sem protocolo', c.nunca>0)+
       tile('Valor dos meses', c.fat, L.length+' lançamentos · '+brl(c.solic)+' solicitados')+'</div>';
+    var cm = S.pnCal || App.hojeISO().slice(0,7), ms = D.meses(); if(ms.indexOf(cm)<0) ms.push(cm);
+    var calReemb = '<div class="cx"><h3>Calendário de reembolsos</h3><p class="sub">Pagamentos aos profissionais, solicitações na Amil e reembolsos recebidos, dia a dia. Toque num dia para ver os detalhes.</p>'+
+      '<div class="tb"><button class="bt cl" id="pc-ant" aria-label="Mês anterior">‹</button><select id="pc-mes" aria-label="Mês">'+ms.sort().reverse().map(function(m){ return '<option'+(m===cm?' selected':'')+'>'+esc(m)+'</option>'; }).join('')+'</select><button class="bt cl" id="pc-prox" aria-label="Próximo mês">›</button></div>'+
+      D.calendario(cm, D.ctx(), 'reemb')+'</div>';
     var gr = S.pnGr || 'sem', dh = D.dadosHoras(gr);
     var horas = '<div class="cx"><h3>Horas dos profissionais</h3><div class="abas" role="tablist"><button role="tab" class="aba'+(gr==='sem'?' on':'')+'" data-gr="sem">Por semana</button><button role="tab" class="aba'+(gr==='ciclo'?' on':'')+'" data-gr="ciclo">Por ciclo (mês)</button></div>'+
       (dh.vazio ? '<p class="sub">Ainda não há atendimentos registrados. Marque os atendimentos na Agenda (Sessões) e o gráfico aparece aqui.</p>' : '<p class="sub">'+(gr==='sem' ? 'Horas de atendimento por semana (segunda a domingo), nas últimas 12 semanas.' : 'Horas de atendimento por ciclo mensal.')+' Cada cor é um profissional.</p>'+D.chartStack(dh.cats, dh.series, dh.val))+'</div>';
@@ -85,11 +89,18 @@
       '<div class="cx"><h3>O que fazer agora</h3><p class="sub">Tudo que está em aberto, agrupado pelo que precisa ser feito. Toque num item para abrir o lançamento.</p>'+fazer+'</div>'+
       '<div class="cx"><h3>Mês a mês</h3><p class="sub">Valor do mês, quanto já foi solicitado e reembolsado, e a situação de cada solicitação. Toque numa linha para ver os lançamentos do mês logo abaixo.</p>'+
       '<div class="tw"><table class="tb2 ctr" style="min-width:900px"><thead><tr><th>Mês</th><th class="n">Prof.</th><th class="n">Valor</th><th class="n">Solicitado</th><th class="n">Reembolsado</th><th class="n">%</th><th class="n">Situação</th><th>Status na Amil</th><th class="n">Prazo Amil</th></tr></thead><tbody>'+linhas+'</tbody></table></div>'+
-      '<div class="barras" style="margin-top:18px">'+barras+'</div><div class="leg"><span><i style="background:var(--azesc)"></i>Valor do mês</span><span><i style="background:#8DB4DB"></i>Reembolsado</span></div></div>';
+      '<div class="barras" style="margin-top:18px">'+barras+'</div><div class="leg"><span><i style="background:var(--azesc)"></i>Valor do mês</span><span><i style="background:#8DB4DB"></i>Reembolsado</span></div></div>'+calReemb;
   }
   tela.depois = function(){
     var b = $('#pn-prova'); if(b) b.onclick = function(){ App.exportarProva(this, $('#pn-msg')); };
     $$('[data-gr]').forEach(function(x){ x.onclick = function(){ S.pnGr = x.dataset.gr; App.ir('painel'); }; });
+    if($('#pc-mes')){
+      var cm = S.pnCal || App.hojeISO().slice(0,7);
+      $('#pc-mes').onchange = function(){ S.pnCal = this.value; App.ir('painel'); };
+      $('#pc-ant').onclick = function(){ S.pnCal = D.cicloVizinho(cm, -1); App.ir('painel'); };
+      $('#pc-prox').onclick = function(){ S.pnCal = D.cicloVizinho(cm, 1); App.ir('painel'); };
+      D.ligarCalendario(D.ctx());
+    }
     $$('.lk3[data-l]').forEach(function(x){ x.onclick = function(){ S.ciclo = x.dataset.c; S.lanSel = x.dataset.l; App.ir('ciclo'); }; });
     $$('tr.clic[data-c]').forEach(function(x){ x.onclick = function(){
       var prox = x.nextElementSibling;

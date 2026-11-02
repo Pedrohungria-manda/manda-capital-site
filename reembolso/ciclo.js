@@ -30,48 +30,44 @@
       tile('Solicitado', brl(sol), v ? Math.round(100*sol/v)+'% do valor' : '')+tile('Reembolsado', brl(re), sol ? Math.round(100*re/sol)+'% do solicitado' : '')+
       tile('Em aberto', ab, ab ? 'lançamentos com algo a fazer' : 'tudo fechado', ab>0)+tile('Mais antigo', maisAntigo===null ? '—' : maisAntigo+' d', 'solicitado e sem retorno')+'</div>';
 
-    var familia = S.u.perfil==='familia', corpo = '', grupo = null;
+    var familia = S.u.perfil==='familia', corpo = '', grupo = null, nSel = 0;
     L.forEach(function(l){
-      var p = P[l.profId]||{}, t = p.terapia||'', a = D.acao(l), ds = D.diasSolic(l);
-      if(t!==grupo){ grupo = t; corpo += '<tr class="gh"><td colspan="11">'+esc(D.GRUPO_NOME[t])+'</td></tr>'; }
-      corpo += '<tr class="clic" data-l="'+esc(l.id)+'"><td><b>'+esc(p.apelido||l.profId)+'</b>'+(l.parcela?' <small>parc. '+esc(l.parcela)+'</small>':'')+'<br><button class="lk3 mini" data-agenda="'+esc(l.profId)+'">Agenda</button></td><td class="n">'+brl(num(l.valor))+'</td>'+
-        '<td>'+D.sim(l.nf)+'</td><td>'+D.sim(l.freq)+'</td><td>'+D.sim(l.comp)+'</td><td>'+dataBR(l.dtPagamento)+'</td>'+
-        '<td>'+(l.dtEntrada ? dataBR(l.dtEntrada)+(ds ? ' <small>'+(ds.fechado ? ds.dias+' d até o reembolso' : 'há '+ds.dias+' d')+'</small>' : '') : '—')+'</td>'+
-        '<td>'+(l.numProtocolo ? esc(l.numProtocolo) : '—')+'</td><td>'+D.statusChip(l.status)+'</td><td class="n">'+(num(l.vReembolsado)!==null ? brl(num(l.vReembolsado)) : '—')+'</td>'+
-        '<td><span class="ac '+a.nivel+'">'+esc(a.texto)+'</span></td></tr>';
+      var p = P[l.profId]||{}, t = p.terapia||'', ds = D.diasSolic(l), v = num(l.valor)||0, rv = num(l.vReembolsado), saldo = v - (rv||0), tem = Math.abs(saldo) > 0.005;
+      if(t!==grupo){ grupo = t; corpo += '<tr class="gh"><td colspan="9">'+esc(D.GRUPO_NOME[t])+'</td></tr>'; }
+      if(tem) nSel++;
+      corpo += '<tr class="clic" data-l="'+esc(l.id)+'"><td class="ck"><input type="checkbox" class="sel" data-id="'+esc(l.id)+'" data-saldo="'+saldo+'"'+(tem && familia ? '' : ' disabled')+' aria-label="Selecionar '+esc(p.apelido||l.profId)+'"></td>'+
+        '<td class="nm" data-r="Profissional"><b>'+esc(String(p.nome||l.profId).split(' ')[0])+'</b>'+(l.parcela ? ' <small>parc. '+esc(l.parcela)+'</small>' : '')+'</td>'+
+        '<td data-r="Valor">'+D.moeda(v)+'</td><td data-r="Pago em">'+D.dataCurta(l.dtPagamento)+'</td><td data-r="Solicitado em">'+D.dataCurta(l.dtEntrada)+'</td>'+
+        '<td data-r="Protocolo">'+(l.numProtocolo ? esc(l.numProtocolo) : '—')+'</td><td data-r="Reembolsado">'+(rv!==null ? D.moeda(rv) : '—')+'</td>'+
+        '<td data-r="Dias" title="'+(ds ? (ds.fechado ? 'dias da solicitação até o reembolso' : 'em aberto: contando até hoje') : '')+'">'+(ds ? '<span class="'+(ds.fechado ? '' : 'dab')+'">'+ds.dias+'</span>' : '—')+'</td>'+
+        '<td data-r="Saldo" class="'+(tem ? 'sdo' : 'zero')+'">'+(tem ? D.moeda(saldo) : '—')+'</td></tr>';
     });
-    var tabela = L.length ? '<div class="tw"><table class="tb2" style="min-width:1180px"><thead><tr><th>Profissional</th><th class="n">Valor</th><th>NF</th><th>Lista</th><th>Comp.</th><th>Pago em</th><th>Solicitado em</th><th>Protocolo</th><th>Status na Amil</th><th class="n">Reembolsado</th><th>O que fazer</th></tr></thead><tbody>'+corpo+'</tbody></table></div>'
+    var tabela = L.length ? '<div class="barra-sel" id="sel-bar" hidden><span id="sel-txt"></span><button class="bt" id="sel-email">Montar e-mail para a Amil</button><button class="bt cl peq" id="sel-limpa">Limpar</button></div>'+
+        '<table class="tb2 tcic ctr"><thead><tr><th class="ck">'+(familia ? '<input type="checkbox" id="sel-todos" aria-label="Selecionar todos com saldo"'+(nSel ? '' : ' disabled')+'>' : '')+'</th><th>Profissional</th><th>Valor</th><th>Pago em</th><th>Solicitado em</th><th>Protocolo</th><th>Reembolsado</th><th>Dias</th><th>Saldo</th></tr></thead><tbody>'+corpo+'</tbody></table>'
       : '<p class="sub">Nenhum lançamento em '+esc(S.ciclo)+'. '+(familia ? 'Use "Abrir ciclo" para criar um por profissional ativo.' : '')+'</p>';
 
     var nav = '<div class="tb"><button class="bt cl" id="cic-ant" aria-label="Mês anterior">‹</button><select id="cic-sel" aria-label="Competência">'+meses.concat(meses.indexOf(S.ciclo)<0?[S.ciclo]:[]).sort().reverse().map(function(c){ return '<option'+(c===S.ciclo?' selected':'')+'>'+esc(c)+'</option>'; }).join('')+'</select><button class="bt cl" id="cic-prox" aria-label="Próximo mês">›</button>'+
       (familia ? '<span class="gap"></span><button class="bt" id="cic-abrir">Abrir ciclo</button><button class="bt cl" id="cic-pasta">Criar pastas</button><button class="bt cl" id="cic-gerar">Gerar listas</button>' : '')+'</div><div id="cic-res"></div>';
 
-    var modoCal = S.cicCal || 'atend', ctxCal = D.ctx();
-    var abasCal = '<div class="abas" role="tablist"><button role="tab" class="aba'+(modoCal==='atend'?' on':'')+'" data-cal="atend">Calendário de atendimentos</button><button role="tab" class="aba'+(modoCal==='reemb'?' on':'')+'" data-cal="reemb">Calendário de reembolsos</button></div>';
-    var cal = '<div class="cx"><h3>'+(modoCal==='atend' ? 'Atendimentos de ' : 'Reembolsos de ')+esc(S.ciclo)+'</h3>'+abasCal+
-      (modoCal==='atend'
-        ? '<p class="sub">Horas de cada dia, por terapia. Toque num dia para ver as sessões.</p>'+D.calendario(S.ciclo, ctxCal, 'atend')+'<h4>Horas por semana e por terapia</h4><p class="sub">As quatro semanas do ciclo (1–7, 8–14, 15–21 e 22 até o fim do mês) e o total de cada terapia.</p>'+D.tabelaSemanas(D.horasDoCiclo(S.ciclo, S.M.sessoes, App.mapaProf()))
-        : '<p class="sub">Pagamentos aos profissionais, solicitações na Amil e reembolsos recebidos neste mês. Toque num dia para ver os detalhes.</p>'+D.calendario(S.ciclo, ctxCal, 'reemb'))+'</div>';
+    var cal = '<div class="cx"><h3>Atendimentos de '+esc(S.ciclo)+'</h3><p class="sub">O mês inteiro em semanas, com os horários de 30 em 30 minutos e as horas de cada dia. Fim de semana aparece cinza. Para marcar horários de um profissional, use a Agenda em Sessões.</p>'+
+      D.gradeMensal(S.ciclo, D.ctx(), {})+'<h4>Horas por semana e por terapia</h4>'+D.tabelaSemanas(D.horasDoCiclo(S.ciclo, S.M.sessoes, App.mapaProf()))+'</div>';
     var docs = familia ? '<div class="cx"><h3>Arquivos de '+esc(S.ciclo)+' no Drive</h3><p class="sub">Notas, listas assinadas e comprovantes de cada profissional neste mês.</p><button class="bt cl" id="cic-arq">Carregar arquivos do mês</button><div id="cic-arqs" style="margin-top:12px"></div></div>' : '';
     return nav+tiles+'<div class="cx"><div class="tb" style="margin:0 0 8px"><h3 style="margin:0">Profissionais de '+esc(S.ciclo)+'</h3><span class="gap"></span>'+(familia ? '<button class="bt cl" id="cic-novo">+ Lançamento avulso</button>' : '')+'</div>'+
-      '<p class="sub">Toque numa linha para abrir o lançamento, registrar o protocolo da Amil e acompanhar.</p>'+tabela+'</div>'+cal+docs;
+      '<p class="sub">Toque numa linha para abrir o lançamento. Quem tem saldo pode ser marcado para montar o e-mail à Amil.</p>'+tabela+'</div>'+cal+docs;
   }
-
   tela.depois = function(){
     var familia = S.u.perfil==='familia', res = $('#cic-res');
     $('#cic-sel').onchange = function(){ S.ciclo = this.value; App.ir('ciclo'); };
     $('#cic-ant').onclick = function(){ S.ciclo = D.cicloVizinho(S.ciclo, -1); App.ir('ciclo'); };
     $('#cic-prox').onclick = function(){ S.ciclo = D.cicloVizinho(S.ciclo, 1); App.ir('ciclo'); };
-    D.ligarCalendario(D.ctx());
     if(S.msgCiclo){ res.innerHTML = '<div class="ban ok">'+esc(S.msgCiclo)+'</div>'; S.msgCiclo = null; }
     if(!familia) return;
-    $$('tr.clic[data-l]').forEach(function(tr){ tr.onclick = function(){ abrirGaveta(tr.dataset.l); }; });
+    $$('tr.clic[data-l]').forEach(function(tr){ tr.onclick = function(e){ if(e.target.closest('input,button,a')) return; abrirGaveta(tr.dataset.l); }; });
+    ligarSelecao();
     $('#cic-novo').onclick = function(){ abrirGaveta(null); };
     var trava = function(on, b, txt){ $$('#cic-abrir,#cic-pasta,#cic-gerar').forEach(function(x){ x.disabled = on; }); if(b && txt) b.textContent = txt; };
 
     $('#cic-abrir').onclick = abrirDialogo;
-    $$('[data-cal]').forEach(function(b){ b.onclick = function(){ S.cicCal = b.dataset.cal; App.ir('ciclo'); }; });
-    $$('[data-agenda]').forEach(function(b){ b.onclick = function(e){ e.stopPropagation(); irAgenda(b.dataset.agenda, S.ciclo); }; });
     $('#cic-pasta').onclick = async function(){
       var b = this, t0 = b.textContent; trava(true, b, 'Criando…');
       try{ var o = await api('pastaCiclo', { ciclo:S.ciclo }); if(!o.ok) throw new Error(o.msg);
@@ -96,6 +92,30 @@
     };
     if(S.lanSel){ var id = S.lanSel; S.lanSel = null; abrirGaveta(id); }
   };
+
+  /** Marcar quem tem saldo e montar o e-mail para a Amil (rascunho no Gmail, nunca enviado). */
+  function ligarSelecao(){
+    var barra = $('#sel-bar'); if(!barra) return;
+    var marcados = function(){ return $$('input.sel:checked'); };
+    var atu = function(){
+      var cs = marcados(), s = cs.reduce(function(t, c){ return t + (+c.dataset.saldo||0); }, 0);
+      barra.hidden = !cs.length; $('#sel-txt').textContent = cs.length+' selecionado(s) · saldo '+D.moeda(s);
+      var td = $('#sel-todos'), hab = $$('input.sel:not(:disabled)'); if(td) td.checked = hab.length>0 && hab.every(function(c){ return c.checked; });
+    };
+    $$('input.sel').forEach(function(c){ c.onchange = atu; });
+    if($('#sel-todos')) $('#sel-todos').onchange = function(){ var on = this.checked; $$('input.sel:not(:disabled)').forEach(function(c){ c.checked = on; }); atu(); };
+    $('#sel-limpa').onclick = function(){ $$('input.sel').forEach(function(c){ c.checked = false; }); atu(); };
+    $('#sel-email').onclick = async function(){
+      var ids = marcados().map(function(c){ return c.dataset.id; }), b = this, res = $('#cic-res'); if(!ids.length) return;
+      if(!confirm('Montar o e-mail para a Amil com '+ids.length+' item(ns)?\n\nVai ser criado um RASCUNHO no Gmail, com os arquivos de cada mês e os documentos do processo em anexo. Nada é enviado.')) return;
+      b.disabled = true; b.textContent = 'Montando…'; res.innerHTML = '<div class="ban">Juntando os arquivos e montando o rascunho. Pode levar um minuto.</div>';
+      try{
+        var o = await api('montarEmail', { ids:ids }); if(!o.ok) throw new Error(o.msg);
+        res.innerHTML = '<div class="ban ok"><b>Rascunho criado</b> com '+o.itens+' item(ns) e '+o.anexos+' anexo(s). <a href="'+esc(o.url)+'" target="_blank" rel="noopener noreferrer">Abrir os rascunhos no Gmail</a>'+(o.faltando.length ? '<br><b>Atenção:</b> '+o.faltando.map(esc).join('; ') : '')+'</div>';
+      }catch(x){ res.innerHTML = '<div class="ban crit">'+esc(msgErro(x, 'Não foi possível montar o e-mail.'))+'</div>'; }
+      b.disabled = false; b.textContent = 'Montar e-mail para a Amil'; res.scrollIntoView({ block:'center' });
+    };
+  }
 
   function irAgenda(profId, ciclo){ S.agProf = profId; S.sesMes = ciclo; S.sesTab = 'agenda'; S.agSel = {}; S.agFoco = null; S.agMsg = ''; App.ir('sessoes'); }
 
