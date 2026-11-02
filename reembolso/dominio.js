@@ -8,7 +8,16 @@
   D.PRAZO_AMIL = 15;
   D.TERAPIAS = ['aba','fono','to','psicomot',''];
   D.GRUPO_NOME = { aba:'ABA', fono:'Fonoaudiologia', to:'Terapia ocupacional', psicomot:'Psicomotricidade', '':'Sem terapia definida' };
+  D.PAPEIS = ['Aplicador','Supervisor'];
+  /** 'sup' (supervisão), 'apl' (aplicação, inclusive "AT") ou '' (sem função cadastrada). */
+  D.funcao = function(p){ var s = String((p||{}).papel||''); return /superv/i.test(s) ? 'sup' : s ? 'apl' : ''; };
+  D.MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
   D.mmaa = function(c){ return c.slice(5)+'/'+c.slice(2,4); };
+  /** Status da Amil em nomes curtos, para caber nas tabelas. */
+  D.STATUS_CURTO = { 'Preparando':'Preparando', 'Aguardando Documentação':'Aguard. doc.', 'Em processamento':'Em process.', 'Liberado para Pagamento':'Liberado', 'Pagamento Confirmado':'Confirmado', 'Em Reanálise':'Reanálise', 'Reembolso Devolvido':'Devolvido', 'Indeferido':'Indeferido' };
+  /** Coluna da tabelinha de status por mês: processamento, confirmado, reanálise, recusado, outros. */
+  D.STATUS_COL = function(s){ return s==='Em processamento' ? 'proc' : s==='Pagamento Confirmado' ? 'conf' : s==='Em Reanálise' ? 'rean' : (s==='Indeferido'||s==='Reembolso Devolvido') ? 'rec' : 'out'; };
+  D.curto = function(n){ n = +n||0; return n>=1000 ? (n/1000).toFixed(1).replace('.',',')+'k' : String(Math.round(n)); };
 
   D.dias = function(a, b){ var x = Date.parse(a), y = Date.parse(b); return isNaN(x)||isNaN(y) ? null : Math.round((y-x)/864e5); };
 
@@ -153,7 +162,7 @@
   D.ctx = function(filtroProf){
     var M = App.S.M;
     return { sessoes: filtroProf ? M.sessoes.filter(function(s){ return s.profId===filtroProf; }) : M.sessoes,
-             lancamentos: filtroProf ? M.lancamentos.filter(function(l){ return l.profId===filtroProf; }) : M.lancamentos, profs: App.mapaProf() };
+             lancamentos: filtroProf ? M.lancamentos.filter(function(l){ return l.profId===filtroProf; }) : M.lancamentos, profs: App.mapaProf(), escola: M.escola || {} };
   };
 
   /** Meses conhecidos (lançamentos, sessões e o atual), do mais novo ao mais antigo. */
@@ -192,66 +201,103 @@
       if(a===null || b===null) return;
       for(var t = Math.floor(a/30)*30; t < b; t += 30){ var i = (t - fx.ini)/30; if(i < 0 || i >= n) continue; (occ[s.data+'|'+i] = occ[s.data+'|'+i] || []).push(s); }
     });
-    var nomeDia = ['D','S','T','Q','Q','S','S'], tot = 0;
-    var blocos = V.janelas(ciclo).map(function(w){
-      var dias = [], soma = 0; for(var d = w.ini; d <= w.fim; d++){ var iso = ciclo+'-'+(d<10?'0':'')+d; dias.push({ d:d, iso:iso, wd:V.diaSemana(iso) }); soma += dia[iso]||0; }
-      tot += soma;
-      var cab = '<th class="h"></th>'+dias.map(function(x){ var fim = x.wd===0 || x.wd===6;
-        return '<th class="dia'+(fim?' fim':'')+(x.iso===hoje?' hoje':'')+'" data-d="'+x.iso+'"'+(opts.interativo && x.iso<=hoje && !fim ? ' role="button" title="Marcar o horário padrão neste dia"' : '')+'><small>'+nomeDia[x.wd]+'</small><b>'+x.d+'</b></th>'; }).join('');
-      var linhas = '';
-      for(var i = 0; i < n; i++){
-        var min = fx.ini + 30*i;
-        linhas += '<tr><th class="h">'+(min%60===0 ? hora(min).slice(0,2)+'h' : '')+'</th>'+dias.map(function(x){
-          var fim = x.wd===0 || x.wd===6, ls = occ[x.iso+'|'+i], mk = marc[x.iso+'|'+min], fut = x.iso > hoje, cls = 'c'+(fim?' fim':'')+(ls?' ocu':'')+(mk?' mar':'')+(opts.interativo && !fut && !ls ? ' clic' : '');
-          var cor = ls ? ' style="background:'+D.CORES[D.terapiaDe(P, ls[0].profId)]+'"' : '';
-          var tip = ls ? ls.map(function(s){ return (P[s.profId]||{}).apelido+' '+s.horaIni+'–'+s.horaFim; }).join(' · ') : hora(min);
-          return '<td class="'+cls+'"'+cor+' data-d="'+x.iso+'" data-m="'+min+'" title="'+esc(tip)+'">'+(!pid && ls && ls.length>1 ? ls.length : '')+'</td>';
-        }).join('')+'</tr>';
-      }
-      var rod = '<th class="h">h</th>'+dias.map(function(x){ var h = dia[x.iso]; return '<td class="tt'+((x.wd===0||x.wd===6)?' fim':'')+'">'+(h ? hh(h).replace(',0','') : '')+'</td>'; }).join('');
-      return '<div class="sem"><h4>Semana '+w.n+' <small>dias '+w.ini+'–'+w.fim+'</small><span>'+(soma ? hh(soma)+' h' : '—')+'</span></h4><table class="grade"><thead><tr>'+cab+'</tr></thead><tbody>'+linhas+'</tbody><tfoot><tr>'+rod+'</tr></tfoot></table></div>';
-    });
-    return '<div class="semanas">'+blocos.join('')+'</div><p class="grade-tot">Total do mês: <b>'+hh(tot)+' h</b></p>';
+    var nd = V.diasDoMes(ciclo), dias = [], tot = 0, e7 = ctx.escola || {}, fimSem = function(w){ return w===0 || w===6; }, nomeDia = ['D','S','T','Q','Q','S','S'];
+    for(var d = 1; d <= nd; d++){ var iso0 = ciclo+'-'+(d<10?'0':'')+d; dias.push({ d:d, iso:iso0, wd:V.diaSemana(iso0) }); tot += dia[iso0]||0; }
+    var nFim = dias.filter(function(x){ return fimSem(x.wd); }).length, un = 96/((nd-nFim) + 0.5*nFim);
+    var cols = '<col style="width:4%">'+dias.map(function(x){ return '<col style="width:'+(fimSem(x.wd) ? un/2 : un).toFixed(2)+'%">'; }).join('');
+    var janelas = V.janelas(ciclo), ini7 = {};
+    var somaJ = function(w){ var s = 0; for(var d = w.ini; d <= w.fim; d++) s += dia[ciclo+'-'+(d<10?'0':'')+d]||0; return s; };
+    janelas.forEach(function(w){ ini7[w.ini] = 1; });
+    var semCab = '<th class="h"></th>'+janelas.map(function(w){ var s = somaJ(w); return '<th class="sw" colspan="'+(w.fim-w.ini+1)+'">Semana '+w.n+' <span>'+(s ? hh(s)+' h' : '—')+'</span></th>'; }).join('');
+    var cab = '<th class="h"></th>'+dias.map(function(x){ var fim = fimSem(x.wd);
+      return '<th class="dia'+(fim?' fim':'')+(ini7[x.d]?' sini':'')+(x.iso===hoje?' hoje':'')+'" data-d="'+x.iso+'"'+(opts.interativo && x.iso<=hoje && !fim ? ' role="button" title="Marcar o horário padrão neste dia"' : '')+'><small>'+nomeDia[x.wd]+'</small><b>'+x.d+'</b></th>'; }).join('');
+    var escMin = {}; for(var w7 = 0; w7 < 7; w7++){ var e = e7[w7]; escMin[w7] = e && e.ini && e.fim && minutos(e.ini)!==null && minutos(e.fim)!==null ? [minutos(e.ini), minutos(e.fim)] : null; }
+    var linhas = '';
+    for(var i = 0; i < n; i++){
+      var min = fx.ini + 30*i;
+      linhas += '<tr><th class="h">'+(min%60===0 ? (min/60)+'h' : Math.floor(min/60)+':30')+'</th>'+dias.map(function(x){
+        var fim = fimSem(x.wd), ls = occ[x.iso+'|'+i], mk = marc[x.iso+'|'+min], fut = x.iso > hoje, em = escMin[x.wd], na = em && min>=em[0] && min<em[1];
+        var cls = 'c'+(fim?' fim':'')+(ini7[x.d]?' sini':'')+(na?' hesc':'')+(ls?' ocu':'')+(mk?' mar':'')+(opts.interativo && !fut && !ls ? ' clic' : '');
+        var cor = ls ? ' style="background:'+D.CORES[D.terapiaDe(P, ls[0].profId)]+'"' : '';
+        var tip = ls ? ls.map(function(s){ return (P[s.profId]||{}).apelido+' '+s.horaIni+'–'+s.horaFim; }).join(' · ') : hora(min)+(na ? ' · horário escolar' : '');
+        return '<td class="'+cls+'"'+cor+' data-d="'+x.iso+'" data-m="'+min+'" title="'+esc(tip)+'">'+(!pid && ls && ls.length>1 ? ls.length : '')+'</td>';
+      }).join('')+'</tr>';
+    }
+    var rod = '<tr><th class="h">h</th>'+dias.map(function(x){ var h = dia[x.iso]; return '<td class="tt'+(fimSem(x.wd)?' fim':'')+(ini7[x.d]?' sini':'')+'">'+(h ? hh(h).replace(',0','') : '')+'</td>'; }).join('')+'</tr>';
+    var leg = V.escolaVazia(e7) ? '' : '<div class="cal-leg"><span><i class="m" style="background:#F3C9C9"></i>horário escolar: sem atendimento</span></div>';
+    return '<div class="gscroll"><table class="grade gm"><colgroup>'+cols+'</colgroup><thead><tr>'+semCab+'</tr><tr>'+cab+'</tr></thead><tbody>'+linhas+'</tbody><tfoot>'+rod+'</tfoot></table></div>'+leg+'<p class="grade-tot">Total do mês: <b>'+hh(tot)+' h</b></p>';
   };
 
   D.urlBaixar = function(id){ return 'https://drive.google.com/uc?export=download&id='+encodeURIComponent(id); };
   D.urlPasta = function(id){ return 'https://drive.google.com/drive/folders/'+encodeURIComponent(id); };
 
-  /** Horas dos profissionais por semana (modo 'sem', últimas 12) ou por mês/ciclo (modo 'ciclo'), empilhadas por profissional. */
-  D.dadosHoras = function(modo){
-    var P = App.mapaProf(), SS = App.S.M.sessoes, cats, chave;
+  /** Horas dos profissionais por semana (modo 'sem') ou por mês (modo 'ciclo'), empilhadas por profissional (por='prof') ou por terapia (por='terapia').
+      ano e mes (opcionais) recortam o período: com mes, as semanas do mês; com ano, os meses/semanas com atendimento naquele ano. */
+  D.dadosHoras = function(modo, por, ano, mes, profId){
+    var P = App.mapaProf(), SS = App.S.M.sessoes.filter(function(s){ return (!ano || s.data.slice(0,4)===ano) && (!mes || s.data.slice(0,7)===mes) && (!profId || s.profId===profId); }), cats, chave;
     if(modo==='ciclo'){
       var m = {}; SS.forEach(function(s){ m[s.data.slice(0,7)] = 1; });
       cats = Object.keys(m).sort().slice(-12).map(function(k){ return { k:k, rot:D.mmaa(k) }; }); chave = function(s){ return s.data.slice(0,7); };
-    } else { cats = D.ultimasSemanas(12).map(function(w){ return { k:w, rot:D.rotSemana(w) }; }); chave = function(s){ return D.segundaDe(s.data); }; }
+    } else {
+      var ws = {}; SS.forEach(function(s){ ws[D.segundaDe(s.data)] = 1; });
+      var lista = (ano || mes) ? Object.keys(ws).map(Number).sort(function(a,b){ return a-b; }) : D.ultimasSemanas(12);
+      cats = (mes ? lista : lista.slice(-12)).map(function(w){ return { k:w, rot:D.rotSemana(w) }; }); chave = function(s){ return D.segundaDe(s.data); };
+    }
     var ok = {}; cats.forEach(function(c){ ok[c.k] = 1; });
-    var val = {}, tot = {};
-    SS.forEach(function(s){ var k = chave(s); if(!ok[k]) return; var h = num(s.horas)||0; val[k+'|'+s.profId] = (val[k+'|'+s.profId]||0) + h; tot[s.profId] = (tot[s.profId]||0) + h; });
-    var ids = Object.keys(tot).sort(function(a,b){ return tot[b]-tot[a]; });
-    var series = ids.map(function(id, i){ var p = P[id]||{}; return { k:id, nome:(p.apelido||id)+' ('+D.SIGLA[p.terapia||'x']+')', cor:D.PALETA[i % D.PALETA.length] }; });
+    var val = {}, tot = {}, serie = function(s){ return por==='terapia' ? D.terapiaDe(P, s.profId) : s.profId; };
+    SS.forEach(function(s){ var k = chave(s); if(!ok[k]) return; var h = num(s.horas)||0, q = serie(s); val[k+'|'+q] = (val[k+'|'+q]||0) + h; tot[q] = (tot[q]||0) + h; });
+    var ids = Object.keys(tot).sort(function(a,b){ return por==='terapia' ? D.TERAPIAS.indexOf(a==='x'?'':a) - D.TERAPIAS.indexOf(b==='x'?'':b) : tot[b]-tot[a]; });
+    var series = ids.map(function(id, i){
+      if(por==='terapia') return { k:id, nome:D.GRUPO_NOME[id==='x'?'':id], cor:D.CORES[id] };
+      var p = P[id]||{}; return { k:id, nome:(p.apelido||id)+' ('+D.SIGLA[p.terapia||'x']+')', cor:D.PALETA[i % D.PALETA.length] }; });
     return { cats:cats, series:series, val:function(c, k){ return val[c+'|'+k]; }, vazio:!ids.length };
   };
 
   D.fmtTam = function(b){ b = +b||0; return b>1048576 ? (b/1048576).toFixed(1).replace('.',',')+' MB' : Math.max(1,Math.round(b/1024))+' KB'; };
   // ------------------------------------------------------------ horas por semana do ciclo e por terapia
-  /** Horas do mês nas 4 janelas do ciclo (1–7, 8–14, 15–21, 22–fim), por terapia. profId opcional. */
+  /** Horas do mês nas 4 janelas do ciclo (1–7, 8–14, 15–21, 22–fim), por terapia e por profissional. profId opcional. */
   D.horasDoCiclo = function(ciclo, sessoes, profs, profId){
-    var r = { jan: V.janelas(ciclo).map(function(j){ return { n:j.n, ini:j.ini, fim:j.fim, t:{}, tot:0 }; }), t:{}, tot:0 };
+    var r = { jan: V.janelas(ciclo).map(function(j){ return { n:j.n, ini:j.ini, fim:j.fim, t:{}, p:{}, s:[], tot:0 }; }), t:{}, p:{}, tot:0 };
     sessoes.forEach(function(s){
       if(s.data.slice(0,7)!==ciclo || (profId && s.profId!==profId)) return;
       var h = num(s.horas)||0, t = D.terapiaDe(profs, s.profId), dia = +s.data.slice(8), w = r.jan[dia<=7?0:dia<=14?1:dia<=21?2:3];
-      w.t[t] = (w.t[t]||0) + h; w.tot += h; r.t[t] = (r.t[t]||0) + h; r.tot += h;
+      w.t[t] = (w.t[t]||0) + h; w.p[s.profId] = (w.p[s.profId]||0) + h; w.s.push(s); w.tot += h; r.t[t] = (r.t[t]||0) + h; r.p[s.profId] = (r.p[s.profId]||0) + h; r.tot += h;
     });
     return r;
   };
-  /** Tabela semana × terapia, com o total das 4 semanas embaixo. */
+  var TS = {}, tsN = 0;
+  function tsDetalhe(w, P){
+    var por = {}; w.s.slice().sort(function(a,b){ return (a.data+a.horaIni).localeCompare(b.data+b.horaIni); }).forEach(function(s){ (por[s.profId] = por[s.profId] || []).push(s); });
+    var ids = Object.keys(por).sort(function(a,b){ return String((P[a]||{}).apelido||a).localeCompare(String((P[b]||{}).apelido||b), 'pt-BR'); });
+    if(!ids.length) return '<div class="det-in l"><p class="sub">Nenhum atendimento nesta semana.</p></div>';
+    return '<div class="det-in l"><ul class="lst">'+ids.map(function(id){ var p = P[id]||{};
+      return '<li><span><b>'+esc(p.apelido||id)+'</b> · '+D.SIGLA[p.terapia||'x']+(p.papel ? ' · '+esc(p.papel) : '')+'</span><span>'+por[id].map(function(s){ return dataBR(s.data).slice(0,5)+' '+esc(s.horaIni)+'–'+esc(s.horaFim); }).join(' · ')+' · <b>'+hh(w.p[id])+' h</b></span></li>'; }).join('')+'</ul></div>';
+  }
+  function tsCorpo(g){
+    var r = g.r, P = App.mapaProf(), prof = g.modo==='prof', cols;
+    if(prof) cols = Object.keys(r.p).sort(function(a,b){ return (D.TERAPIAS.indexOf((P[a]||{}).terapia||'')-D.TERAPIAS.indexOf((P[b]||{}).terapia||'')) || String((P[a]||{}).apelido||a).localeCompare(String((P[b]||{}).apelido||b), 'pt-BR'); })
+      .map(function(id){ return { k:id, rot:(P[id]||{}).apelido||id, cor:D.CORES[D.terapiaDe(P, id)] }; });
+    else cols = ['aba','fono','to','psicomot','x'].filter(function(t){ return t!=='x' || r.t.x; }).map(function(t){ return { k:t, rot:D.SIGLA[t], cor:D.CORES[t] }; });
+    var get = function(o, k){ return prof ? o.p[k] : o.t[k]; }, cel = function(v){ return '<td class="n">'+(v ? hh(v)+' h' : '—')+'</td>'; };
+    var corpo = r.jan.map(function(w){
+      var ab = g.open[w.n];
+      return '<tr class="clic'+(ab?' aberto':'')+'" data-sem="'+w.n+'" title="Toque para ver quem atendeu nesta semana"><td><b>S'+w.n+'</b> <small>dias '+w.ini+'–'+w.fim+'</small></td>'+cols.map(function(c){ return cel(get(w, c.k)); }).join('')+'<td class="n"><b>'+(w.tot ? hh(w.tot)+' h' : '—')+'</b></td></tr>'+
+        (ab ? '<tr class="det"><td colspan="'+(cols.length+2)+'">'+tsDetalhe(w, P)+'</td></tr>' : ''); }).join('');
+    return '<div class="tubo peq" role="group" aria-label="Agrupar horas"><button type="button" data-tsm="terapia" class="'+(!prof?'on':'')+'">Por terapia</button><button type="button" data-tsm="prof" class="'+(prof?'on':'')+'">Por profissional</button></div>'+
+      '<div class="tw"><table class="tb2 ctr" style="min-width:0"><thead><tr><th>Semana</th>'+cols.map(function(c){ return '<th><i class="pt" style="background:'+c.cor+'"></i>'+esc(c.rot)+'</th>'; }).join('')+'<th>Total</th></tr></thead><tbody>'+corpo+'</tbody>'+
+      '<tfoot><tr><td>Ciclo completo</td>'+cols.map(function(c){ return cel(get(r, c.k)); }).join('')+'<td class="n">'+hh(r.tot)+' h</td></tr></tfoot></table></div>';
+  }
+  /** Tabela semana × terapia (ou × profissional), com o total do ciclo embaixo. Toque numa semana para ver quem atendeu. */
   D.tabelaSemanas = function(r){
-    var cols = ['aba','fono','to','psicomot','x'].filter(function(t){ return t!=='x' || r.t.x; });
-    var cel = function(v){ return '<td class="n">'+(v ? hh(v)+' h' : '—')+'</td>'; };
-    return '<div class="tw"><table class="tb2 ctr" style="min-width:0"><thead><tr><th>Semana</th>'+cols.map(function(t){ return '<th><i class="pt" style="background:'+D.CORES[t]+'"></i>'+D.SIGLA[t]+'</th>'; }).join('')+'<th>Total</th></tr></thead><tbody>'+
-      r.jan.map(function(w){ return '<tr><td><b>S'+w.n+'</b> <small>dias '+w.ini+'–'+w.fim+'</small></td>'+cols.map(function(t){ return cel(w.t[t]); }).join('')+'<td class="n"><b>'+(w.tot ? hh(w.tot)+' h' : '—')+'</b></td></tr>'; }).join('')+
-      '</tbody><tfoot><tr><td>Ciclo completo</td>'+cols.map(function(t){ return cel(r.t[t]); }).join('')+'<td class="n">'+hh(r.tot)+' h</td></tr></tfoot></table></div>';
+    var k = 't'+(++tsN); delete TS['t'+(tsN-20)]; TS[k] = { r:r, modo:App.S.tsModo||'terapia', open:{} };
+    return '<div class="tsem" data-k="'+k+'">'+tsCorpo(TS[k])+'</div>';
   };
+  document.addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('[data-tsm]'), tr = e.target.closest && e.target.closest('tr[data-sem]'), box = e.target.closest && e.target.closest('.tsem');
+    if(!box || (!b && !tr)) return; var g = TS[box.dataset.k]; if(!g) return;
+    if(b){ g.modo = b.dataset.tsm; App.S.tsModo = g.modo; } else g.open[tr.dataset.sem] = !g.open[tr.dataset.sem];
+    box.innerHTML = tsCorpo(g);
+  });
 
   // ------------------------------------------------------------ semanas (segunda a domingo) e gráficos
   var isoDe = function(n){ return new Date(n*864e5).toISOString().slice(0,10); };

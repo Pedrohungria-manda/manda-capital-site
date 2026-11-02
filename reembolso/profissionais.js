@@ -67,7 +67,7 @@
     var novo = !p.id, campo = function(id, rot, val, extra){ return '<label class="campo"><span>'+rot+'</span><input id="pf-'+id+'" value="'+esc(val)+'" '+(extra||'')+'></label>'; };
     var terap = '<option value="">— a definir —</option>'+Object.keys(App.TERAPIA_NOME).map(function(k){ return '<option value="'+k+'"'+(p.terapia===k?' selected':'')+'>'+App.TERAPIA_NOME[k]+'</option>'; }).join('');
     return '<div class="duas">'+campo('nome','Nome completo (como na nota fiscal)',p.nome||'','maxlength="120"')+campo('apelido','Apelido',p.apelido||'','maxlength="60"')+'</div>'+
-      '<div class="duas"><label class="campo"><span>Terapia</span><select id="pf-terapia">'+terap+'</select></label>'+campo('papel','Papel (opcional)',p.papel||'','maxlength="40"')+'</div>'+
+      '<div class="duas"><label class="campo"><span>Terapia</span><select id="pf-terapia">'+terap+'</select></label>'+'<label class="campo"><span>Função</span><select id="pf-papel"><option value="">— a definir —</option>'+D.PAPEIS.concat(p.papel && D.PAPEIS.indexOf(p.papel)<0 ? [p.papel] : []).map(function(o){ return '<option'+(p.papel===o?' selected':'')+'>'+esc(o)+'</option>'; }).join('')+'</select></label></div>'+
       '<div class="duas">'+campo('conselho','Conselho (CRP, CRFa, CREFITO)',p.conselho||'','maxlength="20"')+campo('registro','Registro',p.registro||'','maxlength="30"')+'</div>'+
       '<div class="duas">'+campo('doc','CPF ou CNPJ',p.docFiscal||'','maxlength="20" inputmode="numeric"')+campo('email','E-mail (também é o login)',p.email||'','type="email" inputmode="email" autocapitalize="none"')+'</div>'+
       campo('end','Endereço onde atende',p.endereco||'','maxlength="240"')+
