@@ -103,6 +103,14 @@ body{background:#0A1C2A;color:#F3EBD9;font:15px/1.5 "Barlow",-apple-system,"Sego
 .it.on{background:rgba(63,182,174,.16);color:#fff;font-weight:600}
 .it.on::before{content:"";position:absolute;left:-8px;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--verde)}
 .it.on .ic{color:var(--verde)}
+.it.ex{cursor:default;color:var(--sb-mut);opacity:.62}
+.it.ex:hover{background:transparent}
+.it.ex .ic{opacity:.7}
+.it.ex .lb{display:flex;flex-direction:column;line-height:1.15}
+.exb{display:inline-flex;align-items:center;gap:3px;margin-top:2px;font:600 8.5px/1 "Montserrat",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--ouro);opacity:.9}
+.exb svg{width:8px;height:8px;stroke:currentColor;fill:none;stroke-width:2.8;stroke-linecap:round;flex:none}
+.sb.min .exb{position:absolute;top:6px;right:9px;margin:0;width:6px;height:6px;border-radius:50%;background:var(--ouro);font-size:0;gap:0}
+.sb.min .exb svg{display:none}
 .bdg{min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--ouro);color:var(--azesc);font:700 11px/20px "Montserrat",sans-serif;text-align:center}
 .sb-foot{border-top:1px solid var(--sb-line);padding:8px}
 .sb-foot .upd{font:400 10.5px "DM Mono",monospace;color:var(--sb-mut);padding:6px 10px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -180,6 +188,8 @@ body{background:#0A1C2A;color:#F3EBD9;font:15px/1.5 "Barlow",-apple-system,"Sego
 .acs-it .sb2 span.no{background:#F3F4F6;color:#9AA3AF;text-decoration:line-through}
 
 /* ---------- acessos (admin) ---------- */
+.ac [hidden]{display:none!important}
+.mx-ac select{font:500 13px "Barlow",sans-serif;border:1px solid var(--linha);border-radius:8px;padding:7px 8px;background:#fff;color:var(--tinta);max-width:220px}
 .ac{max-width:1240px;margin:0 auto}
 .ac-cab{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
 .ac-cab h2{font:800 26px "Barlow",sans-serif;color:var(--azesc);margin:0} .ac-cab p{margin:4px 0 0;color:var(--mudo)}
@@ -362,6 +372,8 @@ window.__API_URL="https://script.google.com/macros/s/AKfycbzryE_fhEa08PdI73FCqrE
 
   // ---------------------------------------------------------------- permissões
   var ver = function(id){ var m=(S.u&&S.u.matriz)||{}; return !!(m[id] && m[id].ver); };
+  var emExec = function(id){ var m=(S.u&&S.u.matriz)||{}; return !!(m[id] && m[id].exec && !m[id].ver); };
+  var verAcessos = function(){ return !!(S.u && (S.u.admin || S.u.verAcessos)); };
   var subOk = function(id, s){ var m=(S.u&&S.u.matriz)||{}; return ver(id) && !(m[id].sub && m[id].sub[s]===0); };
   function calcBloq(){ var B={}; S.areas.forEach(function(a){ var l=a.sub.filter(function(s){ return !subOk(a.id, s); }); if(l.length) B[a.id]=l; }); window.__MCA_SUBBLOQ = B; }
   var podeLancar = function(){ var m=(S.u&&S.u.matriz)||{}; return Object.keys(m).some(function(k){ return m[k].lancar || m[k].editar; }); };
@@ -377,7 +389,7 @@ window.__API_URL="https://script.google.com/macros/s/AKfycbzryE_fhEa08PdI73FCqrE
     var d = new Date(S.M.gerado), fmt = d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
     $('#upd').textContent = 'Atualizado em ' + fmt;
     var h = (location.hash||'').slice(1);
-    if(h==='perfil') ver_('perfil'); else if(h==='acessos' && S.u.admin) ver_('acessos'); else if(h && h!=='painel' && ver(h)) ver_(h); else primeiraTela();
+    if(h==='perfil') ver_('perfil'); else if(h==='acessos' && verAcessos()) ver_('acessos'); else if(h && h!=='painel' && ver(h)) ver_(h); else primeiraTela();
     setInterval(marcar, 800);
   }
   function primeiraTela(){
@@ -408,15 +420,20 @@ window.__API_URL="https://script.google.com/macros/s/AKfycbzryE_fhEa08PdI73FCqrE
   function montarMenu(){
     var nav = $('#sb-nav'), h = '', gr = '';
     S.areas.forEach(function(a){
-      if(!ver(a.id)) return;
+      if(!ver(a.id)){
+        if(!emExec(a.id)) return;
+        if(a.grupo !== gr){ gr = a.grupo; h += '<div class="grp">'+esc(gr)+'</div>'; }
+        h += '<div class="it ex" role="button" aria-disabled="true" title="'+esc(a.nome)+' · em execução: ainda em construção, abre em breve">'+ic(a.id)+'<span class="lb">'+esc(a.nome)+'<span class="exb"><svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.6V6l1.6 1"/></svg>em execução</span></span></div>';
+        return;
+      }
       if(a.grupo !== gr){ gr = a.grupo; h += '<div class="grp">'+esc(gr)+'</div>'; }
       var dv = a.grupo==='Painel CFO' ? 'painel' : a.id;
       var ir = a.id==='alertas' ? 'inicio' : a.id;
       h += '<button class="it" data-v="'+dv+'" data-ir="'+ir+'"'+(a.id==='alertas'?' data-sino="1"':'')+' title="'+esc(a.nome)+'">'+ic(a.id)+'<span class="lb">'+esc(a.nome)+'</span>'+(a.id==='alertas'?'<b class="bdg" hidden></b>':'')+'</button>';
     });
-    if(S.u.admin) h += '<div class="grp">Administração</div><button class="it" data-v="acessos" title="Acessos e permissões">'+ic('acessos')+'<span class="lb">Acessos e permissões</span></button>';
+    if(verAcessos()) h += '<div class="grp">Administração</div><button class="it" data-v="acessos" title="Acessos e permissões">'+ic('acessos')+'<span class="lb">Acessos e permissões</span></button>';
     nav.innerHTML = h;
-    $$('.it', nav).forEach(function(b){ b.addEventListener('click', function(){
+    $$('button.it', nav).forEach(function(b){ b.addEventListener('click', function(){
       if(b.dataset.v==='painel') irPainel(b.dataset.ir, !!b.dataset.sino); else ver_(b.dataset.v);
       if(estreito()) abrirMenu(false);
     }); });
@@ -438,7 +455,7 @@ window.__API_URL="https://script.google.com/macros/s/AKfycbzryE_fhEa08PdI73FCqrE
     pintarAvatar($('#eu-av'), S.u);
     $('#eu-nome').textContent = S.u.apelido || S.u.nome || S.u.email;
     $('#eu-cargo').textContent = S.u.cargoNome || (S.u.admin ? 'Administrador' : '');
-    $('#eu-acessos').hidden = !S.u.admin;
+    $('#eu-acessos').hidden = !verAcessos();
     var bt=$('#eu'), mn=$('#eu-menu');
     bt.onclick = function(e){ e.stopPropagation(); mn.hidden = !mn.hidden; bt.setAttribute('aria-expanded', String(!mn.hidden)); };
     document.addEventListener('click', function(){ mn.hidden = true; bt.setAttribute('aria-expanded','false'); });
@@ -522,11 +539,11 @@ window.__API_URL="https://script.google.com/macros/s/AKfycbzryE_fhEa08PdI73FCqrE
     var acs = S.areas.filter(function(a){ return ver(a.id); }).map(function(a){
       var x = m[a.id], fl = [x.editar?'edita':'', x.lancar?'lança':''].filter(String).join(' · ');
       return '<div class="acs-it"><b>'+esc(a.nome)+'</b>'+(fl?'<span class="fl">'+fl+'</span>':'')+(a.sub.length?'<div class="sb2">'+a.sub.map(function(s){ return '<span'+(subOk(a.id,s)?'':' class="no"')+'>'+esc(s)+'</span>'; }).join('')+'</div>':'')+'</div>';
-    }).join('') || '<p class="sub">Nenhuma área liberada.</p>';
+    }).join('') + S.areas.filter(function(a){ return emExec(a.id); }).map(function(a){ return '<div class="acs-it"><b>'+esc(a.nome)+'</b><span class="fl">em execução</span></div>'; }).join('') || '<p class="sub">Nenhuma área liberada.</p>';
     el.innerHTML = '<div class="pf">'+
       '<div class="pf-capa"><div class="pf-foto" id="pf-foto"><span id="pf-ini"></span><label class="pf-cam" title="Trocar foto"><svg class="ic" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg><input type="file" accept="image/*" id="pf-arq" hidden></label></div>'+
       '<div class="pf-id"><h1>'+esc(u.nome||u.email)+'</h1><p class="cg">'+esc(u.cargoNome||'Sem cargo definido')+' · '+esc(u.email)+'</p>'+
-      '<div class="chips"><span class="chip ouro">'+esc(nivelTexto(u))+'</span>'+(u.admin?'<span class="chip">Administrador dos acessos</span>':'')+flags.join('')+'</div></div></div>'+
+      '<div class="chips"><span class="chip ouro">'+esc(nivelTexto(u))+'</span>'+(u.admin?'<span class="chip">Administrador dos acessos</span>':u.verAcessos?'<span class="chip">Vê os acessos</span>':'')+flags.join('')+'</div></div></div>'+
       '<div class="pf-grid"><div class="cx"><h3>Seus dados</h3><p class="sub">Como você aparece para o time no app.</p>'+
       '<div class="duas"><label class="campo"><span>Nome completo</span><input id="pf-nome" value="'+esc(u.nome)+'" maxlength="120"></label>'+
       '<label class="campo"><span>Como prefere ser chamado</span><input id="pf-ap" value="'+esc(u.apelido)+'" maxlength="60"></label></div>'+
@@ -610,7 +627,8 @@ window.__API_URL="https://script.google.com/macros/s/AKfycbzryE_fhEa08PdI73FCqrE
   function editar(email){
     var u = A.lista.filter(function(x){ return x.email===email; })[0];
     A.sel = email; A.conv = null;
-    A.ed = u ? JSON.parse(JSON.stringify(u)) : { email:'', nome:'', cargo:'', perfil:'interno', ativo:true, admin:false, matriz:{}, novo:true };
+    A.ed = u ? JSON.parse(JSON.stringify(u)) : { email:'', nome:'', cargo:'', perfil:'interno', ativo:true, admin:false, adminNivel:'', matriz:{}, novo:true };
+    if(A.ed.adminNivel === undefined) A.ed.adminNivel = A.ed.admin ? 'sim' : '';
   }
   function desenharAcessos(){
     var el = $('#v-acessos'), e = A.ed;
@@ -639,16 +657,25 @@ window.__API_URL="https://script.google.com/macros/s/AKfycbzryE_fhEa08PdI73FCqrE
       '<div class="duas"><label class="campo"><span>Cargo</span><select id="ae-cargo">'+cargos+'</select></label>'+
       '<label class="campo"><span>Perfil dos dados</span><select id="ae-perfil"><option value="interno"'+(e.perfil!=='dono'?' selected':'')+'>Restrito (sem remuneração individual)</option><option value="dono"'+(e.perfil==='dono'?' selected':'')+'>Completo</option></select></label></div>'+
       '<label class="tgl"><input type="checkbox" class="ck" id="ae-ativo"'+(e.ativo!==false?' checked':'')+'> Acesso ativo</label>'+
-      '<label class="tgl"><input type="checkbox" class="ck" id="ae-admin"'+(e.admin?' checked':'')+'> Administra os acessos (vê esta tela)</label>'+
-      '<div class="mx-ac"><button class="bt cl" id="mx-padrao">Aplicar padrão do cargo</button><button class="bt cl" id="mx-tudo">Marcar tudo</button><button class="bt cl" id="mx-nada">Limpar</button></div>'+
+      '<label class="campo"><span>Tela de acessos e permissões</span><select id="ae-admin"><option value=""'+(!e.adminNivel?' selected':'')+'>Não vê</option><option value="ver"'+(e.adminNivel==='ver'?' selected':'')+'>Vê tudo, sem editar</option><option value="sim"'+(e.adminNivel==='sim'?' selected':'')+'>Administra (cria e edita usuários)</option></select></label>'+
+      '<p class="sub" style="margin:2px 0 10px">Quem não vê esta tela tem <b>Orçamento</b>, <b>Rolling Forecast</b> e <b>Gestão da empresa</b> no menu como “em execução” (apagados, sem abrir) e não vê o <b>Painel do projeto</b>, mesmo que estejam marcados abaixo.</p>'+
+      '<div class="mx-ac"><button class="bt cl" id="mx-padrao">Aplicar padrão do cargo</button><button class="bt cl" id="mx-tudo">Marcar tudo</button><button class="bt cl" id="mx-nada">Limpar</button>'+
+        (A.lista.length>1?'<select id="mx-copia" aria-label="Copiar acessos de"><option value="">Copiar acessos de…</option>'+A.lista.filter(function(u){ return u.email!==e.email; }).map(function(u){ return '<option value="'+esc(u.email)+'">'+esc(u.nome||u.email)+'</option>'; }).join('')+'</select>':'')+'</div>'+
       '<div class="mx-wrap"><table class="mx"><thead><tr><th>Área do menu</th><th>Ver</th><th>Editar</th><th>Lançar</th></tr></thead><tbody>'+linhas+'</tbody></table></div>'+
       '<div class="leg"><span><b>Ver</b>: abre a área (▸ mostra as sub-áreas)</span><span><b>Editar</b>: corrige dados existentes</span><span><b>Lançar</b>: inclui dados novos no sistema</span></div>'+
       '<div style="margin-top:16px"><button class="bt" id="ae-salvar">Salvar acessos</button>'+(e.novo?'':' <button class="bt cl" id="ae-conv">Gerar novo convite</button>')+'<span class="msg" id="ae-msg"></span></div>'+
       (A.conv?'<div class="conv">Código de primeiro acesso de <b>'+esc(A.conv.email)+'</b>: <b class="cod">'+esc(A.conv.codigo)+'</b><br><span class="sub">Vale até '+esc(A.conv.validade)+'. Envie à pessoa: abrir <b>mandacap.com.br/across</b>, tocar em <b>Primeiro acesso</b>, digitar o e-mail e o código e criar a senha.</span><div style="margin-top:8px"><button class="bt cl" id="conv-cp">Copiar mensagem</button></div></div>':'')+
       '</div></div></div>';
     $$('.us', el).forEach(function(b){ b.onclick = function(){ editar(b.dataset.em); desenharAcessos(); }; });
+    if(!S.u.admin){ // só vê: nada de criar, editar ou gerar convite
+      $$('.cx input, .cx select, .cx textarea', el).forEach(function(c){ c.disabled = true; });
+      ['#ac-novo','#mx-padrao','#mx-tudo','#mx-nada','#mx-copia','#ae-salvar','#ae-conv'].forEach(function(q){ var b=$(q); if(b) b.hidden = true; });
+      var mg=$('#ae-msg'); if(mg){ mg.className='msg'; mg.textContent='Você vê os acessos, mas só o administrador cria ou edita usuários.'; }
+      $$('.abre', el).forEach(function(b){ b.onclick = function(){ A.abertos[b.dataset.ab] = !A.abertos[b.dataset.ab]; desenharAcessos(); }; });
+      return;
+    }
     $('#ac-novo').onclick = function(){ editar(null); desenharAcessos(); };
-    var lerCampos = function(){ e.nome=$('#ae-nome').value; if(e.novo) e.email=$('#ae-email').value.trim().toLowerCase(); e.cargo=$('#ae-cargo').value; e.perfil=$('#ae-perfil').value; e.ativo=$('#ae-ativo').checked; e.admin=$('#ae-admin').checked; };
+    var lerCampos = function(){ e.nome=$('#ae-nome').value; if(e.novo) e.email=$('#ae-email').value.trim().toLowerCase(); e.cargo=$('#ae-cargo').value; e.perfil=$('#ae-perfil').value; e.ativo=$('#ae-ativo').checked; e.adminNivel=$('#ae-admin').value; e.admin = e.adminNivel==='sim'; };
     $$('.abre', el).forEach(function(b){ b.onclick = function(){ lerCampos(); A.abertos[b.dataset.ab] = !A.abertos[b.dataset.ab]; desenharAcessos(); }; });
     $$('.mx .ck', el).forEach(function(c){ c.onchange = function(){
       lerCampos(); var id=c.dataset.a, x = e.matriz[id] = e.matriz[id] || { ver:0, editar:0, lancar:0, sub:{} };
@@ -659,6 +686,7 @@ window.__API_URL="https://script.google.com/macros/s/AKfycbzryE_fhEa08PdI73FCqrE
     }; });
     $('#mx-padrao').onclick = function(){ lerCampos(); if(!e.cargo){ $('#ae-msg').className='msg er'; $('#ae-msg').textContent='Escolha o cargo primeiro.'; return; } e.matriz = matrizPadrao(e.cargo); if(PADRAO[e.cargo]) e.perfil = PADRAO[e.cargo].perfil; desenharAcessos(); };
     $('#mx-tudo').onclick = function(){ lerCampos(); var m={}; S.areas.forEach(function(a){ var s={}; a.sub.forEach(function(x){ s[x]=1; }); m[a.id]={ver:1,editar:(e.matriz[a.id]||{}).editar||0,lancar:(e.matriz[a.id]||{}).lancar||0,sub:s}; }); e.matriz=m; desenharAcessos(); };
+    if($('#mx-copia')) $('#mx-copia').onchange = function(){ var o = A.lista.filter(function(u){ return u.email===this.value; }, this)[0]; if(!o) return; lerCampos(); e.matriz = JSON.parse(JSON.stringify(o.matriz||{})); e.perfil = o.perfil; desenharAcessos(); };
     $('#mx-nada').onclick = function(){ lerCampos(); e.matriz = {}; desenharAcessos(); };
     $('#ae-salvar').onclick = async function(){
       lerCampos(); var b=this, mg=$('#ae-msg'); b.disabled=true; mg.className='msg'; mg.textContent='Salvando…';
